@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+# Extensible user account with custom parameters
 class User(AbstractUser):
     def save(self, *args, **kwargs):
-        # Custome attributes get saved here
         super(User, self).save(*args, **kwargs)    
             
     def __str__(self):
