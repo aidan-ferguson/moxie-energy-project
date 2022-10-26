@@ -1,10 +1,8 @@
-from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_exempt
 from django.middleware import csrf
 from api.utils import *
-
-TEST_DATA_CSV = "datasets/single_value_30m_intervals.csv"
+from api.data_providers.csv_data_provider import CSVDataProvider
+from datetime import datetime
 
 # A function used to test the connection to the API
 def test_connection(request):
@@ -14,24 +12,11 @@ def test_connection(request):
 def electricity_usage(request):
     print(f"Request for electricity data for user id: {request.user.username}")
     
-    # Open the file and store the 10 first readings in an array
-    filepath = staticfiles_storage.path(TEST_DATA_CSV)
-    reading_values = []
-    columns = []
-    with open(filepath, "r") as file:
-        columns = file.readline().strip().split(",")
-        while len(reading_values) < 10:
-            reading_values.append(file.readline().strip().split(","))
-            
-    # Next bundle the readings into an array of dictionaries (JSON format)
-    json_reading_values = []
-    for value in reading_values:
-        reading = {}
-        for idx in range(len(value)):
-            reading[columns[idx]] = value[idx]
-        json_reading_values.append(reading)
-        
-    return return_success({"usage":json_reading_values})
+    start_date = datetime.strptime(request.GET["start"], "%d/%m/%Y")
+    end_date = datetime.strptime(request.GET["end"], "%d/%m/%Y")
+    
+    reading_values = CSVDataProvider.get_energy_data(start_date, end_date)
+    return return_success({"usage":reading_values})
 
 # Function that will send a valid CSRF token to the client for inclusion in POST requests
 def get_csrf_token(request):
