@@ -1,12 +1,11 @@
-from django.http import HttpResponse
 from django.contrib.staticfiles.storage import staticfiles_storage
-import json
+from utils import *
 
 TEST_DATA_CSV = "datasets/single_value_30m_intervals.csv"
 
 # A function used to test the connection to the API
 def test_connection(request):
-    return HttpResponse(json.dumps({"success":True}))
+    return return_success({})
 
 # For now this is a dummy view that will read data from a CSV file and send a response
 def electricity_usage(request, user_id):
@@ -29,4 +28,19 @@ def electricity_usage(request, user_id):
             reading[columns[idx]] = value[idx]
         json_reading_values.append(reading)
         
-    return HttpResponse(json.dumps({"success":True, "usage":json_reading_values}))
+    return return_json({"success":True, "usage":json_reading_values})
+
+# Login endpoint
+def login(request):
+    # Ensure the request is a POST request
+    if request.method == 'POST':
+        # Attempt to get the credentials from the request
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+        
+        if username != None or password != None:
+            return return_json({"success":False})
+        
+        
+    else:
+        return return_json({"success":False, "reason":"You must use a POST method to login"})
