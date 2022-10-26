@@ -30,7 +30,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949aaea-89bc-4b9f-8870-d35a9ba9a4ef" name="Default Changelist" comment="" />
+    <list default="true" id="5949aaea-89bc-4b9f-8870-d35a9ba9a4ef" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../backend/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/api/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
