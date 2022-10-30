@@ -1,17 +1,18 @@
 package com.sh22.frontend_networking_test
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.JsonReader
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.unity3d.player.UnityPlayer
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,16 +22,10 @@ class MainActivity : AppCompatActivity() {
         // Set a onClick callback for the test button
         val button = findViewById<Button>(R.id.test_button)
         button.setOnClickListener(View.OnClickListener {
-            // Because we can't run network operations on the main thread (it is used to render UI)
-            //   we need to call the function in a co-routine
-            GlobalScope.launch {
-                val response = testAPICall()
-                // Only the UI thread can access the views
-                runOnUiThread {
-                    val text = findViewById<TextView>(R.id.api_sample_text)
-                    text.text = response
-                }
-            }
+            // Set the colour of the unity background to the same as the app
+            val color = (findViewById<Button>(R.id.test_button).rootView.background as ColorDrawable).color
+            UnityPlayer.UnitySendMessage("Main Camera", "change", Color.red(color).toString() + "," + Color.green(color).toString() + "," + Color.blue(color).toString())
+            UnityPlayer.UnitySendMessage("Cube", "ToggleSpin", "")
         });
     }
 
