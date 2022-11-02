@@ -1,0 +1,2 @@
+rootProject.name = "frontend-networking-test"
+include ':app'

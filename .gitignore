@@ -160,3 +160,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Apple image caching
+.DS_Store
