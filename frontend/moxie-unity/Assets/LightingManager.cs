@@ -15,7 +15,7 @@ public class LightingManager : MonoBehaviour
     [SerializeField] private Light DirectionalLight;
     [SerializeField] private LightingPreset Preset;
     //Variables
-    [SerializeField, Range(0, 24)] private float TimeOfDay;
+    [SerializeField, Range(0, 24)] private float TimeOfDay = 13;
     [SerializeField] Transform lightHolder;
 
 
@@ -35,7 +35,7 @@ public class LightingManager : MonoBehaviour
         {
             UpdateLighting(TimeOfDay / 24f);
         }*/
-        UpdateLighting(slider.value);
+        UpdateLighting(TimeOfDay/24.0f);
     }
 
 

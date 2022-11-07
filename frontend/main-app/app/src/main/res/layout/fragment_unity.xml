@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/frameLayoutForUnity"
-        android:layout_width="288dp"
-        android:layout_height="290dp">
-
-    </FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="407dp"
+        app:cardCornerRadius="20dp" />
 
 </FrameLayout>

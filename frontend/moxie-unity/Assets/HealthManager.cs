@@ -27,7 +27,12 @@ public class HealthManager : MonoBehaviour
 
     public float GetHealth()
     {
-        return slider.value;
+        return health;
+    }
+
+    public void SetHealth(string new_health) {
+        Debug.Log(new_health);
+        health = float.Parse(new_health);
     }
 
     private void Start()
@@ -46,6 +51,7 @@ public class HealthManager : MonoBehaviour
 
     private void Update()
     {
+        ValueChangeCheck();
         if (Input.GetKey("escape"))
         {
             Application.Quit();

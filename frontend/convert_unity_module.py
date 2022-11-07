@@ -17,16 +17,19 @@ UNITY_MODULE_FOLDER = './unity-module'
 NDK_VERSION = "21.3.6528147"
 
 def delete_unity_module():
-    print(f"Deleting old unity module folder: {UNITY_MODULE_FOLDER}")
+    choice = ""
+    while choice != "y" and choice != "n":
+        choice = input(f"Delete old unity module folder: {UNITY_MODULE_FOLDER}? (y/n) ").strip().lower()
     
-    if os.path.exists(UNITY_MODULE_FOLDER):
-        for root, dirs, files in os.walk(UNITY_MODULE_FOLDER, topdown=False):
-            for name in files:
-                os.remove(os.path.join(root, name))
-            for name in dirs:
-                os.rmdir(os.path.join(root, name))
-                
-    print(f"Deleted {UNITY_MODULE_FOLDER}")
+    if choice == "y":
+        if os.path.exists(UNITY_MODULE_FOLDER):
+            for root, dirs, files in os.walk(UNITY_MODULE_FOLDER, topdown=False):
+                for name in files:
+                    os.remove(os.path.join(root, name))
+                for name in dirs:
+                    os.rmdir(os.path.join(root, name))
+                    
+        print(f"Deleted {UNITY_MODULE_FOLDER}")
     
 def edit_launcher_gradle_build():
     # Check file exists

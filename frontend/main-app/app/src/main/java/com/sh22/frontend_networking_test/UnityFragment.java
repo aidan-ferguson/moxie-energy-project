@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,7 @@ public class UnityFragment extends Fragment {
 
         mUnityPlayer.requestFocus();
         mUnityPlayer.windowFocusChanged(true);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return view;
     }
 
