@@ -48,15 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-
-        Integer progress = 40;
-        Float score = Float.valueOf(progress) / 100;
-        ProgressBar progressBar = findViewById(R.id.progress_bar);
-        TextView textView = findViewById(R.id.text_view_progress);
-        progressBar.setProgress(progress);
-        textView.setText(progress.toString());
-        int resultColor = ColorUtils.blendARGB(0xFF0000, 0x00FF00, score);
-        textView.getBackground().setColorFilter(new LightingColorFilter(resultColor, resultColor));
     }
 
     private void replaceFragment(Fragment fragment){

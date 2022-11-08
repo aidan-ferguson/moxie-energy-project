@@ -1,12 +1,16 @@
 package com.sh22.frontend_networking_test;
 
+import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +63,18 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        Integer progress = 40;
+        Float score = Float.valueOf(progress) / 100;
+        ProgressBar progressBar = view.findViewById(R.id.progress_bar);
+        TextView textView = view.findViewById(R.id.text_view_progress);
+        progressBar.setProgress(progress);
+        textView.setText(progress.toString());
+        int resultColor = ColorUtils.blendARGB(0xFF0000, 0x00FF00, score);
+        textView.getBackground().setColorFilter(new LightingColorFilter(resultColor, resultColor));
+
+        // Return the inflated view
+        return view;
     }
 }
