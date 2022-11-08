@@ -1,13 +1,8 @@
 package com.sh22.frontend_networking_test;
 
-import android.graphics.LightingColorFilter;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
