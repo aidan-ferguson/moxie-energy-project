@@ -19,10 +19,6 @@
         style="@style/CircularDeterminateProgressBar"
         android:layout_width="155dp"
         android:layout_height="159dp"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="286dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginBottom="286dp"
         android:indeterminateOnly="false"
         android:progress="60"
         android:progressDrawable="@drawable/circle"
@@ -31,14 +27,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.414"
         tools:progress="0" />
 
     <TextView
         android:id="@+id/text_view_progress"
         android:layout_width="109dp"
         android:layout_height="104dp"
-        android:layout_marginStart="151dp"
-        android:layout_marginBottom="314dp"
         android:background="@drawable/round_button"
         android:gravity="center"
         android:shadowColor="#000000"
@@ -48,8 +43,10 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#FFFFFF"
         android:textSize="54dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar"
         tools:text="6.8" />
 
 
