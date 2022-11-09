@@ -13,25 +13,26 @@ import com.sh22.frontend_networking_test.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    Float score = 0.7f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new HomeFragment());
+        replaceFragment(HomeFragment.newInstance(score.toString()));
 
         // Navigation bar stuff
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(item ->{
             switch(item.getItemId()){
                 case R.id.home:
-                    replaceFragment(new HomeFragment());
+                    replaceFragment(HomeFragment.newInstance(score.toString()));
                     break;
                 case R.id.appliances:
                     replaceFragment(new AppliancesFragment());
                     break;
                 case R.id.ecosystem:
-                    replaceFragment(new EcosystemFragment());
+                    replaceFragment(EcosystemFragment.newInstance(score.toString()));
                     break;
                 case R.id.tips:
                     replaceFragment(new TipsFragment());
