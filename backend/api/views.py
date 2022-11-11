@@ -46,6 +46,9 @@ def login_user(request):
     else:
         return return_error("You must use a POST method to login")
     
+def get_eco_score(request):
+    return return_success({"score": 1.0})
+    
 # Logout endpoint
 def logout_user(reqeust):
     logout(reqeust)
