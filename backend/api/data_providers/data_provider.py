@@ -3,12 +3,18 @@ The DataProvider base class guarentees that every sub-class provides the followi
 
 - get_energy_data(start_date, end_date)
 
-This function returns data in the following format:
+This function returns an dictionary in the following format:
 
-[
-    [timestamp, total energy consumption, %power used by appliance 1, ..., %power used by appliance n, kWh by appliance 1, ..., kWh by appliance 2]
-    ...
-]
+{
+    "labels": ["aggregate", "electric heater", ...]             # The names of the columns of data
+    "starting timestamp": n                                     # In UNIX seconds format
+    "interval": n                                               # The interval of the data (each array element is n seconds apart) 
+    "data": [
+        [aggregate usage, electric heater usage, ...],
+        [aggregate usage, electric heater usage, ...],
+        ...
+    ]
+}
 
 The subclasses can interpret data from any source (CSV, external API, etc...) so long as it is returned in this format
 """
