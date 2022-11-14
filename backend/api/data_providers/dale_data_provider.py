@@ -56,7 +56,6 @@ class DALEDataProvider(DataProvider):
                     
         # Get lables into array format
         labels = [labels[idx] for idx in range(1, len(labels)+1)]
-        print(labels)
                     
         # Construct final response
         ret_val = {
