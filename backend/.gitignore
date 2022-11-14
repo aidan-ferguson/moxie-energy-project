@@ -162,4 +162,4 @@ dmypy.json
 cython_debug/
 
 # NILM datasets (they can be very big and a download script is provided)
-static/datasets/dale/*
+static/datasets/*
