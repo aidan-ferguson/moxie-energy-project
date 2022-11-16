@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class UpdatableHealthObject : MonoBehaviour
 {
     [SerializeField]
-    protected healthManager healthManager;
+    protected HealthManager healthManager;
 
     [SerializeField]
     protected Color healthyColor;
