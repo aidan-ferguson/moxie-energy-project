@@ -1,4 +1,4 @@
-package com.sh22.frontend_networking_test;
+package com.sh22.energy_saver_app;
 
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;

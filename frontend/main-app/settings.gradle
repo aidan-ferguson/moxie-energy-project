@@ -1,4 +1,4 @@
-rootProject.name = "frontend-networking-test"
+rootProject.name = "energy-saver-app"
 include ':app'
 
 include ':unityLibrary'

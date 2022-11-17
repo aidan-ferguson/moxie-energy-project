@@ -1,4 +1,4 @@
-package com.sh22.frontend_networking_test;
+package com.sh22.energy_saver_app;
 
 import android.os.Bundle;
 
@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
-import com.sh22.frontend_networking_test.databinding.ActivityMainBinding;
+import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.sh22.frontend_networking_test
+package com.sh22.energy_saver_app
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
