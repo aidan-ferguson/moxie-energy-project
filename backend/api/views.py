@@ -19,7 +19,7 @@ def electricity_usage(request):
     start_date = datetime.strptime(request.GET["start"], "%d/%m/%Y")
     end_date = datetime.strptime(request.GET["end"], "%d/%m/%Y")
     
-    reading_values = data_provider.get_energy_data(start_date, end_date)
+    reading_values = data_provider.get_energy_data("house_3", start_date, end_date)
     return return_success({"usage":reading_values})
 
 # Function that will send a valid CSRF token to the client for inclusion in POST requests
@@ -58,7 +58,7 @@ def get_eco_score(request):
     # For now use hardcoded dates
     start_date = datetime.strptime("01/03/2013", "%d/%m/%Y")
     end_date = datetime.strptime("01/04/2013", "%d/%m/%Y")
-    data = data_provider.get_energy_data(start_date, end_date)
+    data = data_provider.get_energy_data("house_3", start_date, end_date)
     if len(data["data"]) == 0:
         return return_error("Data could not be loaded")
     

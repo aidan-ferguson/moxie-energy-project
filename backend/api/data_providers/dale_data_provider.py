@@ -17,13 +17,12 @@ import os
 DALE_RESOLUTION = 6
 
 DALE_FOLDER = staticfiles_storage.path("datasets/dale")
-HOUSE = "house_3"
-DATASET_FOLDER = os.path.join(DALE_FOLDER, HOUSE)
 
 class DALEDataProvider(DataProvider):
     @staticmethod
-    def get_energy_data(start_date, end_date):
+    def get_energy_data(house, start_date, end_date):
         # Read the labels file to get a dictionary mapping integers to channel names
+        DATASET_FOLDER = os.path.join(DALE_FOLDER, house)
         labels = {}
         with open(os.path.join(DATASET_FOLDER, "labels.dat"), "r") as file:
             labels = {int(line.split(" ")[0]): line.split(" ")[1].strip() for line in file.readlines()}

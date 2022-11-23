@@ -23,5 +23,5 @@ The subclasses can interpret data from any source (CSV, external API, etc...) so
 class DataProvider(object):
     # Function to be overridden
     @staticmethod
-    def get_energy_data(start_date, end_date):
+    def get_energy_data(house, start_date, end_date):
         raise NotImplementedError("get_energy_data must be implemented for each DataProvider")

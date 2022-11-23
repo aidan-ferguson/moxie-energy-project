@@ -14,9 +14,7 @@ if __name__ == "__main__":
     # First download & extract the DALE data
     print("Downloading DALE dataset")
     dale_folder = os.path.join(DATASET_FOLDER, "dale")
-    dale_path = dale_download_file(dale_folder, dale_get_file_size())
-    print("Extracting")
-    extract_dale_data(dale_folder)
+    dale_path = dale_download_file(dale_folder)
     print(f"Downloaded & Extracted DALE to {dale_path}")
     
     # Then download & combine the national average postcode datasets
