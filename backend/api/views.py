@@ -54,7 +54,7 @@ def login_user(request):
         return return_error("You must use a POST method to login")
 
 # Returns the difference in aggreate power usage for different devices compared to last month 
-def get_eco_score(request):
+def get_appliances(request):
     # Compute kWh for a month and compare to the average monthly kWh for the same postcode
     #   then express this as a eco-score in range [0, 1] and return it
     
@@ -75,7 +75,7 @@ def get_eco_score(request):
     prev_week_averages = np.mean(prev_week["data"], axis=0)
     curr_day_averages = np.mean(curr_day["data"], axis=0)
     
-    return return_success({"lables":prev_week["labels"], "previous_week":list(prev_week_averages), "current_month":list(curr_day_averages)})
+    return return_success({"labels":prev_week["labels"], "previous_week":list(prev_week_averages), "today":list(curr_day_averages)})
 
 # Get the device usages for a user aswell as the national average
 def device_usages(request):
