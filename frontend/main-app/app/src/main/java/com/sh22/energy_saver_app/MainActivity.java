@@ -7,8 +7,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-
+import com.sh22.energy_saver_app.backendhandler.ApplianceData;
+import com.sh22.energy_saver_app.backendhandler.BackendInterface;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(HomeFragment.newInstance(score.toString()));
+        replaceFragment(HomeFragment.newInstance());
 
         // Navigation bar stuff
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(item ->{
             switch(item.getItemId()){
                 case R.id.home:
-                    replaceFragment(HomeFragment.newInstance(score.toString()));
+                    replaceFragment(HomeFragment.newInstance());
                     break;
                 case R.id.appliances:
                     replaceFragment(new AppliancesFragment());

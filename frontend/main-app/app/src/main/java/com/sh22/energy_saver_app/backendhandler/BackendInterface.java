@@ -1,0 +1,68 @@
+package com.sh22.energy_saver_app.backendhandler;
+
+import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class BackendInterface {
+    private static final String url_str = "http://10.0.2.2:8000/api/usage/appliances";
+    private static ApplianceData cached_data = null;
+    static Object lock = new Object();
+
+    // Function to get the past weeks energy usage and todays energy usage per device
+    public static ApplianceData get_appliance_data() throws IOException, JSONException {
+        synchronized (lock) {
+            Log.d("here", "here");
+            if (cached_data != null) {
+                return cached_data;
+            }
+
+            URL apiURL = null;
+            try {
+                apiURL = new URL(url_str);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // Create HTTP connection (we don't have SSL setup on django)
+            URLConnection connection = apiURL.openConnection();
+            InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+
+            Scanner s = new Scanner(reader).useDelimiter("\\A");
+            String data = s.hasNext() ? s.next() : "";
+
+            JSONObject json_data = new JSONObject(data).getJSONObject("data");
+            JSONArray json_labels = json_data.getJSONArray("labels");
+            JSONArray json_previous_week = json_data.getJSONArray("previous_week");
+            JSONArray json_current_day = json_data.getJSONArray("today");
+            ApplianceData applianceData = new ApplianceData();
+            for (int i = 0; i < json_labels.length(); i++) {
+                applianceData.labels.add(json_labels.getString(i));
+            }
+            for (int i = 0; i < json_previous_week.length(); i++) {
+                applianceData.weekly_average.add(json_previous_week.getDouble(i));
+            }
+            for (int i = 0; i < json_current_day.length(); i++) {
+                applianceData.today.add(json_current_day.getDouble(i));
+            }
+
+
+            connection.getInputStream().close();
+            reader.close();
+
+            cached_data = applianceData;
+            lock.notifyAll();
+        }
+        return cached_data;
+    }
+}
