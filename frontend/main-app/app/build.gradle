@@ -13,7 +13,7 @@ android {
         }
 
         applicationId "com.sh22.energy_saver_app"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"

@@ -33,7 +33,7 @@ class DALEDataProvider(DataProvider):
         end_unix = int(time.mktime(end_date.timetuple()))
         
         # Create array which will be returned as part of response at the end
-        data = [[0 for range in range(len(labels))] for _ in range(start_unix, end_unix, DALE_RESOLUTION)]
+        data = [[0 for _ in range(len(labels))] for _ in range(start_unix, end_unix+DALE_RESOLUTION, DALE_RESOLUTION)]
         
         # If it needs to be faster we should preprocess the data into a format similar to ours
         # Go through each file and add the data for the corresponding timestamps
@@ -48,7 +48,7 @@ class DALEDataProvider(DataProvider):
                         continue
                     
                     # Get the index of the data it should be in
-                    data_idx = int((line[0] - start_unix)/DALE_RESOLUTION)
+                    data_idx = (line[0] - start_unix)//DALE_RESOLUTION
                     
                     # We minus 1 as the channel id's are not 0 indexed
                     data[data_idx][channel_idx-1] = line[1]

@@ -4,7 +4,9 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from api.utils import *
 from api.data_providers.csv_data_provider import CSVDataProvider
 from api.data_providers.dale_data_provider import DALEDataProvider
-from datetime import datetime
+import datetime
+from dateutil.relativedelta import relativedelta
+import numpy as np
 
 data_provider = DALEDataProvider
 
@@ -12,14 +14,15 @@ data_provider = DALEDataProvider
 def test_connection(request):
     return return_success({})
 
-# For now this is a dummy view that will return the raw electricity usage for a given time period
+# View that returns raw data for the past month of energy usage
 def electricity_usage(request):
     print(f"Request for electricity data for user id: {request.user.username}")
     
-    start_date = datetime.strptime(request.GET["start"], "%d/%m/%Y")
-    end_date = datetime.strptime(request.GET["end"], "%d/%m/%Y")
+    # Treat the start of the data as the current time minus 9 1/2 years  to simulate live data
+    start_date = datetime.datetime.now() - relativedelta(years=9, months=3)
+    end_date = start_date + relativedelta(months=1)
     
-    reading_values = data_provider.get_energy_data("house_3", start_date, end_date)
+    reading_values = data_provider.get_energy_data("house_4", start_date, end_date)
     return return_success({"usage":reading_values})
 
 # Function that will send a valid CSRF token to the client for inclusion in POST requests
@@ -50,42 +53,29 @@ def login_user(request):
     else:
         return return_error("You must use a POST method to login")
 
-# Return an eco score based on energy usage compared with the national average  
+# Returns the difference in aggreate power usage for different devices compared to last month 
 def get_eco_score(request):
     # Compute kWh for a month and compare to the average monthly kWh for the same postcode
     #   then express this as a eco-score in range [0, 1] and return it
     
-    # For now use hardcoded dates
-    start_date = datetime.strptime("01/03/2013", "%d/%m/%Y")
-    end_date = datetime.strptime("01/04/2013", "%d/%m/%Y")
-    data = data_provider.get_energy_data("house_3", start_date, end_date)
-    if len(data["data"]) == 0:
-        return return_error("Data could not be loaded")
+    # Treat the start of the data as the current time minus 9 and a half years to simulate live data
+    start_date = datetime.datetime.now() - relativedelta(years=9, months=3)
+    end_date = start_date + relativedelta(days=1)
+    curr_day = data_provider.get_energy_data("house_4", start_date, end_date)
+    if len(curr_day["data"]) == 0:
+        return return_error("Data for current month could not be loaded")
     
-    # Calculate total aggregate for the month
-    aggregate_idx = data["labels"].index("aggregate")
+    end_date   = start_date
+    start_date = start_date - relativedelta(days=7)
+    prev_week = data_provider.get_energy_data("house_4", start_date, end_date)
+    if len(prev_week["data"]) == 0:
+        return return_error("Data for previous month could not be loaded")
     
-    # Now calculate kWh = ((sum(power) / 1000) * time inverval) / 3600
-    # This is sligtly inaccurate as the device used for the aggregate uses apparent power but we don't know the power factor so we can't convert
-    # https://electronics.stackexchange.com/questions/237025/converting-watt-values-over-time-to-kwh
-    w_month_total = sum([reading[aggregate_idx] for reading in data["data"]]) / (1000 * data["interval"])
-    house_kwh = w_month_total / 3600.0
+    # Calculate averages for each device in the current and previous months
+    prev_week_averages = np.mean(prev_week["data"], axis=0)
+    curr_day_averages = np.mean(curr_day["data"], axis=0)
     
-    # Now get the annual average kWh usage in the same area (hardcoded for now) and return the difference scaled by some value
-    postcode = "G13 2JU"
-    postcode_usage = 0
-    gov_filepath = staticfiles_storage.path("datasets/postcodes/postcode_usage.csv")
-    with open(gov_filepath, "r") as file:
-        while line := file.readline():
-            # Postcode is column 0, mean consumption is 3
-            line = line.split(",")
-            if line[0] == postcode:
-                postcode_usage = int(float(line[3]))
-                
-    # Get monthly usage from annual
-    postcode_usage /= 12
-
-    return return_success({"difference":(house_kwh-postcode_usage)})
+    return return_success({"lables":prev_week["labels"], "previous_week":list(prev_week_averages), "current_month":list(curr_day_averages)})
 
 # Get the device usages for a user aswell as the national average
 def device_usages(request):
