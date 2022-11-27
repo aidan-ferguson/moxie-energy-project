@@ -1,8 +1,12 @@
 package com.sh22.energy_saver_app;
 
+import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -28,8 +32,6 @@ import java.io.IOException;
  */
 public class HomeFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "score";
-    private Float score = 0.0f;
 
     public HomeFragment() {
     }
@@ -44,6 +46,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,14 +67,17 @@ public class HomeFragment extends Fragment {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         Double aggregate_daily = appliance_data.today.get(0);
                         Double limit = 500.0;
+                        float score = (float)(aggregate_daily / limit);
 
-                        Integer progress = Math.toIntExact(Math.round((aggregate_daily / limit) * 100));
+                        Integer progress = Math.round(score * 100);
                         ProgressBar progressBar = view.findViewById(R.id.progress_bar);
                         TextView textView = view.findViewById(R.id.text_view_progress);
                         progressBar.setProgress(progress);
                         textView.setText(progress.toString());
-                        int resultColor = ColorUtils.blendARGB(0xFF0000, 0x00FF00, score);
-                        textView.getBackground().setColorFilter(new LightingColorFilter(resultColor, resultColor));
+                        int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
+                        int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+                        progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
                     });
                 }
             } catch (IOException | JSONException e) {

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -20,8 +21,20 @@ public class BackendInterface {
 
     // Function to get the past weeks energy usage and todays energy usage per device
     public static ApplianceData get_appliance_data() throws IOException, JSONException {
+        // Just for debugging
+//        ApplianceData applianceDataDebug = new ApplianceData();
+//        applianceDataDebug.labels.add("aggregate");
+//        applianceDataDebug.labels.add("kettle");
+//        applianceDataDebug.labels.add("freezer");
+//        applianceDataDebug.weekly_average.add(286.72630231842936);
+//        applianceDataDebug.weekly_average.add(13.089364192815548);
+//        applianceDataDebug.weekly_average.add(33.90864177934743);
+//        applianceDataDebug.today.add(351.7993889313242);
+//        applianceDataDebug.today.add(21.88229984028887);
+//        applianceDataDebug.today.add(39.5259356989098);
+//        cached_data = applianceDataDebug;
+
         synchronized (lock) {
-            Log.d("here", "here");
             if (cached_data != null) {
                 return cached_data;
             }
