@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">energy-saver-app</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="appliance_page_heading">Appliances</string>
 </resources>

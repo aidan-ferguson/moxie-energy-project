@@ -19,7 +19,6 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    Float score = 0.7f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new AppliancesFragment());
                     break;
                 case R.id.ecosystem:
-                    replaceFragment(EcosystemFragment.newInstance(score.toString()));
+                    replaceFragment(EcosystemFragment.newInstance());
                     break;
                 case R.id.tips:
                     replaceFragment(new TipsFragment());
