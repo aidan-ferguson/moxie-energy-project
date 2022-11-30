@@ -29,7 +29,7 @@
 
 
                 <gradient
-                    android:endColor="@color/green"
+                    android:endColor="@color/good_usage"
                     android:startColor="@color/red"
                     android:type="sweep" />
 

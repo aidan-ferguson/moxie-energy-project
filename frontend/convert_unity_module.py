@@ -10,26 +10,12 @@
 # - set ndkVersion "x.y.z" at bottom of unityLibrary's build gradle (in android section)(currently 21.3.6528147)
 # - in order to only have one app icon installed on the phones home screen
 # 	- comment out <intent-filter> section on unityLibrary's AndroidManifest.xml file (lines 5 to 8 for me)
+# - remove android app icon from launcher's AndroidManifest.xml
 
 import os
 
 UNITY_MODULE_FOLDER = './unity-module'
 NDK_VERSION = "21.3.6528147"
-
-def delete_unity_module():
-    choice = ""
-    while choice != "y" and choice != "n":
-        choice = input(f"Delete old unity module folder: {UNITY_MODULE_FOLDER}? (y/n) ").strip().lower()
-    
-    if choice == "y":
-        if os.path.exists(UNITY_MODULE_FOLDER):
-            for root, dirs, files in os.walk(UNITY_MODULE_FOLDER, topdown=False):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-                for name in dirs:
-                    os.rmdir(os.path.join(root, name))
-                    
-        print(f"Deleted {UNITY_MODULE_FOLDER}")
     
 def edit_launcher_gradle_build():
     # Check file exists
@@ -171,16 +157,33 @@ def remove_intent_filter():
         file.write(''.join(data))
         
     print(f"Edited {filename}")
+    
+    
+def remove_app_icon():
+    filename = f"{UNITY_MODULE_FOLDER}/launcher/src/main/AndroidManifest.xml"
+    print(f"Editing {filename}")
+    
+    # Check file exists
+    if not os.path.exists(filename):
+        raise SystemExit(f"{filename} does not exist, did you export the unity project?")
+    
+    # Open file in read mode
+    with open(filename, "r") as file:
+        # Find intent filter start
+        data = file.readlines()
         
+        for line_idx in range(len(data)):
+            # Just replace any occurances of the icon specification with nothing
+            data[line_idx] = data[line_idx].replace('android:icon="@mipmap/app_icon"', '')
+    
+    # Open again and write to file
+    with open(filename, "w") as file:
+        file.write(''.join(data))
+        
+    print(f"Edited {filename}")
             
 if __name__ == "__main__":
     print("Moxie Unity game Build script")
-    
-    # First delete the unity-module folder to be replaced by the unity export
-    delete_unity_module();
-    
-    # Now prompt to compile new unity module into directory
-    input(f"Now export the unity project to {UNITY_MODULE_FOLDER} and press enter when done: ")
     
     # Now edit the launcher gradle build
     edit_launcher_gradle_build()
@@ -188,8 +191,11 @@ if __name__ == "__main__":
     # Now add the NDK version to the unityLibrary build.gradle file
     add_ndk_version()
     
-    # Finally, remove the intent-filter XML element in unityLibrary's AndroidManifest so that 
+    # Remove the intent-filter XML element in unityLibrary's AndroidManifest so that 
     #   we don't get two icons on the phones home screen
     remove_intent_filter() 
+    
+    # Remove unity launcher's app icon
+    remove_app_icon()
     
     print("Complete. You can now rebuild in android studio")
