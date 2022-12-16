@@ -14,3 +14,7 @@
 
 # Apple image caching
 .DS_Store
+
+# gitlab runner local testing
+builds/
+.gitlab-ci-local/

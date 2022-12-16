@@ -1,0 +1,17 @@
+# Backend CI pipeline
+# Install required stuff, make the database and run a check
+backend:build:
+  before_script:
+    - pip3 install -r backend/requirements.txt
+  stage: build
+  needs: []
+  script:
+    - python3 backend/manage.py makemigrations
+    - python3 backend/manage.py migrate
+    - python3 backend/manage.py check 
+
+backend:test:
+  stage: test
+  needs: ["backend:build"]
+  script:
+    - echo Need to add Django tests
