@@ -7,6 +7,7 @@ from api.data_providers.dale_data_provider import DALEDataProvider
 import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
+import random
 
 data_provider = DALEDataProvider
 
@@ -77,9 +78,21 @@ def get_appliances(request):
     
     return return_success({"labels":prev_week["labels"], "previous_week":list(prev_week_averages), "today":list(curr_day_averages)})
 
-# Get the device usages for a user aswell as the national average
-def device_usages(request):
-    pass
+# View to generate and return unique energy saving tips to the user
+def get_tips(request):
+    # For now just randomly pull from a list of tips
+    tips = [
+        "Don't leave your computer on overnight",
+        "Don't leave your TV on standby", 
+        "Don't leave your lights on when you leave a room", 
+        "Don't leave your phone on charge when it's fully charged", 
+        "Use power strips to turn off multiple devices at once", 
+        "Turn off the lights when you leave a room", 
+        "Unplug devices when you're not using them", 
+        "Use a power strip to turn off multiple devices at once"
+    ]
+    
+    return return_success({"tip": random.choice(tips)})
     
 # Logout endpoint
 def logout_user(reqeust):
