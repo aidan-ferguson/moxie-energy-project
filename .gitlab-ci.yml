@@ -43,7 +43,10 @@ unity:build:
   image: unityci/editor:2020.3.41f1-android-1
   script:
     # Creates a headless X server which runs the unity editor and builds the project
-    - xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' 
-      unity-editor -force-free -projectPath $UNITY_DIR -quit -batchmode -nographics -buildTarget Android
-      -customBuildTarget Android -customBuildPath $UNITY_BUILD_PATH -executeMethod BuildCommand.PerformBuild -logFile /dev/stdout
+    # - xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' 
+    #   unity-editor -projectPath $UNITY_DIR -quit -batchmode -nographics -buildTarget Android
+    #   -customBuildTarget Android -customBuildPath $UNITY_BUILD_PATH -executeMethod BuildCommand.PerformBuild -logFile /dev/stdout
     # - 
+    - xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' unity-editor -logFile /dev/stdout -batchmode -nographics -username "2566197f@student.gla.ac.uk" -password "SH22=best" | tee ./unity-output.log
+    - cat ./unity-output.log
+
