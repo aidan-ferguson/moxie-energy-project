@@ -1,24 +1,31 @@
 # Backend CI pipeline
-# Install required stuff, make the database and run a check
-backend:build:
+# Install all the dependancies required to build/test the backend
+.backend-setup: &backend-setup
+  - apt -y update
+  - apt -y install python3 python3-pip
+  - apt -y upgrade
+  - pip3 install -r backend/requirements.txt
+
+# 'Build' the backend (database and syntax checking)
+backend-build:
   image: ubuntu:20.04
-  before_script:
-    - apt -y update
-    - apt -y install python3 python3-pip
-    - apt -y upgrade
-    - pip3 install -r backend/requirements.txt
   stage: build
   needs: []
+  before_script:
+    - *backend-setup
   script:
     - cd backend
     - python3 manage.py makemigrations
     - python3 manage.py migrate
     - python3 manage.py check 
 
-backend:test:
+# Test the backend, run the django tests
+backend-test:
   image: ubuntu:20.04
   stage: test
   needs: ["backend:build"]
+  before_script:
+    - *backend-setup
   script:
     - cd backend
     - python3 manage.py test
