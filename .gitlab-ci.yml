@@ -1,13 +1,13 @@
 # Backend CI pipeline
 # Install all the dependancies required to build/test the backend
-.backend-setup: &backend-setup
+.backend:setup: &backend-setup
   - apt -y update
   - apt -y install python3 python3-pip
   - apt -y upgrade
   - pip3 install -r backend/requirements.txt
 
 # 'Build' the backend (database and syntax checking)
-backend-build:
+backend:build:
   image: ubuntu:20.04
   stage: build
   needs: []
@@ -20,7 +20,7 @@ backend-build:
     - python3 manage.py check 
 
 # Test the backend, run the django tests
-backend-test:
+backend:test:
   image: ubuntu:20.04
   stage: test
   needs: ["backend:build"]
