@@ -1,3 +1,8 @@
+# CI variables
+variables:
+  UNITY_DIR: $CI_PROJECT_DIR/frontend/moxie-unity
+  UNITY_BUILD_PATH: $CI_PROJECT_DIR/frontend/unity-module
+
 # Backend CI pipeline
 # Install all the dependancies required to build/test the backend
 .backend:setup: &backend-setup
@@ -8,9 +13,9 @@
 
 # 'Build' the backend (database and syntax checking)
 backend:build:
-  image: ubuntu:20.04
   stage: build
   needs: []
+  image: ubuntu:20.04
   before_script:
     - *backend-setup
   script:
@@ -21,11 +26,24 @@ backend:build:
 
 # Test the backend, run the django tests
 backend:test:
-  image: ubuntu:20.04
   stage: test
   needs: ["backend:build"]
+  image: ubuntu:20.04
   before_script:
     - *backend-setup
   script:
     - cd backend
     - python3 manage.py test
+
+# Frontend Unity CI Pipeline
+# Modified from https://gitlab.com/game-ci/unity3d-gitlab-ci-example
+unity:build:
+  stage: build
+  needs: []
+  image: unityci/editor:2020.3.41f1-android-1
+  script:
+    # Creates a headless X server which runs the unity editor and builds the project
+    - xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' 
+      unity-editor -force-free -projectPath $UNITY_DIR -quit -batchmode -nographics -buildTarget Android
+      -customBuildTarget Android -customBuildPath $UNITY_BUILD_PATH -executeMethod BuildCommand.PerformBuild -logFile /dev/stdout
+    # - 
