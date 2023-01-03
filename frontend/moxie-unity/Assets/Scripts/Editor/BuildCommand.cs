@@ -9,10 +9,14 @@ static class BuildCommand {
         // Set build target to android
         var buildTarget = BuildTarget.Android;
 
+        // Set export project flag
+        EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
+
         Console.WriteLine("[*] Performing build");
         
         // Hardcoded version value for now
         PlayerSettings.bundleVersion = "1.0.0";
+        
 
         // Set build path to env variable defined in CI file and scripting backend to IL2CPP
         var buildPath = GetBuildPath();

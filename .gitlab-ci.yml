@@ -54,13 +54,19 @@ unity:build:
   needs: []
   image: unityci/editor:2020.3.41f1-android-1
   before_script:
-    - *unity-setup
+    - if [ -z $UNITY_LICENSE ]; then bash scripts/ci_unity_activation.bash; exit 1; fi
+    - mkdir -p /root/.cache/unity3d
+    - mkdir -p /root/.local/share/unity3d/Unity
+    - echo "$UNITY_LICENSE" > /root/.local/share/unity3d/Unity/Unity_lic.ulf
+    - cat /root/.local/share/unity3d/Unity/Unity_lic.ulf
   script:
     # Creates a headless X server which runs the unity editor and builds the project
     - xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' 
       unity-editor -projectPath $UNITY_PROJECT_DIR -quit -batchmode -nographics -buildTarget Android
       -customBuildTarget Android -customBuildPath $UNITY_BUILD_PATH -executeMethod BuildCommand.PerformBuild -logFile /dev/stdout
     - UNITY_EXIT_CODE=$?
+    - apt-get install tree
+    - tree $UNITY_BUILD_PATH
     - exit $UNITY_EXIT_CODE
   artifacts:
     paths:
