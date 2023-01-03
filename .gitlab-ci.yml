@@ -54,5 +54,4 @@ unity:build:
       unity-editor -projectPath $UNITY_DIR -quit -batchmode -nographics -buildTarget Android
       -customBuildTarget Android -customBuildPath $UNITY_BUILD_PATH -executeMethod BuildCommand.PerformBuild -logFile /dev/stdout
     - UNITY_EXIT_CODE=$?
-    - cat ~/.config/unity3d/Unity/Unity.Licensing.Client.log
     - exit $UNITY_EXIT_CODE
