@@ -43,10 +43,10 @@ unity:build:
   image: unityci/editor:2020.3.41f1-android-1
   before_script:
     # Write unity license (from gitlab variables) to file
-    - if [ -z $UNITY_LICENSE ]; then exit 1; fi
+    - if [ -z $UNITY_LICENSE ]; then bash scripts/ci_unity_activation.bash; exit 1; fi
     - mkdir -p /root/.cache/unity3d
     - mkdir -p /root/.local/share/unity3d/Unity
-    - echo $UNITY_LICENSE > /root/.local/share/unity3d/Unity/Unity_lic.ulf
+    - echo "$UNITY_LICENSE" > /root/.local/share/unity3d/Unity/Unity_lic.ulf
     - cat /root/.local/share/unity3d/Unity/Unity_lic.ulf
   script:
     # Creates a headless X server which runs the unity editor and builds the project
