@@ -61,7 +61,7 @@ static class BuildCommand {
         return null;
     }
 
-     static void SetScriptingBackendFromEnv(BuildTarget platform, String backend) {
+     static void SetScriptingBackendFromEnv(BuildTarget platform, String scriptingBackend) {
         var targetGroup = BuildPipeline.GetBuildTargetGroup(platform);
         if (scriptingBackend.TryConvertToEnum(out ScriptingImplementation backend)) {
             Console.WriteLine($":: Setting ScriptingBackend to {backend}");
