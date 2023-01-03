@@ -4,7 +4,7 @@ variables:
   UNITY_BUILD_PATH: $CI_PROJECT_DIR/frontend/unity-module
   ANDROID_PROJECT_DIR: $CI_PROJECT_DIR/frontend/main-app
   ANDROID_COMPILE_SDK: "33"
-  ANDROID_BUILD_TOOLS: "33.0.1"
+  ANDROID_BUILD_TOOLS: "30.0.3"
   ANDROID_SDK_TOOLS: "9123335"
 
 # Backend CI pipeline
@@ -102,5 +102,9 @@ android:build:
     - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
     - cd "$ANDROID_PROJECT_DIR"
     - chmod +x ./gradlew
+    # For local testing
+    - wget --output-document=$CI_PROJECT_DIR/frontend/unity-module.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+    - unzip -d tmp-unity-module unity-module.zip
+    - mv tmp-unity-module/frontend/unity-module ./unity-module
   script:
     - ./gradlew build
