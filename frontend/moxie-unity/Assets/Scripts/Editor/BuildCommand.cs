@@ -16,7 +16,7 @@ static class BuildCommand {
 
         // Set build path to env variable defined in CI file and scripting backend to IL2CPP
         var buildPath = GetBuildPath();
-        var buildOptions = BuildOptions.None
+        var buildOptions = BuildOptions.None;
         SetScriptingBackendFromEnv(buildTarget, "IL2CPP");
 
         var buildReport = BuildPipeline.BuildPlayer(GetEnabledScenes(), buildPath, buildTarget, buildOptions);
