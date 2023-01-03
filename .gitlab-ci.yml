@@ -1,3 +1,8 @@
+# TODO
+# Linting
+# Only run jobs on folder change
+# Run full stack on merge request
+
 # CI variables
 variables:
   UNITY_PROJECT_DIR: $CI_PROJECT_DIR/frontend/moxie-unity
@@ -75,8 +80,8 @@ unity:test:
   stage: test
   needs: ["unity:build"]
   image: unityci/editor:2020.3.41f1-android-1
-  # before_script:
-  #   - *unity-setup
+  before_script:
+    - *unity-setup
   script:
     - cat /opt/unity/Editor/Data/PlaybackEngines/AndroidPlayer/NDK/source.properties
     - echo "Need to make tests"
@@ -110,12 +115,16 @@ android:build:
     - sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
     - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
     - sdkmanager --sdk_root=${ANDROID_HOME} "ndk;${android_ndk_version}"
+    - sdkmanager --sdk_root=${ANDROID_HOME} "cmake;3.22.1"
     - cd "$ANDROID_PROJECT_DIR"
     # Set SDK installation path
     - echo "sdk.dir=${ANDROID_HOME}" > local.properties
     - chmod +x ./gradlew
+    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
   script:
     - pushd $CI_PROJECT_DIR/frontend
     - python3 ./convert_unity_module.py
     - popd
+    # Need to disable localisation to build IL2CPP - https://learn.microsoft.com/en-us/dotnet/core/runtime-config/globalization
+    - export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     - ./gradlew build
