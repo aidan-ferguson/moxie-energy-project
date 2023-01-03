@@ -7,15 +7,17 @@
 # 	- "apply plugin:application" to "apply plugin:library"
 # 	- delete application id line
 # 	- delete bundle section at bottom
-# - set ndkVersion "x.y.z" at bottom of unityLibrary's build gradle (in android section)(currently 21.3.6528147)
 # - in order to only have one app icon installed on the phones home screen
 # 	- comment out <intent-filter> section on unityLibrary's AndroidManifest.xml file (lines 5 to 8 for me)
 # - remove android app icon from launcher's AndroidManifest.xml
+# - add exported:true for unity player's manifest
+# - check if source.properties exists in unity-module folder and replace ndk version
+#   - then set ndkVersion "x.y.z" at bottom of unityLibrary's build gradle (in android section)(currently 21.3.6528147)
 
 import os
 
 UNITY_MODULE_FOLDER = './unity-module'
-NDK_VERSION = "21.3.6528147"
+NDK_VERSION = "21.3.6528147" # This can be changed if source.properties is present in unity-module dir (happens in CI pipeline)
     
 def edit_launcher_gradle_build():
     # Check file exists
@@ -78,8 +80,19 @@ def edit_launcher_gradle_build():
     print(f"Edited {filename}")
     
 def add_ndk_version():
+    # First check for a source.properties
+    ndk_version_filename = f"{UNITY_MODULE_FOLDER}/source.properties"
+    if os.path.exists(ndk_version_filename):
+        with open(ndk_version_filename, "r") as file:
+            lines = file.readlines()
+            for line in lines:
+                if 'Pkg.Revision' in line:
+                    line = line.split("=")
+                    NDK_VERSION = line[-1].strip()
+    
     filename = f"{UNITY_MODULE_FOLDER}/unityLibrary/build.gradle"
     print(f"Editing {filename}")
+    print(f"Using NDK version {NDK_VERSION}")
     
     # Check file exists
     if not os.path.exists(filename):
@@ -181,6 +194,29 @@ def remove_app_icon():
         file.write(''.join(data))
         
     print(f"Edited {filename}")
+    
+def define_exported_attribute():
+    filename = f"{UNITY_MODULE_FOLDER}/unityLibrary/src/main/AndroidManifest.xml"
+    print(f"Editing {filename}")
+    
+    # Check file exists
+    if not os.path.exists(filename):
+        raise SystemExit(f"{filename} does not exist, did you export the unity project?")
+    
+    # Open file in read mode
+    with open(filename, "r") as file:
+        # Find application tag
+        data = file.readlines()
+
+        for line_idx in range(len(data)):
+            if '<activity' in data[line_idx]:
+                data[line_idx] = data[line_idx].replace('<activity', '<activity android:exported="true"')
+    
+    # Open again and write to file
+    with open(filename, "w") as file:
+        file.write(''.join(data))
+        
+    print(f"Edited {filename}")
             
 if __name__ == "__main__":
     print("Moxie Unity game Build script")
@@ -197,5 +233,8 @@ if __name__ == "__main__":
     
     # Remove unity launcher's app icon
     remove_app_icon()
+    
+    # Set the android:exported attribute in unity player's manifest
+    define_exported_attribute()
     
     print("Complete. You can now rebuild in android studio")
