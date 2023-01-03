@@ -1,6 +1,6 @@
 echo "The UNITY_LICENSE enviroment variable was not found, generating a license activation file"
 
-if [[ -z "${UNITY_USERNAME}" ]] || [[ -z "${UNITY_PASSWORD}" ]]; then
+if [ -z "${UNITY_USERNAME}" ] || [ -z "${UNITY_PASSWORD}" ]; then
     echo "You must set the UNITY_USERNAME and UNITY_PASSWORD enviroment variables in order to generate a license activation file, these will be your unity credentials"
     exit 1
 fi
