@@ -22,6 +22,13 @@ variables:
   - apt-get -y upgrade
   - pip3 install -r backend/requirements.txt
 
+# Rules for backend jobs
+.backend:rules: &backend-rules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - changes: 
+      - $BACKEND_DIR/**/*
+
 # 'Build' the backend (database and syntax checking)
 backend:build:
   stage: build
@@ -34,10 +41,7 @@ backend:build:
     - python3 manage.py makemigrations
     - python3 manage.py migrate
     - python3 manage.py check 
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - changes: 
-      - $BACKEND_DIR/**/*
+  <<: *backend-rules
 
 # Test the backend, run the django tests
 backend:test:
@@ -49,6 +53,8 @@ backend:test:
   script:
     - cd $BACKEND_DIR
     - python3 manage.py test
+  <<: *backend-rules
+  
 
 # Run a linter on the backend
 backend:lint:
@@ -61,6 +67,7 @@ backend:lint:
     - cd $BACKEND_DIR
     - apt-get install pylint -y
     - find . -type f -name "*.py" | xargs pylint --errors-only
+  <<: *backend-rules
 
 # Frontend Unity CI Pipeline
 # Modified from https://gitlab.com/game-ci/unity3d-gitlab-ci-example
@@ -71,6 +78,13 @@ backend:lint:
   - mkdir -p /root/.local/share/unity3d/Unity
   - echo "$UNITY_LICENSE" > /root/.local/share/unity3d/Unity/Unity_lic.ulf
   - cat /root/.local/share/unity3d/Unity/Unity_lic.ulf
+
+# Rules for frontend jobs
+.frontend:rules: &frontend-rules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - changes: 
+      - $FRONTEND_DIR/**/*
 
 unity:build:
   stage: build
@@ -93,10 +107,7 @@ unity:build:
     paths:
       - $UNITY_BUILD_PATH
     expire_in: "2 hours"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - changes: 
-      - $UNITY_PROJECT_DIR/**/*
+  <<: *frontend-rules
 
 unity:test:
   stage: test
@@ -107,9 +118,11 @@ unity:test:
   script:
     - cat /opt/unity/Editor/Data/PlaybackEngines/AndroidPlayer/NDK/source.properties
     - echo "Need to make tests"
+  <<: *frontend-rules
 
 # Frontend android pipeline
 # Gradle has a built in linter so we don't need a seperate lint stage
+
 # Adapted from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Android.gitlab-ci.yml
 android:build:
   stage: build
@@ -151,7 +164,5 @@ android:build:
     # Need to disable localisation to build IL2CPP - https://learn.microsoft.com/en-us/dotnet/core/runtime-config/globalization
     - export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     - ./gradlew build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - changes: 
-      - $FRONTEND_DIR/**/*
+  <<: *frontend-rules
+  
