@@ -1,8 +1,3 @@
 rootProject.name = "energy-saver-app"
 include ':app'
 
-include ':unityLibrary'
-project (':unityLibrary').projectDir = new File('../unity-module/unityLibrary')
-
-include ':launcher'
-project (':launcher').projectDir = new File('../unity-module/launcher')
