@@ -84,7 +84,7 @@ backend:lint:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - changes: 
-      - $FRONTEND_DIR/**/*
+      - frontend/**/*
 
 unity:build:
   stage: build
@@ -164,7 +164,7 @@ android:build:
     - popd
     # Need to disable localisation to build IL2CPP - https://learn.microsoft.com/en-us/dotnet/core/runtime-config/globalization
     - export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-    - ./gradlew assemble -PUnityBuild=true
+    - ./gradlew assemble -PBuildUnity=true
   artifacts:
     when: on_success
     paths:
