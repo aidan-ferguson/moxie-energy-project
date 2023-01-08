@@ -17,7 +17,7 @@
 import os
 
 UNITY_MODULE_FOLDER = './unity-module'
-NDK_VERSION = "21.3.6528147" # This can be changed if source.properties is present in unity-module dir (happens in CI pipeline)
+DEFAULT_NDK_VERSION = "21.3.6528147" # This can be changed if source.properties is present in unity-module dir (happens in CI pipeline)
     
 def edit_launcher_gradle_build():
     # Check file exists
@@ -80,6 +80,7 @@ def edit_launcher_gradle_build():
     print(f"Edited {filename}")
     
 def add_ndk_version():
+    NDK_VERSION = DEFAULT_NDK_VERSION
     # First check for a source.properties
     ndk_version_filename = f"{UNITY_MODULE_FOLDER}/source.properties"
     if os.path.exists(ndk_version_filename):

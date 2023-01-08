@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.appliances:
                     replaceFragment(new AppliancesFragment());
                     break;
-
+                case R.id.ecosystem:
+                    replaceFragment(EcosystemFragment.newInstance());
+                    break;
                 case R.id.tips:
                     replaceFragment(new TipsFragment());
                     break;
