@@ -27,7 +27,8 @@ variables:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - changes: 
-      - ${BACKEND_DIR}/**/*
+      # Can't use CI variables here
+      - backend/**/*
 
 # 'Build' the backend (database and syntax checking)
 backend:build:
@@ -84,7 +85,8 @@ backend:lint:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - changes: 
-      - ${FRONTEND_DIR}/**/*
+      # Can't use CI variables here
+      - frontend/**/*
 
 unity:build:
   stage: build
