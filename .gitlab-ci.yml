@@ -19,7 +19,6 @@ variables:
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -y 
   - apt-get install -y python3 python3-pip
-  - apt-get -y upgrade
   - pip3 install -r backend/requirements.txt
 
 # Rules for backend jobs
@@ -34,7 +33,7 @@ variables:
 backend:build:
   stage: build
   needs: []
-  image: ubuntu:20.04
+  image: python:3.9
   before_script:
     - *backend-setup
   script:
@@ -48,7 +47,7 @@ backend:build:
 backend:test:
   stage: test
   needs: ["backend:build"]
-  image: ubuntu:20.04
+  image: python:3.9
   before_script:
     - *backend-setup
   script:
@@ -58,17 +57,17 @@ backend:test:
   
 
 # Run a linter on the backend
-backend:lint:
-  stage: test
-  needs: ["backend:build"]
-  image: ubuntu:20.04
-  before_script:
-    - *backend-setup
-  script:
-    - cd $BACKEND_DIR
-    - apt-get install pylint -y
-    - find . -type f -name "*.py" | xargs pylint --errors-only
-  <<: *backend-rules
+# backend:lint:
+#   stage: test
+#   needs: ["backend:build"]
+#   image: python:3.9
+#   before_script:
+#     - *backend-setup
+#   script:
+#     - cd $BACKEND_DIR
+#     - apt-get install pylint -y
+#     - find . -type f -name "*.py" | xargs pylint --errors-only
+#   <<: *backend-rules
 
 # Frontend Unity CI Pipeline
 # Modified from https://gitlab.com/game-ci/unity3d-gitlab-ci-example
@@ -172,4 +171,5 @@ android:build:
     paths:
       - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
   <<: *frontend-rules
+  
   

@@ -7,7 +7,9 @@ from api.data_providers.dale_data_provider import DALEDataProvider
 import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import random
+import json
+import openai
+import os
 
 data_provider = DALEDataProvider
 
@@ -80,19 +82,31 @@ def get_appliances(request):
 
 # View to generate and return unique energy saving tips to the user
 def get_tips(request):
-    # For now just randomly pull from a list of tips
-    tips = [
-        "Don't leave your computer on overnight",
-        "Don't leave your TV on standby", 
-        "Don't leave your lights on when you leave a room", 
-        "Don't leave your phone on charge when it's fully charged", 
-        "Use power strips to turn off multiple devices at once", 
-        "Turn off the lights when you leave a room", 
-        "Unplug devices when you're not using them", 
-        "Use a power strip to turn off multiple devices at once"
-    ]
+    # Generate the tip prompt
+    prompt = f"A bullet point list of tips for a household with a family of 4 that used 10kWh of electricity today:\n"
     
-    return return_success({"tip": random.choice(tips)})
+    # Get the list of tips from OpenAI
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        temperature=0.7,
+        max_tokens=128,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    
+    # Parse the response and split on the bullet point
+    if len(response["choices"]) == 0:
+        print(response)
+        return return_error("Failed to generate any tips")
+    tips = response["choices"][0]["text"].replace("\u2013", "\2022").replace("\n-","\u2022").split("\u2022")
+    tips = [tip.strip() for tip in tips]
+    
+    # Typically the last bullet point will be cut off as it runs out of characters, so exlcude it
+    
+    return return_success({"tips": tips})
     
 # Logout endpoint
 def logout_user(reqeust):
