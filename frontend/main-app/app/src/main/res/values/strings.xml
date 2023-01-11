@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">energy-saver-app</string>
     <string name="appliance_page_heading">Appliances</string>
+    <string name="tips_page_heading">Tips</string>
 </resources>

@@ -2,11 +2,14 @@ package com.sh22.energy_saver_app;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +52,7 @@ public class TipsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -58,7 +62,26 @@ public class TipsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tips, container, false);
+        View view = inflater.inflate(R.layout.fragment_tips, container, false);
+
+        CardView cardView = view.findViewById(R.id.stat1);
+        cardView.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.card_animation);
+        cardView.setAnimation(animation);
+
+
+        CardView cardView2 = view.findViewById(R.id.stat2);
+        cardView2.setVisibility(View.VISIBLE);
+        Animation animation1 = AnimationUtils.loadAnimation(getContext(), R.anim.card_animation);
+        cardView2.setAnimation(animation1);
+
+
+        CardView cardView3 = view.findViewById(R.id.stat3);
+        cardView3.setVisibility(View.VISIBLE);
+        Animation animation2 = AnimationUtils.loadAnimation(getContext(), R.anim.card_animation);
+        cardView3.setAnimation(animation2);
+        return view;
     }
+
+
 }

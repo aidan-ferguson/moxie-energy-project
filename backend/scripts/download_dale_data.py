@@ -10,7 +10,8 @@ import subprocess
 BASE_URL = "https://data.ukedc.rl.ac.uk/mget/edc/efficiency/residential/EnergyConsumption/Domestic/UK-DALE-2015/UK-DALE-disaggregated"
 FILES_TO_DOWNLOAD = "*"
 DEPTH = 1
-COMPRESSION_RATIO = 3 # For printing accurate(ish) percentages
+COMPRESSION_RATIO = 3 # For printing accurate(ish) percentages during downloading
+TIME_RESOLUTION = 30*60 # Resolution that the data will be stored at in seconds
 
 # Get the filesize of the file we want, not essential and is specific to the UK-DALE website
 def dale_get_file_size(url):
@@ -53,8 +54,14 @@ def dale_download_file(folder):
                     f.write(chunk)
                     counter += 1
                     
-        extract_dale_data(folder, filename)
-
+        if extract_dale_data(folder, filename) == True:
+            # Then, decrease the time resolution (just take the average)
+            print(f"Changing time resolution of {house}")
+            decrease_dale_resolution(os.path.join(folder, house))
+        
+            # Finally clean up (delete the downloaded .tgz file)
+            print(f"Deleting {house} archive")
+            os.remove(dataset_filepath)
 
 # Attempt to extract the downloaded archive using tar, fail and provide message otherwise
 def extract_dale_data(folder, filename):
@@ -65,10 +72,50 @@ def extract_dale_data(folder, filename):
         os.mkdir(new_folder)
         
     try:
-        subprocess.call(["tar", "-xf", os.path.join(folder, filename), "-C", new_folder])
-    except FileNotFoundError:
+        subprocess.check_output(["tar", "-xf", os.path.join(folder, filename), "-C", new_folder])
+        return True
+    except (FileNotFoundError, subprocess.CalledProcessError):
         # The weird codes here are colour ANSI escape sequences, used so the user can see that something has gone wrong
-        print(f"\033[91m File could not be extracted, please manually extract the archive to {new_folder} \033[0m")
+        print(f"\033[91m File could not be extracted, please manually extract {os.path.join(folder, filename)} to {new_folder} \033[0m")
+        return False
+        
+def decrease_dale_resolution(house_folder):
+    for filename in os.listdir(house_folder):
+        if "channel" in filename:
+            # Get old file data
+            old_data = None
+            with open(os.path.join(house_folder, filename), "r") as file:
+                old_data = file.readlines()
+            
+            # Calculate the old time resolution
+            reading_1 = int(old_data[0].split(" ")[0])
+            reading_2 = int(old_data[1].split(" ")[0])
+            
+            # If we are not reducing the resolution of the dataset, skip this file
+            if TIME_RESOLUTION <= (reading_2-reading_1):
+                continue
+            
+            # Else iterate through the file adding the readings to a list, then when the current reading
+            #   and the first one differ by more than the required resolution, take the average and add
+            #   it to the new file
+            start_time = 0
+            old_readings = []
+            new_readings = []
+            for line in old_data:
+                if len(old_readings) == 0:
+                    start_time = int(line.split(" ")[0])
+                current_time = int(line.split(" ")[0])
+                
+                old_readings.append(int(line.split(" ")[1]))
+                
+                if (current_time-start_time) > TIME_RESOLUTION:
+                    # Average currently gets rounded
+                    average = round(sum(old_readings)/len(old_readings))
+                    new_readings.append(f"{start_time} {average}")
+                    old_readings = []
+            
+            with open(os.path.join(house_folder, filename), "w") as file:
+                file.write('\n'.join(new_readings))
 
 if __name__ == "__main__":
     dale_download_file(".")

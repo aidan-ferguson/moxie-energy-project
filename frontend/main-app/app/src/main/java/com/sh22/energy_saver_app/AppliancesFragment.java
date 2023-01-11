@@ -73,6 +73,8 @@ public class AppliancesFragment extends Fragment {
                         ApplianceRecyclerViewAdapter adapter = new ApplianceRecyclerViewAdapter(activity, appliances);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+
+
                     });
                 }
 
