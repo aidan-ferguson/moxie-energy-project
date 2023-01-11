@@ -172,3 +172,4 @@ android:build:
       - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
   <<: *frontend-rules
   
+  
