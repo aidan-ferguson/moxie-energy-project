@@ -3,6 +3,31 @@ plugins {
     id 'kotlin-android'
 }
 
+// A build system hacked together,
+// For an energy saving app,
+// With scripts and code,
+// Tangled and knotted,
+// Like a tangled ball of yarn.
+//
+// But despite its haggard form,
+// It works, and that is all,
+// To save energy, it's a tool,
+// In this fight against a wasting call.
+//
+// It may not be pretty,
+// But it gets the job done,
+// With each line of code,
+// Energy is saved, one by one.
+//
+// So here's to the hacked together,
+// The makeshift and the frail,
+// For they may not be perfect,
+// But they will never fail.
+//
+// In this quest for a greener future,
+// We must use all we've got,
+// And this build system, hacked together,
+// Is a tool that will not be forgot.
 task copy_unity_files {
     if (project.hasProperty("BuildUnity")) {
         def src = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragmentUnity.java")
