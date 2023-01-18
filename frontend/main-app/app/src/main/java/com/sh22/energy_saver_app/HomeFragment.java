@@ -66,7 +66,8 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         Double aggregate_daily = appliance_data.today.get(0);
-                        Double limit = 500.0;
+                        Log.d("moxie", String.valueOf(aggregate_daily));
+                        Double limit = appliance_data.weekly_average.get(0);
                         float score = (float)(aggregate_daily / limit);
 
                         Integer progress = Math.round(score * 100);
@@ -77,6 +78,12 @@ public class HomeFragment extends Fragment {
                         int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+
+                        // Clamp upper bound of the colour
+                        if(score > 1.0) {
+                            resultColor = bad_colour;
+                        }
+
                         progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
                     });
                 }
