@@ -149,4 +149,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio
 
 # Don't upload intermediate build files
-./app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java
+app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java
