@@ -22,10 +22,11 @@ def electricity_usage(request):
     print(f"Request for electricity data for user id: {request.user.username}")
     
     # Treat the start of the data as the current time minus 9 1/2 years  to simulate live data
-    start_date = datetime.datetime.now() - relativedelta(years=9, months=3)
+    start_date = datetime.datetime.now() - relativedelta(years=9, months=9)
     end_date = start_date + relativedelta(months=1)
     
     reading_values = data_provider.get_energy_data("house_4", start_date, end_date)
+    print(reading_values)
     return return_success({"usage":reading_values})
 
 # Function that will send a valid CSRF token to the client for inclusion in POST requests
@@ -62,7 +63,7 @@ def get_appliances(request):
     #   then express this as a eco-score in range [0, 1] and return it
     
     # Treat the start of the data as the current time minus 9 and a half years to simulate live data
-    start_date = datetime.datetime.now() - relativedelta(years=9, months=3)
+    start_date = datetime.datetime.now() - relativedelta(years=9, months=9, days=1)
     end_date = start_date + relativedelta(days=1)
     curr_day = data_provider.get_energy_data("house_4", start_date, end_date)
     if len(curr_day["data"]) == 0:

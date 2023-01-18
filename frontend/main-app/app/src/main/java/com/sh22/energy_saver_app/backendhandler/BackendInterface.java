@@ -57,6 +57,8 @@ public class BackendInterface {
             Scanner s = new Scanner(reader).useDelimiter("\\A");
             String data = s.hasNext() ? s.next() : "";
 
+            Log.d("moxie", data);
+
             JSONObject json_data = new JSONObject(data).getJSONObject("data");
             JSONArray json_labels = json_data.getJSONArray("labels");
             JSONArray json_previous_week = json_data.getJSONArray("previous_week");
@@ -71,7 +73,6 @@ public class BackendInterface {
             for (int i = 0; i < json_current_day.length(); i++) {
                 applianceData.today.add(json_current_day.getDouble(i));
             }
-
 
             connection.getInputStream().close();
             reader.close();

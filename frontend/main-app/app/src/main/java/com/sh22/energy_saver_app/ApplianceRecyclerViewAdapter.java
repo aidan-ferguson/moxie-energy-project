@@ -88,10 +88,15 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.DeviceTitle.setTypeface(type);
 
         // Set the progress position and colour of the progress bar
-        holder.progressBar.setProgress((int) (appliance_data.get(position).getUsageToday() * 100), true);
+        float score = appliance_data.get(position).getUsageToday()/appliance_data.get(position).getWeeklyUsage();
+        holder.progressBar.setProgress((int) (score * 100), true);
         int good_colour = ContextCompat.getColor(context, R.color.good_usage);
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
-        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, appliance_data.get(position).getUsageToday());
+        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+        // Clamp to red if over limit
+        if(score > 1.0){
+            resultColor = bad_colour;
+        }
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
 

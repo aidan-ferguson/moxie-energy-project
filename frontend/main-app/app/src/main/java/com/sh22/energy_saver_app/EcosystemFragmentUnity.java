@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.sh22.energy_saver_app.backendhandler.ApplianceData;
 import com.sh22.energy_saver_app.backendhandler.BackendInterface;
 import com.unity3d.player.UnityPlayer;
 
@@ -41,14 +42,21 @@ public class EcosystemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // // Currently the score will be the daily aggregate as a percentage of some number
-        Double aggregate_daily = 0.0;
+        ApplianceData applianceData = null;
         try {
-            aggregate_daily = Objects.requireNonNull(BackendInterface.get_appliance_data()).today.get(0);
+            applianceData = Objects.requireNonNull(BackendInterface.get_appliance_data());
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         Double limit = 500.0;
-        float score = (float)(aggregate_daily / limit);
+        float score = (float) (1.0 - (float)(applianceData.today.get(0) / applianceData.weekly_average.get(0)));
+
+        // Clamp to 0-1
+        if (score < 0) {
+            score = 0;
+        } else if (score > 1) {
+            score = 1;
+        }
 
          // Create unity player and view
          if(mUnityPlayer == null) {
