@@ -57,17 +57,18 @@ backend:test:
   
 
 # Run a linter on the backend
-# backend:lint:
-#   stage: test
-#   needs: ["backend:build"]
-#   image: python:3.9
-#   before_script:
-#     - *backend-setup
-#   script:
-#     - cd $BACKEND_DIR
-#     - apt-get install pylint -y
-#     - find . -type f -name "*.py" | xargs pylint --errors-only
-#   <<: *backend-rules
+backend:lint:
+  stage: test
+  needs: ["backend:build"]
+  image: python:3.9
+  before_script:
+    - *backend-setup
+  script:
+    - cd $BACKEND_DIR
+    - apt-get install pylint -y
+    - find . -type f -name "*.py" | xargs pylint --errors-only
+  allow_failure: true
+  <<: *backend-rules
 
 # Frontend Unity CI Pipeline
 # Modified from https://gitlab.com/game-ci/unity3d-gitlab-ci-example
