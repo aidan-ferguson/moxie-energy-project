@@ -64,6 +64,9 @@ backend:lint:
   before_script:
     - *backend-setup
   script:
+    # Echo pylint config to file
+    - echo "[MASTER]" > ~/.pylintrc
+    - echo "init-hook='import site, sys; sys.path += site.getsitepackages()'" >> ~/.pylintrc
     - cd $BACKEND_DIR
     - apt-get install pylint -y
     - find . -type f -name "*.py" | xargs pylint --errors-only
