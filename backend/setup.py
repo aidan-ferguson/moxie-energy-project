@@ -4,8 +4,8 @@ For:
 - downloading datasets
 
 """
-from scripts.download_dale_data import *
-from scripts.download_national_averages import *
+from scripts.download_dale_data import dale_download_file
+from scripts.download_national_averages import postcode_download_file, postcode_combine_files
 import os
 
 DATASET_FOLDER = os.path.realpath("./static/datasets")
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     print("Downloading DALE dataset")
     dale_folder = os.path.join(DATASET_FOLDER, "dale")
     dale_download_file(dale_folder)
-    
+
     # Then download & combine the national average postcode datasets
     print("Downloading national average dataset")
     postcode_folder = os.path.join(DATASET_FOLDER, "postcodes")
