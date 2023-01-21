@@ -163,3 +163,9 @@ cython_debug/
 
 # NILM datasets (they can be very big and a download script is provided)
 static/datasets/*
+
+# Virtual enviroment things
+.venv
+venv
+Pipfile
+Pipfile.lock
