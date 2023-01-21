@@ -56,7 +56,7 @@ def dale_download_file(folder):
                     f.write(chunk)
                     counter += 1
 
-        if extract_dale_data(folder, filename) == True:
+        if extract_dale_data(folder, filename) is True:
             # Then, decrease the time resolution (just take the average)
             print(f"Changing time resolution of {house}")
             decrease_dale_resolution(os.path.join(folder, house))

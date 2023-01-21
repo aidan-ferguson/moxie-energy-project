@@ -46,7 +46,7 @@ def login_user(request):
         return return_error("You must use a POST method to login")
 
 
-# Returns the difference in aggreate power usage for different devices compared to last month 
+# Returns the difference in aggreate power usage for different devices compared to last month
 def get_appliances(request):
     # Treat the start of the data as the current time minus 9 and a half years to simulate live data
     start_date = datetime.datetime.now() - relativedelta(years=9, months=9, days=1)
@@ -71,7 +71,7 @@ def get_appliances(request):
 # View to generate and return unique energy saving tips to the user
 def get_tips(request):
     # Generate the tip prompt
-    prompt = f"A bullet point list of tips for a household with a family of 4 that used 10kWh of electricity today:\n"
+    prompt = "A bullet point list of tips for a household with a family of 4 that used 10kWh of electricity today:\n"
 
     # Get the list of tips from OpenAI
     openai.api_key = os.getenv("OPENAI_API_KEY")
