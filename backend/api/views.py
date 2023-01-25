@@ -3,6 +3,7 @@ from django.middleware import csrf
 from api.utils import return_error, return_success
 from api.data_providers.dale_data_provider import DALEDataProvider
 import datetime
+import time
 from dateutil.relativedelta import relativedelta
 import numpy as np
 import openai
@@ -48,16 +49,20 @@ def login_user(request):
 
 # Returns the difference in aggreate power usage for different devices compared to last month
 def get_appliances(request):
-    # Treat the start of the data as the current time minus 9 and a half years to simulate live data
-    start_date = datetime.datetime.now() - relativedelta(years=9, months=9, days=1)
-    end_date = start_date + relativedelta(days=1)
-    curr_day = data_provider.get_energy_data("house_4", start_date, end_date)
+    # Right now the bounds of the house_4 dataset are defined so we can loop the data
+    DALE_START_DATE = 1362840007
+    DALE_END_DATE = 1380602255
+    
+    start_time = DALE_START_DATE + (int(time.time()) % (DALE_END_DATE - DALE_START_DATE))
+    start_time = datetime.datetime.fromtimestamp(start_time)
+    end_time = start_time + relativedelta(days=1)
+    curr_day = data_provider.get_energy_data("house_4", start_time, end_time)
     if len(curr_day["data"]) == 0:
         return return_error("Data for current month could not be loaded")
 
-    end_date = start_date
-    start_date = start_date - relativedelta(days=7)
-    prev_week = data_provider.get_energy_data("house_4", start_date, end_date)
+    end_time = start_time
+    start_time = start_time - relativedelta(days=7)
+    prev_week = data_provider.get_energy_data("house_4", start_time, end_time)
     if len(prev_week["data"]) == 0:
         return return_error("Data for previous month could not be loaded")
 
