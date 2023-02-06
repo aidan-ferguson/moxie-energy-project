@@ -7,8 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 
 
 public class SignInActivity extends AppCompatActivity {
@@ -18,6 +20,9 @@ public class SignInActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        @NonNull ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
          email = findViewById(R.id.username);
          password = findViewById(R.id.password);
 
