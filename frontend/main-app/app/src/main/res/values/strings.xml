@@ -5,12 +5,15 @@
     <string name="tips_page_heading">Tips</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_confirm_password">Confirm Password</string>
+    <string name="prompt_firstname">Firstname</string>
+    <string name="prompt_surname">Surname</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="register_text">Register</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="app_load_text">One second, we are loading your energy saver.</string>
+    <string name="app_load_text">One moment, we are loading your energy saver.</string>
     <string name="login_heading"><u>Your Energy Saver</u></string>
 </resources>

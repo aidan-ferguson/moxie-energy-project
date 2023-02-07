@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
 from django.middleware import csrf
 from api.utils import *
 from api.data_providers.dale_data_provider import DALEDataProvider
@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 import numpy as np
 import openai
 import os
-from api.serialisers import LoginSerializer
+from api.serialisers import RegisterSerializer
 from rest_framework import permissions
 from rest_framework import views
 from rest_framework.response import Response
@@ -15,23 +15,22 @@ from rest_framework import status
 
 data_provider = DALEDataProvider
 
+# A view used to test an authenticated connection to the server
 class TestView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        content = {'message': 'Hello, World!'}
+        content = {'message': 'Successfully connected'}
         return Response(content)
     
-# Login endpoint
-class LoginView(views.APIView):
+# User registration endpoint
+class RegisterView(views.APIView):
     # Display view to unauthenticated users
     permission_classes = (permissions.AllowAny,)
-
+    
     def post(self, request):
-        serializer = LoginSerializer(data=self.request.data, context={ 'request': self.request })
+        serializer = RegisterSerializer(data=self.request.data, context={ 'request': self.request })
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
 # View that returns raw data for the past month of energy usage
