@@ -1,21 +1,38 @@
 from django.contrib.auth import authenticate, login, logout
 from django.middleware import csrf
-from django.contrib.staticfiles.storage import staticfiles_storage
 from api.utils import *
-from api.data_providers.csv_data_provider import CSVDataProvider
 from api.data_providers.dale_data_provider import DALEDataProvider
 import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import json
 import openai
 import os
+from api.serialisers import LoginSerializer
+from rest_framework import permissions
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework import status
 
 data_provider = DALEDataProvider
 
-# A function used to test the connection to the API
-def test_connection(request):
-    return return_success({})
+class TestView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
+    
+# Login endpoint
+class LoginView(views.APIView):
+    # Display view to unauthenticated users
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = LoginSerializer(data=self.request.data, context={ 'request': self.request })
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response(None, status=status.HTTP_202_ACCEPTED)
 
 # View that returns raw data for the past month of energy usage
 def electricity_usage(request):
@@ -32,30 +49,6 @@ def electricity_usage(request):
 # Function that will send a valid CSRF token to the client for inclusion in POST requests
 def get_csrf_token(request):
     return return_success({"token": csrf.get_token(request)})
-
-# Login endpoint
-def login_user(request):
-    # Ensure the request is a POST request
-    if request.method == 'POST':
-        # Attempt to get the credentials from the request
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
-        
-        if username == None or password == None:
-            return return_error("You must provide a username and password in the request")
-        
-        user = authenticate(username=username, password=password)
-        if user:
-            if user.is_active:
-                login(request, user)
-                return return_success({})
-            else:
-                return return_error("This account has been disabled")
-        else:
-            return return_error("Invalid credentials")
-        
-    else:
-        return return_error("You must use a POST method to login")
 
 # Returns the difference in aggreate power usage for different devices compared to last month 
 def get_appliances(request):
