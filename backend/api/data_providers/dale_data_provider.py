@@ -9,7 +9,6 @@ Note: every house has an aggregate channel that is total power draw (not just th
 
 from api.data_providers.data_provider import DataProvider
 from django.contrib.staticfiles.storage import staticfiles_storage
-from datetime import datetime
 import time
 import os
 
@@ -17,6 +16,7 @@ import os
 DALE_RESOLUTION = 6
 
 DALE_FOLDER = staticfiles_storage.path("datasets/dale")
+
 
 class DALEDataProvider(DataProvider):
     @staticmethod
@@ -26,12 +26,12 @@ class DALEDataProvider(DataProvider):
         labels = {}
         with open(os.path.join(DATASET_FOLDER, "labels.dat"), "r") as file:
             labels = {int(line.split(" ")[0]): line.split(" ")[1].strip() for line in file.readlines()}
-            
-        # Split up the start date and end date into 6 second segments so that we can 
+
+        # Split up the start date and end date into 6 second segments so that we can
         #   attribute 1 timestamp to readings that were probably taken at the same time
         start_unix = int(time.mktime(start_date.timetuple()))
         end_unix = int(time.mktime(end_date.timetuple()))
-        
+
         # Create array which will be returned as part of response at the end
         data = [[0 for _ in range(len(labels))] for _ in range(start_unix, end_unix+DALE_RESOLUTION, DALE_RESOLUTION)]
         

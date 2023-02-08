@@ -563,12 +563,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         animatorSet.start();
 
                     }
+
             }}
 
 
             );
 
-            //When the
+
 
         }
 

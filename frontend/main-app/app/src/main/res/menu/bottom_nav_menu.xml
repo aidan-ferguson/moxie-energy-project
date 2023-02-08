@@ -14,10 +14,6 @@
         android:icon="@drawable/ic_baseline_photo_size_select_actual_24"
         android:id="@+id/ecosystem"
         tools:ignore="HardcodedText" />
-    <item android:title="Tips"
-        android:icon="@drawable/bulb"
-        android:id="@+id/tips"
-        tools:ignore="HardcodedText"/>
     <item android:title="Settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:id="@+id/settings"

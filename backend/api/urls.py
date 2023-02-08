@@ -6,7 +6,6 @@ urlpatterns = [
     path('test-connection', views.TestView.as_view(), name='test-connection'),
     path('auth/register', views.RegisterView.as_view(), name='login'),
     path('auth/logout', views.logout_user, name='logout'),
-    path('usage/electricity', views.electricity_usage, name='electricity_usage'),
     path('usage/appliances', views.get_appliances, name='get_appliances'),
     path('usage/tips', views.get_tips, name="get_tips"),
     path('auth/get-token', obtain_auth_token, name='token_auth'),

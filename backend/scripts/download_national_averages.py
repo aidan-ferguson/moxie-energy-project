@@ -11,11 +11,12 @@ BASE_URLS = ["https://assets.publishing.service.gov.uk/government/uploads/system
 
 FINAL_FILENAME = "postcode_usage.csv"
 
+
 # Will download the file in chuncks, periodically saving them to disk
 def postcode_download_file(folder):
     if not os.path.exists(folder):
         os.mkdir(folder)
-    
+
     for url in BASE_URLS:
         filename = url.split("/")[-1]
         dataset_filepath = os.path.join(folder, filename)
@@ -30,8 +31,9 @@ def postcode_download_file(folder):
                     print("{:.2f} %".format(100 * (counter*chunk_size)/file_size), end='\r')
                     f.write(chunk)
                     counter += 1
-                
+
     return dataset_filepath
+
 
 # The files are downloaded as two seperate CSVs, simply concatenate them into one
 def postcode_combine_files(folder):
@@ -50,7 +52,7 @@ def postcode_combine_files(folder):
     # Output the combined CSVs to a file
     with open(os.path.join(folder, FINAL_FILENAME), "w") as file:
         file.write(header + ''.join(combined))
-            
+
 
 if __name__ == "__main__":
     postcode_download_file(".")
