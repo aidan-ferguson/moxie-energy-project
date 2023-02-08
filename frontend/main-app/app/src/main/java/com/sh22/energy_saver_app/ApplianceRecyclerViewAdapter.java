@@ -37,11 +37,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sh22.energy_saver_app.backendhandler.ApplianceCardData;
@@ -88,15 +95,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.DeviceTitle.setTypeface(type);
 
         // Set the progress position and colour of the progress bar
-        float score = appliance_data.get(position).getUsageToday()/appliance_data.get(position).getWeeklyUsage();
-        holder.progressBar.setProgress((int) (score * 100), true);
+
+        //holder.progressBar.setProgress((int) (appliance_data.get(position).getUsageToday() * 100), true);
+        holder.progressBar.setProgress(32);
+
         int good_colour = ContextCompat.getColor(context, R.color.good_usage);
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
-        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
-        // Clamp to red if over limit
-        if(score > 1.0){
-            resultColor = bad_colour;
-        }
+        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, appliance_data.get(position).getUsageToday());
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
 
@@ -134,6 +139,10 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         CardView card1;
         CardView card2;
         ImageView cautionLevel;
+        BarChart barChart;
+        BarData barData;
+        BarDataSet barDataSet;
+        ArrayList barEntriesArrayList;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -152,6 +161,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             card1 = itemView.findViewById(R.id.stat1);
             card2 = itemView.findViewById(R.id.stat2);
             cautionLevel = itemView.findViewById(R.id.home_icon2);
+            barChart = itemView.findViewById(R.id.idBarChart);
 
 
 
@@ -325,7 +335,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         if (isCompareExpanded[0] == true){
                             initialHeight = DeviceCard.getHeight();
-                            finalHeight = initialHeight-1700;
+                            finalHeight = initialHeight-2100;
                             initialWidth = DeviceCard.getWidth();
                             finalWidth = initialWidth-30;
                             isCompareExpanded[0]=false;
@@ -367,7 +377,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         // Start the animation
                         animatorSet.start();
                         CompareButton.setVisibility(View.GONE);
-
+                        barChart.setVisibility(View.GONE);
                         TipsButton.setVisibility(View.GONE);
                         DeviceCard.setCardElevation(9);
                         card1.setVisibility(View.GONE);
@@ -477,6 +487,30 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                     if (!isCompareExpanded[0]) {
 
+                        getBarEntries();
+
+                        // creating a new bar data set.
+                        barDataSet = new BarDataSet(barEntriesArrayList, "Friends");
+
+                        // creating a new bar data and
+                        // passing our bar data set.
+                        barData = new BarData(barDataSet);
+
+                        // below line is to set data
+                        // to our bar chart.
+                        barChart.setData(barData);
+
+                        // adding color to our bar data set.
+                        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+
+                        // setting text color.
+                        barDataSet.setValueTextColor(Color.BLACK);
+
+                        // setting text size
+                        barDataSet.setValueTextSize(16f);
+                        barChart.getDescription().setEnabled(false);
+                        barChart.setVisibility(View.VISIBLE);
+                        barChart.animateXY(500, 500);
                         isCompareExpanded[0] = true;
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
 
@@ -489,7 +523,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight + 1000;
+                        int finalHeight = initialHeight + 1400;
                         ;
 
                         // Create ValueAnimator objects to animate the height and width
@@ -509,6 +543,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                 DeviceCard.setLayoutParams(layoutParams);
                             }
                         });
+
 
 
                         // Create an AnimatorSet to run the height and width animations together
@@ -523,7 +558,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         isCompareExpanded[0] = false;
 
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-
+                        barChart.setVisibility(View.GONE);
                         CompareButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
 
                         Context context = view.getContext();
@@ -533,7 +568,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight - 1000;
+                        int finalHeight = initialHeight - 1400;
                         ;
 
                         // Create ValueAnimator objects to animate the height and width
@@ -562,19 +597,43 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         // Start the animation
                         animatorSet.start();
 
-                    }
 
-            }}
+                    }
+            }
+
+                                                 private void getBarEntries() {
+                                                     barEntriesArrayList = new ArrayList<>();
+
+                                                     // adding new entry to our array list with bar
+                                                     // entry and passing x and y axis value to it.
+                                                     barEntriesArrayList.add(new BarEntry(1f, 4));
+                                                     barEntriesArrayList.add(new BarEntry(2f, 6));
+                                                     barEntriesArrayList.add(new BarEntry(3f, 8));
+
+                                                 }
+                                             }
+
+
+
 
 
             );
 
+            //When the tips button is clicked the tips button changes colour
+            TipsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
         }
 
     }
-}
+            );
+
+            //define get fra
+}}}
+
+
 
 
 
