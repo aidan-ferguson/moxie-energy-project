@@ -79,8 +79,10 @@ public class RegisterFragment extends Fragment {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         if (status.success) {
                             // Registration and login success
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            startActivity(intent);
+                            LoginActivity activity = (LoginActivity)getActivity();
+                            if(activity != null) {
+                                ((LoginActivity) getActivity()).replaceFragment(RegisterInformationFragment.newInstance());
+                            }
                         } else {
                             ((EditText)view.findViewById(R.id.register_password_confirm)).setError(status.data);
                         }

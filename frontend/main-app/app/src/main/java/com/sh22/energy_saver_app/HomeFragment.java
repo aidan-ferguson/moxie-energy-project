@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
                         Integer progress = Math.round(score * 100);
                         ProgressBar progressBar = view.findViewById(R.id.progress_bar);
                         TextView textView = view.findViewById(R.id.text_view_progress);
-                        progressBar.setProgress(progress);
+                        progressBar.setProgress(progress, true);
                         textView.setText(progress.toString());
                         int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
@@ -93,18 +93,6 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-
-        TextView textView = (TextView)view.findViewById(R.id.text_view);
-
-        textView.post(new Runnable() {
-            @Override
-            public void run() {
-                textView.invalidate();
-                int required_height = textView.getLineHeight() * textView.getLineCount();
-                textView.setHeight(required_height);
-            }
-        });
-        Log.d("moxie", String.valueOf(textView.getLineCount()));
 
         // Return the inflated view
         return view;
