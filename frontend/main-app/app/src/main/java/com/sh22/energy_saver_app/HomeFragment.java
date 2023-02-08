@@ -85,12 +85,26 @@ public class HomeFragment extends Fragment {
                         }
 
                         progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
+                        TextView textView2 = view.findViewById(R.id.text_view);
+                        textView2.setText("Your text here rjgnfd adkfgbdfg aoifghaoufghaf agobaofhg aogubaofigaoif agbaofgbdaofu afgbaofighoaif aoghadfoihgoifda ah0ghafiogh eojrhgoierhg adfoighaopidrhgn a goaidhgoifadhgoifd aofghoiafhdgioahfg aghoafhgoiafshgoifs g aohsgioashgoiasg as gofshagoifadhgoidfg afogiuhsafoihasfog asfkmg fskjgao[htpqw4htrh gdn;mkxc htv4qnepysah d'lNSAkriyet9hnfds gh9gon");
                     });
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }).start();
+
+        TextView textView = (TextView)view.findViewById(R.id.text_view);
+
+        textView.post(new Runnable() {
+            @Override
+            public void run() {
+                textView.invalidate();
+                int required_height = textView.getLineHeight() * textView.getLineCount();
+                textView.setHeight(required_height);
+            }
+        });
+        Log.d("moxie", String.valueOf(textView.getLineCount()));
 
         // Return the inflated view
         return view;

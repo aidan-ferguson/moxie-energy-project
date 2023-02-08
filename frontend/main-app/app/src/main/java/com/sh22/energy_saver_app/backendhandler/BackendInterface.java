@@ -22,20 +22,20 @@ public class BackendInterface {
     // Function to get the past weeks energy usage and todays energy usage per device
     public static ApplianceData get_appliance_data() throws IOException, JSONException {
         // Just for debugging
-//        ApplianceData applianceDataDebug = new ApplianceData();
-//        applianceDataDebug.labels.add("aggregate");
-//        applianceDataDebug.labels.add("kettle");
-//        applianceDataDebug.labels.add("freezer");
-//        applianceDataDebug.labels.add("lights");
-//        applianceDataDebug.weekly_average.add(286.72630231842936);
-//        applianceDataDebug.weekly_average.add(13.089364192815548);
-//        applianceDataDebug.weekly_average.add(33.90864177934743);
-//        applianceDataDebug.weekly_average.add(5.90864177934743);
-//        applianceDataDebug.today.add(351.7993889313242);
-//        applianceDataDebug.today.add(21.88229984028887);
-//        applianceDataDebug.today.add(39.5259356989098);
-//        applianceDataDebug.today.add(4.90864177934743);
-//        cached_data = applianceDataDebug;
+        ApplianceData applianceDataDebug = new ApplianceData();
+        applianceDataDebug.labels.add("aggregate");
+        applianceDataDebug.labels.add("kettle");
+        applianceDataDebug.labels.add("freezer");
+        applianceDataDebug.labels.add("lights");
+        applianceDataDebug.weekly_average.add(286.72630231842936);
+        applianceDataDebug.weekly_average.add(13.089364192815548);
+        applianceDataDebug.weekly_average.add(33.90864177934743);
+        applianceDataDebug.weekly_average.add(5.90864177934743);
+        applianceDataDebug.today.add(351.7993889313242);
+        applianceDataDebug.today.add(21.88229984028887);
+        applianceDataDebug.today.add(39.5259356989098);
+        applianceDataDebug.today.add(4.90864177934743);
+        cached_data = applianceDataDebug;
 
         synchronized (lock) {
             if (cached_data != null) {
