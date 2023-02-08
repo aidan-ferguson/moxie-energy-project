@@ -335,7 +335,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         if (isCompareExpanded[0] == true){
                             initialHeight = DeviceCard.getHeight();
-                            finalHeight = initialHeight-1700;
+                            finalHeight = initialHeight-1600;
                             initialWidth = DeviceCard.getWidth();
                             finalWidth = initialWidth-30;
                             isCompareExpanded[0]=false;
@@ -523,7 +523,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight + 1000;
+                        int finalHeight = initialHeight + 900;
                         ;
 
                         // Create ValueAnimator objects to animate the height and width
@@ -568,7 +568,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight - 1000;
+                        int finalHeight = initialHeight - 900;
                         ;
 
                         // Create ValueAnimator objects to animate the height and width
