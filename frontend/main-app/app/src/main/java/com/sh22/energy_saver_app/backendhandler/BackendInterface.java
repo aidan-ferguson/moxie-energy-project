@@ -1,13 +1,19 @@
 package com.sh22.energy_saver_app.backendhandler;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.Constants;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -15,11 +21,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BackendInterface {
-    private static final String url_str = "http://10.0.2.2:8000/api/usage/appliances";
+    private static final String appliance_url_str = "http://10.0.2.2:8000/api/usage/appliances";
     private static ApplianceData cached_data = null;
     static Object lock = new Object();
 
-    // Function to get the past weeks energy usage and todays energy usage per device
+        // Function to get the past weeks energy usage and todays energy usage per device
     public static ApplianceData get_appliance_data() throws IOException, JSONException {
         // Just for debugging
 //        ApplianceData applianceDataDebug = new ApplianceData();
@@ -44,7 +50,7 @@ public class BackendInterface {
 
             URL apiURL = null;
             try {
-                apiURL = new URL(url_str);
+                apiURL = new URL(appliance_url_str);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
@@ -53,7 +59,7 @@ public class BackendInterface {
             // Create HTTP connection (we don't have SSL setup on django)
             URLConnection connection = apiURL.openConnection();
             InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-
+            // TODO: handle http errors
             Scanner s = new Scanner(reader).useDelimiter("\\A");
             String data = s.hasNext() ? s.next() : "";
 
