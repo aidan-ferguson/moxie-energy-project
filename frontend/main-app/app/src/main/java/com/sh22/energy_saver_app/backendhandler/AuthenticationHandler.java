@@ -24,15 +24,15 @@ import java.nio.charset.StandardCharsets;
 
 public class AuthenticationHandler {
     // Method for getting the locally stored authentication token, throws exception if it does not exist
-    private static String getLocalToken(Context context) throws NoSuchFieldException {
+    public static String getLocalToken(Context context) throws AuthenticationException {
         // Attempt to get locally stored token
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
         if(!preferences.contains(Constants.PREFERENCE_TOKEN_KEY)) {
-            throw new NoSuchFieldException();
+            throw new AuthenticationException();
         } else {
             String token = preferences.getString(Constants.PREFERENCE_TOKEN_KEY, "default");
             if(token.equals("default")) {
-                throw new NoSuchFieldException();
+                throw new AuthenticationException();
             } else {
                 return token;
             }
@@ -60,23 +60,11 @@ public class AuthenticationHandler {
         String token = null;
         try {
             token = getLocalToken(context);
-        } catch (NoSuchFieldException e) {
+        } catch (AuthenticationException e) {
             Log.e("moxie", "Failed to find token in preferences");
             return false;
         }
         return true;
-    }
-
-    // Utility function to read a full input stream into a string
-    private static String readFullStream(InputStream stream) throws IOException {
-        InputStreamReader inputStream = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(inputStream);
-        StringBuilder buffer = new StringBuilder();
-        String line;
-        while((line = reader.readLine())!= null){
-            buffer.append(line);
-        }
-        return buffer.toString();
     }
 
     // Method that will attempt to get and store a new token from the backend given an email & password
@@ -102,14 +90,14 @@ public class AuthenticationHandler {
             // If the response code is anything but success, get the error string and return false
             int response_code = connection.getResponseCode();
             if (response_code != 200) {
-                String error_reason = readFullStream(connection.getErrorStream());
+                String error_reason = Constants.readFullStream(connection.getErrorStream());
                 Log.e("sh22", "BackendInterface::tryLogin server returned code " + response_code);
                 Log.e("moxie", "BackendInterface::tryLogin server returned: " + error_reason);
                 connection.disconnect();
                 return AuthenticationStatus.FailedAuth(error_reason);
             } else {
                 // Successful authentication, store and return true
-                String token = new JSONObject(readFullStream(connection.getInputStream())).getString("token");
+                String token = new JSONObject(Constants.readFullStream(connection.getInputStream())).getString("token");
                 setLocalToken(context, token);
                 connection.disconnect();
                 return AuthenticationStatus.SuccessAuth();
@@ -137,7 +125,7 @@ public class AuthenticationHandler {
             int response_code = connection.getResponseCode();
             if (response_code != 202) {
                 Log.e("sh22", "BackendInterface::tryLogin server returned failure code " + response_code);
-                String error_reason = readFullStream(connection.getErrorStream());
+                String error_reason = Constants.readFullStream(connection.getErrorStream());
                 connection.disconnect();
                 return AuthenticationStatus.FailedAuth(error_reason);
             } else {

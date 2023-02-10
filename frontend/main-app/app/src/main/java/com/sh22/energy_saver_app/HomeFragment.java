@@ -1,6 +1,7 @@
 package com.sh22.energy_saver_app;
 
 import android.annotation.SuppressLint;
+import android.app.BackgroundServiceStartNotAllowedException;
 import android.content.res.ColorStateList;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
@@ -19,7 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sh22.energy_saver_app.backendhandler.ApplianceData;
+import com.sh22.energy_saver_app.backendhandler.AuthenticationException;
 import com.sh22.energy_saver_app.backendhandler.BackendInterface;
+import com.sh22.energy_saver_app.backendhandler.UserInfo;
 
 import org.json.JSONException;
 
@@ -90,6 +93,18 @@ public class HomeFragment extends Fragment {
                     });
                 }
             } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        // Get user info to display on homepage
+        new Thread(() -> {
+            try {
+                UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
+                if(userInfo != null) {
+                    ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome " + userInfo.firstname);
+                }
+            } catch (AuthenticationException e) {
                 e.printStackTrace();
             }
         }).start();

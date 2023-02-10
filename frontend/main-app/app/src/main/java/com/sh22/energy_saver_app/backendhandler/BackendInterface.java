@@ -5,15 +5,18 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 
+import com.sh22.energy_saver_app.AuthenticationStatus;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.Constants;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -28,20 +31,20 @@ public class BackendInterface {
         // Function to get the past weeks energy usage and todays energy usage per device
     public static ApplianceData get_appliance_data() throws IOException, JSONException {
         // Just for debugging
-        ApplianceData applianceDataDebug = new ApplianceData();
-        applianceDataDebug.labels.add("aggregate");
-        applianceDataDebug.labels.add("kettle");
-        applianceDataDebug.labels.add("freezer");
-        applianceDataDebug.labels.add("lights");
-        applianceDataDebug.weekly_average.add(286.72630231842936);
-        applianceDataDebug.weekly_average.add(13.089364192815548);
-        applianceDataDebug.weekly_average.add(33.90864177934743);
-        applianceDataDebug.weekly_average.add(5.90864177934743);
-        applianceDataDebug.today.add(351.7993889313242);
-        applianceDataDebug.today.add(21.88229984028887);
-        applianceDataDebug.today.add(39.5259356989098);
-        applianceDataDebug.today.add(4.90864177934743);
-        cached_data = applianceDataDebug;
+//        ApplianceData applianceDataDebug = new ApplianceData();
+//        applianceDataDebug.labels.add("aggregate");
+//        applianceDataDebug.labels.add("kettle");
+//        applianceDataDebug.labels.add("freezer");
+//        applianceDataDebug.labels.add("lights");
+//        applianceDataDebug.weekly_average.add(286.72630231842936);
+//        applianceDataDebug.weekly_average.add(13.089364192815548);
+//        applianceDataDebug.weekly_average.add(33.90864177934743);
+//        applianceDataDebug.weekly_average.add(5.90864177934743);
+//        applianceDataDebug.today.add(351.7993889313242);
+//        applianceDataDebug.today.add(21.88229984028887);
+//        applianceDataDebug.today.add(39.5259356989098);
+//        applianceDataDebug.today.add(4.90864177934743);
+//        cached_data = applianceDataDebug;
 
         synchronized (lock) {
             if (cached_data != null) {
@@ -87,5 +90,42 @@ public class BackendInterface {
             lock.notifyAll();
         }
         return cached_data;
+    }
+
+    public static UserInfo GetUserInfo(Context context) throws AuthenticationException{
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // Attempt to connect to endpoint and authenticate
+        String url_str = Constants.SERVER_BASE_URL + "/user/information";
+        URL url = null;
+        try { url = new URL(url_str); }
+        catch (MalformedURLException e) {e.printStackTrace(); return null;}
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Authorization", "Token " + token);
+            connection.connect();
+
+            // If the response code is anything but success, get the error string and return false
+            int response_code = connection.getResponseCode();
+            if (response_code != 200) {
+                String error_reason = Constants.readFullStream(connection.getErrorStream());
+                Log.e("sh22", "BackendInterface::GetUserInfo server returned code " + response_code);
+                Log.e("moxie", "BackendInterface::GetUserInfo server returned: " + error_reason);
+                connection.disconnect();
+                return null;
+            } else {
+                // Successful authentication, store and return true
+                String response = Constants.readFullStream(connection.getInputStream());
+                JSONObject json_data = new JSONObject(response).getJSONObject("user_data");
+                UserInfo userInfo = new UserInfo(
+                        json_data.getString("username"),
+                        json_data.getString("firstname"),
+                        json_data.getString("surname"));
+                connection.disconnect();
+                return userInfo;
+            }
+        } catch (IOException | JSONException e) { e.printStackTrace(); return null;}
     }
 }
