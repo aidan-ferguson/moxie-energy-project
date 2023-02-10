@@ -175,8 +175,7 @@ android:build:
   artifacts:
     when: on_success
     paths:
-      - $ANDROID_PROJECT_DIR/app/build/outputs
-      - $ANDROID_PROJECT_DIR
+      - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
   <<: *frontend-rules
   
   
