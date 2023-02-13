@@ -9,26 +9,27 @@
 
     <TextView
         android:id="@+id/login_heading"
-        android:layout_width="193dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="185dp"
-        android:layout_marginEnd="156dp"
-        android:text="@string/login_heading"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="22sp"
+        android:layout_width="317dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="224dp"
+        android:text="Your energy Saver App"
+        android:textColor="@color/blue_whale"
+        android:textFontWeight="15"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.597"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_width="282dp"
+        android:layout_height="56dp"
         android:layout_marginStart="118dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="119dp"
+        android:background="@drawable/layout_bg"
+        android:textColor="@color/white"
         android:enabled="true"
         android:text="@string/action_sign_in"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +41,7 @@
         android:layout_width="287dp"
         android:layout_height="54dp"
         android:layout_marginStart="62dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="62dp"
         android:autofillHints=""
         android:hint="@string/prompt_password"
@@ -49,6 +50,7 @@
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
@@ -57,7 +59,7 @@
         android:layout_width="287dp"
         android:layout_height="58dp"
         android:layout_marginStart="62dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="62dp"
         android:autofillHints=""
         android:hint="@string/prompt_email"
@@ -65,31 +67,70 @@
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_heading" />
 
-    <TextView
-        android:id="@+id/login_or"
-        android:layout_width="45dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="183dp"
-        android:layout_marginEnd="183dp"
-        android:gravity="center"
-        android:text="or"
-        android:textSize="20sp"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/login_register_button"
+        android:layout_width="113dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/layout_bg"
+        android:backgroundTint="#ED7D31"
+        android:textColor="@color/white"
+        android:text="@string/register_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="204dp"
+        android:layout_height="175dp"
+        android:src="@drawable/app_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.059" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="154dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="40dp"
+        android:text="Don't have an account? "
+        app:layout_constraintEnd_toStartOf="@+id/login_register_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
-    <Button
-        android:id="@+id/login_register_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
-        android:layout_marginEnd="153dp"
-        android:text="@string/register_text"
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="32dp"
+        android:layout_height="22dp"
+        android:src="@drawable/email"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_or" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.431"
+        app:tint="#DEB276" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="41dp"
+        android:layout_height="38dp"
+        android:src="@drawable/ic_baseline_password_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.548"
+        app:tint="#DEB276" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
