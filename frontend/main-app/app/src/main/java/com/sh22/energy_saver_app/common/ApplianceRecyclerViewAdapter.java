@@ -163,6 +163,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
             final boolean[] isExpanded = {false};
             final boolean[] isCompareExpanded = {false};
+            int cardHeightChange = SH22Utils.dpToPixels(itemView.getContext(), 200);
+            int cardWithGraphChange = SH22Utils.dpToPixels(itemView.getContext(), 450);
 
             // Set an OnClickListener for the button
             InvisibleButton.setOnClickListener(new View.OnClickListener() {
@@ -181,9 +183,9 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
                         // Set the start and end values for the height and width animations
-                        int initialHeight = DeviceCard.getHeight();;
-                        int finalHeight = initialHeight + 700;
-                        int initialWidth = DeviceCard.getWidth();;
+                        int initialHeight = DeviceCard.getHeight();
+                        int finalHeight = initialHeight + cardHeightChange;
+                        int initialWidth = DeviceCard.getWidth();
                         int finalWidth = initialWidth + 30;
 
                         // Create ValueAnimator objects to animate the height and width
@@ -275,13 +277,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
 
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight-700;
+                        int finalHeight = initialHeight-cardHeightChange;
                         int initialWidth = DeviceCard.getWidth();
                         int finalWidth = initialWidth-30;
 
                         if (isCompareExpanded[0] == true){
                             initialHeight = DeviceCard.getHeight();
-                            finalHeight = initialHeight-2200;
+                            finalHeight = initialHeight-(cardHeightChange+cardWithGraphChange);
                             initialWidth = DeviceCard.getWidth();
                             finalWidth = initialWidth-30;
                             isCompareExpanded[0]=false;
@@ -499,7 +501,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                                                           // Set the start and end values for the height and width animations
                                                           int initialHeight = DeviceCard.getHeight();
-                                                          int finalHeight = initialHeight + 1500;
+                                                          int finalHeight = initialHeight + cardWithGraphChange;
                                                           ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(BreakDownButton, "alpha", 0, 1);
                                                           fadeInAnimator.setDuration(1000); // 1 second
                                                           fadeInAnimator.addListener(new Animator.AnimatorListener(){
@@ -598,8 +600,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                                                           // Set the start and end values for the height and width animations
                                                           int initialHeight = DeviceCard.getHeight();
-                                                          int finalHeight = initialHeight - 1500;
-                                                          ;
+                                                          int finalHeight = initialHeight - cardWithGraphChange;
+
 
                                                           // Create ValueAnimator objects to animate the height and width
                                                           ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);

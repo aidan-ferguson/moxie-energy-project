@@ -1,5 +1,7 @@
 package com.sh22.energy_saver_app.common;
 
+import android.content.Context;
+
 public class SH22Utils {
 
     // Sigmoid function
@@ -21,5 +23,9 @@ public class SH22Utils {
             return 0.0f;
         }
         return SH22Utils.normaliseEnergyRating((float)(data.weekly_average.get(index)/data.today.get(index)));
+    }
+
+    public static int dpToPixels(Context context, int dp) {
+        return Math.round(dp * context.getResources().getDisplayMetrics().density);
     }
 }

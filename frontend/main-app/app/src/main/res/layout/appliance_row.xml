@@ -64,8 +64,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button"
                 android:layout_width="170dp"
@@ -77,8 +75,8 @@
                 android:textColor="@color/blue_whale"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="gone" />
 
 
             <androidx.appcompat.widget.AppCompatButton
@@ -92,7 +90,8 @@
                 android:textColor="@color/blue_whale"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/device_name"
