@@ -2,6 +2,8 @@ package com.sh22.energy_saver_app.common;
 
 
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -23,18 +25,27 @@ import android.widget.TextView;
 
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Size;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sh22.energy_saver_app.R;
+
+import com.sh22.energy_saver_app.common.ApplianceCardData;
 
 import java.util.ArrayList;
 
@@ -75,13 +86,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.DeviceTitle.setTypeface(type);
 
         // Set the progress position and colour of the progress bar
-
-        //holder.progressBar.setProgress((int) (appliance_data.get(position).getUsageToday() * 100), true);
-        holder.progressBar.setProgress(32);
+        float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getWeeklyUsage() / appliance_data.get(position).getUsageToday());
+        holder.progressBar.setProgress((int) (appliance_score * 100), true);
+//        holder.progressBar.setProgress(32);
 
         int good_colour = ContextCompat.getColor(context, R.color.good_usage);
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
-        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, appliance_data.get(position).getUsageToday());
+        int resultColor = ColorUtils.blendARGB(bad_colour, good_colour, appliance_score);
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
 
@@ -114,15 +125,17 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         Button InvisibleButton;
         TextView InfoText;
         CardView DeviceCard;
-        Button CompareButton;
+        Button BreakDownButton;
         Button TipsButton;
         CardView card1;
         CardView card2;
+        CardView tipsCard;
         ImageView cautionLevel;
         BarChart barChart;
         BarData barData;
         BarDataSet barDataSet;
         ArrayList barEntriesArrayList;
+        Button dropdownButton;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -133,21 +146,25 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             DeviceTitle = itemView.findViewById(R.id.device_name);
             progressBar = itemView.findViewById(R.id.appliance_usage_bar);
             InvisibleButton = itemView.findViewById(R.id.device_name_button);
+            dropdownButton = itemView.findViewById(R.id.dd);
 
             TipsButton = itemView.findViewById(R.id.button);
-            CompareButton= itemView.findViewById(R.id.button2);
+            BreakDownButton = itemView.findViewById(R.id.button2);
             InfoText = itemView.findViewById(R.id.info);
 
             card1 = itemView.findViewById(R.id.stat1);
             card2 = itemView.findViewById(R.id.stat2);
             cautionLevel = itemView.findViewById(R.id.home_icon2);
             barChart = itemView.findViewById(R.id.idBarChart);
+            tipsCard = itemView.findViewById(R.id.tips);
 
 
 
 
             final boolean[] isExpanded = {false};
             final boolean[] isCompareExpanded = {false};
+            int cardHeightChange = SH22Utils.dpToPixels(itemView.getContext(), 200);
+            int cardWithGraphChange = SH22Utils.dpToPixels(itemView.getContext(), 450);
 
             // Set an OnClickListener for the button
             InvisibleButton.setOnClickListener(new View.OnClickListener() {
@@ -166,9 +183,9 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
                         // Set the start and end values for the height and width animations
-                        int initialHeight = DeviceCard.getHeight();;
-                        int finalHeight = initialHeight + 700;
-                        int initialWidth = DeviceCard.getWidth();;
+                        int initialHeight = DeviceCard.getHeight();
+                        int finalHeight = initialHeight + cardHeightChange;
+                        int initialWidth = DeviceCard.getWidth();
                         int finalWidth = initialWidth + 30;
 
                         // Create ValueAnimator objects to animate the height and width
@@ -202,65 +219,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         // Create an AnimatorSet to run the height and width animations together
 
 
-                        ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(CompareButton, "alpha", 0, 1);
-                        fadeInAnimator.setDuration(1000); // 1 second
-                        fadeInAnimator.addListener(new Animator.AnimatorListener(){
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                CompareButton.setVisibility(View.VISIBLE);
-
-                            }
-                           @Override
-                           public void onAnimationEnd(Animator animation) {
-                               // Optional: add code to run when the animation ends
-                           }
-
-                           @Override
-                           public void onAnimationCancel(Animator animation) {
-                               // Optional: add code to run when the animation is canceled
-                           }
-
-                           @Override
-                           public void onAnimationRepeat(Animator animation) {
-                               // Optional: add code to run when the animation repeats
-                           }
-                        });
-
-
-
-
-
-
-                        ObjectAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipsButton, "alpha", 0, 1);
-                        fadeInAnimator2.setDuration(1000); // 1 second
-                        fadeInAnimator2.addListener(new Animator.AnimatorListener(){
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-                                TipsButton.setVisibility(View.VISIBLE);
-
-                            }
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                // Optional: add code to run when the animation ends
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-                                // Optional: add code to run when the animation is canceled
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-                                // Optional: add code to run when the animation repeats
-                            }
-                        });
 
 
                         Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/MicroFLF.ttf");
-                        CompareButton.setTypeface(type);
+                        BreakDownButton.setTypeface(type);
                         TipsButton.setTypeface(type);
                         AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(heightAnimator, widthAnimator, fadeInAnimator, fadeInAnimator2);
+                        animatorSet.playTogether(heightAnimator, widthAnimator);
 
                         // Start the animation
                         animatorSet.start();
@@ -299,6 +264,9 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         cautionLevel.setVisibility(View.VISIBLE);
                         animatorSet2.start();
                         DeviceCard.setCardElevation(22);
+                        dropdownButton.setVisibility(View.VISIBLE);
+                        dropdownButton.setRotation(90);
+
 
 
                     } else {
@@ -309,16 +277,17 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
 
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight-700;
+                        int finalHeight = initialHeight-cardHeightChange;
                         int initialWidth = DeviceCard.getWidth();
                         int finalWidth = initialWidth-30;
 
                         if (isCompareExpanded[0] == true){
                             initialHeight = DeviceCard.getHeight();
-                            finalHeight = initialHeight-1600;
+                            finalHeight = initialHeight-(cardHeightChange+cardWithGraphChange);
                             initialWidth = DeviceCard.getWidth();
                             finalWidth = initialWidth-30;
                             isCompareExpanded[0]=false;
+
 
                         }
 
@@ -356,12 +325,14 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Start the animation
                         animatorSet.start();
-                        CompareButton.setVisibility(View.GONE);
+                        BreakDownButton.setVisibility(View.GONE);
                         barChart.setVisibility(View.GONE);
                         TipsButton.setVisibility(View.GONE);
                         DeviceCard.setCardElevation(9);
                         card1.setVisibility(View.GONE);
                         card2.setVisibility(View.GONE);
+                        dropdownButton.setVisibility(View.GONE);
+                        tipsCard.setVisibility(View.GONE);
 
                     }
 
@@ -461,137 +432,222 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             });
             //When the user clicks on the compare button it will increase the height further in order to show more information
 
-            CompareButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            dropdownButton.setOnClickListener(new View.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(View view) {
 
-                    if (!isCompareExpanded[0]) {
+                                                      if (!isCompareExpanded[0]) {
 
-                        getBarEntries();
+                                                          getBarEntries();
 
-                        // creating a new bar data set.
-                        barDataSet = new BarDataSet(barEntriesArrayList, "Friends");
-
-                        // creating a new bar data and
-                        // passing our bar data set.
-                        barData = new BarData(barDataSet);
-
-                        // below line is to set data
-                        // to our bar chart.
-                        barChart.setData(barData);
-
-                        // adding color to our bar data set.
-                        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-
-                        // setting text color.
-                        barDataSet.setValueTextColor(Color.BLACK);
-
-                        // setting text size
-                        barDataSet.setValueTextSize(16f);
-                        barChart.getDescription().setEnabled(false);
-                        barChart.setVisibility(View.VISIBLE);
-                        barChart.animateXY(500, 500);
-                        isCompareExpanded[0] = true;
-                        ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-
-                        CompareButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
-
-                        Context context = view.getContext();
-                        int color = context.getResources().getColor(R.color.white);
-                        CompareButton.setTextColor(color);
-                        CompareButton.setText("Collapse");
-
-                        // Set the start and end values for the height and width animations
-                        int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight + 900;
-                        ;
-
-                        // Create ValueAnimator objects to animate the height and width
-                        ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
+                                                          // creating a new bar data set.
+                                                          BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
+                                                          // creating a new bar data and
+                                                          // passing our bar data set.
+                                                          barData = new BarData(barDataSet);
+                                                          barChart.getXAxis().setDrawGridLines(false);
+                                                          barChart.getAxisLeft().setDrawGridLines(false);
+                                                          barChart.getAxisRight().setDrawGridLines(false);
+                                                          barChart.getXAxis().setDrawAxisLine(false);
+                                                          barChart.getAxisLeft().setDrawAxisLine(false);
+                                                          barChart.getAxisRight().setDrawAxisLine(true);
+                                                          barChart.getXAxis().setTextColor(Color.TRANSPARENT);
+                                                          barChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
+                                                          barData.setDrawValues(false);
+                                                          //get rid of description label in bottom right
+                                                          barChart.getDescription().setEnabled(false);
 
 
-                        // Set the duration and interpolator for the animations
-                        heightAnimator.setDuration(200);
-                        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                        // Set update listeners on the animators to update the layout parameters as the animations progress
-                        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int value = (int) animation.getAnimatedValue();
-                                layoutParams.height = value;
-                                DeviceCard.setLayoutParams(layoutParams);
-                            }
-                        });
+                                                          // below line is to set data
+                                                          // to our bar chart.
+                                                          barChart.setData(barData);
+//make the bars rounded at the edges
 
 
+                                                          // adding color to our bar data set.
+                                                          barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
 
-                        // Create an AnimatorSet to run the height and width animations together
-                        AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(heightAnimator);
+                                                          // setting text color.
+                                                          barDataSet.setValueTextColor(Color.BLACK);
 
-                        // Start the animation
-                        animatorSet.start();
-
-                }
-                    else{
-                        isCompareExpanded[0] = false;
-
-                        ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-                        barChart.setVisibility(View.GONE);
-                        CompareButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
-
-                        Context context = view.getContext();
-                        int color = context.getResources().getColor(R.color.blue_whale);
-                        CompareButton.setTextColor(color);
-                        CompareButton.setText("COMPARE");
-
-                        // Set the start and end values for the height and width animations
-                        int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight - 900;
-                        ;
-
-                        // Create ValueAnimator objects to animate the height and width
-                        ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
+                                                          // setting text size
+                                                          barDataSet.setValueTextSize(16f);
 
 
-                        // Set the duration and interpolator for the animations
-                        heightAnimator.setDuration(200);
-                        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                                                          Legend legend = barChart.getLegend();
 
-                        // Set update listeners on the animators to update the layout parameters as the animations progress
-                        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int value = (int) animation.getAnimatedValue();
-                                layoutParams.height = value;
-                                DeviceCard.setLayoutParams(layoutParams);
-                            }
-                        });
+                                                          legend.setCustom(new LegendEntry[]{new LegendEntry("You", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[0]),
+                                                                  new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[1]),
+                                                                  new LegendEntry("Your Friend", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[2])});
+                                                          //move the label to the top left
+                                                          legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+//stack the labels
+
+                                                          legend.setEnabled(true);
 
 
-                        // Create an AnimatorSet to run the height and width animations together
-                        AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(heightAnimator);
+                                                          barChart.setVisibility(View.VISIBLE);
+                                                          barChart.animateXY(500, 500);
 
-                        // Start the animation
-                        animatorSet.start();
+                                                          isCompareExpanded[0] = true;
+                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
+
+                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
+
+                                                          Context context = view.getContext();
+                                                          int color = context.getResources().getColor(R.color.white);
+                                                          BreakDownButton.setTextColor(color);
 
 
-                    }
-            }
+                                                          // Set the start and end values for the height and width animations
+                                                          int initialHeight = DeviceCard.getHeight();
+                                                          int finalHeight = initialHeight + cardWithGraphChange;
+                                                          ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(BreakDownButton, "alpha", 0, 1);
+                                                          fadeInAnimator.setDuration(1000); // 1 second
+                                                          fadeInAnimator.addListener(new Animator.AnimatorListener(){
+                                                              @Override
+                                                              public void onAnimationStart(Animator animation) {
+                                                                  BreakDownButton.setVisibility(View.VISIBLE);
 
-                                                 private void getBarEntries() {
-                                                     barEntriesArrayList = new ArrayList<>();
+                                                              }
+                                                              @Override
+                                                              public void onAnimationEnd(Animator animation) {
+                                                                  // Optional: add code to run when the animation ends
+                                                              }
 
-                                                     // adding new entry to our array list with bar
-                                                     // entry and passing x and y axis value to it.
-                                                     barEntriesArrayList.add(new BarEntry(1f, 4));
-                                                     barEntriesArrayList.add(new BarEntry(2f, 6));
-                                                     barEntriesArrayList.add(new BarEntry(3f, 8));
+                                                              @Override
+                                                              public void onAnimationCancel(Animator animation) {
+                                                                  // Optional: add code to run when the animation is canceled
+                                                              }
 
-                                                 }
-                                             }
+                                                              @Override
+                                                              public void onAnimationRepeat(Animator animation) {
+                                                                  // Optional: add code to run when the animation repeats
+                                                              }
+                                                          });
+
+
+
+
+
+
+                                                          ValueAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipsButton, "alpha", 0, 1);
+                                                          fadeInAnimator2.setDuration(1000); // 1 second
+                                                          fadeInAnimator2.addListener(new Animator.AnimatorListener(){
+                                                              @Override
+                                                              public void onAnimationStart(Animator animation) {
+                                                                  TipsButton.setVisibility(View.VISIBLE);
+
+                                                              }
+                                                              @Override
+                                                              public void onAnimationEnd(Animator animation) {
+                                                                  // Optional: add code to run when the animation ends
+                                                              }
+
+                                                              @Override
+                                                              public void onAnimationCancel(Animator animation) {
+                                                                  // Optional: add code to run when the animation is canceled
+                                                              }
+
+                                                              @Override
+                                                              public void onAnimationRepeat(Animator animation) {
+                                                                  // Optional: add code to run when the animation repeats
+                                                              }
+                                                          });
+
+
+                                                          // Create ValueAnimator objects to animate the height and width
+                                                          ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
+
+
+                                                          // Set the duration and interpolator for the animations
+                                                          heightAnimator.setDuration(200);
+                                                          heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                                                          // Set update listeners on the animators to update the layout parameters as the animations progress
+                                                          heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                                              @Override
+                                                              public void onAnimationUpdate(ValueAnimator animation) {
+                                                                  int value = (int) animation.getAnimatedValue();
+                                                                  layoutParams.height = value;
+                                                                  DeviceCard.setLayoutParams(layoutParams);
+                                                              }
+                                                          });
+
+
+
+                                                          // Create an AnimatorSet to run the height and width animations together
+                                                          AnimatorSet animatorSet = new AnimatorSet();
+                                                          animatorSet.playTogether(heightAnimator, fadeInAnimator, fadeInAnimator2);
+
+                                                          // Start the animation
+                                                          animatorSet.start();
+                                                          dropdownButton.setRotation(270);
+
+                                                      }
+                                                      else{
+                                                          isCompareExpanded[0] = false;
+
+                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
+                                                          barChart.setVisibility(View.GONE);
+                                                          tipsCard.setVisibility(View.GONE);
+                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
+
+                                                          Context context = view.getContext();
+                                                          int color = context.getResources().getColor(R.color.blue_whale);
+                                                          BreakDownButton.setTextColor(color);
+
+
+                                                          // Set the start and end values for the height and width animations
+                                                          int initialHeight = DeviceCard.getHeight();
+                                                          int finalHeight = initialHeight - cardWithGraphChange;
+
+
+                                                          // Create ValueAnimator objects to animate the height and width
+                                                          ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
+
+
+                                                          // Set the duration and interpolator for the animations
+                                                          heightAnimator.setDuration(200);
+                                                          heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                                                          // Set update listeners on the animators to update the layout parameters as the animations progress
+                                                          heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                                              @Override
+                                                              public void onAnimationUpdate(ValueAnimator animation) {
+                                                                  int value = (int) animation.getAnimatedValue();
+                                                                  layoutParams.height = value;
+                                                                  DeviceCard.setLayoutParams(layoutParams);
+                                                              }
+                                                          });
+
+
+                                                          // Create an AnimatorSet to run the height and width animations together
+                                                          AnimatorSet animatorSet = new AnimatorSet();
+                                                          animatorSet.playTogether(heightAnimator);
+
+                                                          // Start the animation
+                                                          animatorSet.start();
+                                                          BreakDownButton.setVisibility(View.GONE);
+                                                          TipsButton.setVisibility(View.GONE);
+                                                          dropdownButton.setRotation(90);
+
+
+
+                                                      }
+                                                  }
+
+                                                  private void getBarEntries() {
+                                                      barEntriesArrayList = new ArrayList<>();
+
+                                                      // adding new entry to our array list with bar
+                                                      // entry and passing x and y axis value to it.
+                                                      barEntriesArrayList.add(new BarEntry(1f, 7));
+                                                      barEntriesArrayList.add(new BarEntry(2f, 6));
+                                                      barEntriesArrayList.add(new BarEntry(3f, 8));
+
+                                                  }
+                                              }
 
 
 
@@ -601,17 +657,43 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
             //When the tips button is clicked the tips button changes colour
             TipsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                                              @Override
+                                              public void onClick(View view) {
+                                                  Context context = view.getContext();
+                                                  int color = context.getResources().getColor(R.color.blue_whale);
+                                                  TipsButton.setBackgroundColor(color);
+                                                  TipsButton.setTextColor(Color.WHITE);
+                                                  BreakDownButton.setBackgroundColor(Color.WHITE);
+                                                  BreakDownButton.setTextColor(color);
+                                                  barChart.setVisibility(View.GONE);
+                                                  tipsCard.setVisibility(View.VISIBLE);
+
+                                              }
+
+                                          }
+            );
+
+            BreakDownButton.setOnClickListener(new View.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View view) {
+                                                       Context context = view.getContext();
+                                                       int color = context.getResources().getColor(R.color.blue_whale);
+                                                       BreakDownButton.setBackgroundColor(color);
+                                                       BreakDownButton.setTextColor(Color.WHITE);
+                                                       TipsButton.setBackgroundColor(Color.WHITE);
+                                                       TipsButton.setTextColor(color);
+                                                       tipsCard.setVisibility(View.GONE);
+                                                       barChart.setVisibility(View.VISIBLE);
 
 
-        }
+                                                   }
 
-    }
+                                               }
             );
 
             //define get fra
-}}}
+        }}}
+
 
 
 

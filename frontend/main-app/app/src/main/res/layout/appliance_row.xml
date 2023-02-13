@@ -35,6 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
+                android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -42,10 +43,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
+
+
+
             <ProgressBar
                 android:id="@+id/appliance_usage_bar"
                 style="?android:attr/progressBarStyleHorizontal"
-
                 android:layout_width="231dp"
                 android:layout_height="29dp"
                 android:layout_marginTop="12dp"
@@ -60,42 +63,41 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button"
                 android:layout_width="170dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-
+                android:layout_marginBottom="54dp"
                 android:background="@drawable/rounded_rectangle_button2"
                 android:text="Tips"
                 android:textColor="@color/blue_whale"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="gone" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button2"
                 android:layout_width="170dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="54dp"
                 android:background="@drawable/rounded_rectangle_button2"
-
-
-                android:text="compare"
+                android:text="Breakdown"
                 android:textColor="@color/blue_whale"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/device_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-
-
                 android:layout_marginTop="8dp"
                 android:text="Device Name:"
                 android:textColor="@color/blue_whale"
@@ -163,6 +165,7 @@
                 app:contentPadding="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/device_name">
+
                 <ImageView
                     android:id="@+id/home_icon2"
                     android:layout_width="59dp"
@@ -203,6 +206,52 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dd"
+                android:layout_width="48dp"
+                android:layout_height="56dp"
+                android:background="@drawable/ic_baseline_chevron_right_24"
+                android:rotation="180"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tips"
+                android:layout_width="354dp"
+                android:layout_height="355dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="3dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/button2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stat1">
+
+
+                <TextView
+                    android:id="@+id/tip1"
+                    android:layout_width="322dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="This is how you can reduce your energy usage for this appliance"
+                    android:textColor="@color/blue_whale"
+                    android:textSize="15sp" />
+
+
+            </androidx.cardview.widget.CardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

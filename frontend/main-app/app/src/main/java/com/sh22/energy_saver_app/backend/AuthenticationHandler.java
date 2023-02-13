@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.sh22.energy_saver_app.common.Constants;
+import com.sh22.energy_saver_app.common.SH22Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,14 +85,14 @@ public class AuthenticationHandler {
             // If the response code is anything but success, get the error string and return false
             int response_code = connection.getResponseCode();
             if (response_code != 200) {
-                String error_reason = Constants.readFullStream(connection.getErrorStream());
+                String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
                 Log.e("sh22", "BackendInterface::tryLogin server returned code " + response_code);
                 Log.e("moxie", "BackendInterface::tryLogin server returned: " + error_reason);
                 connection.disconnect();
                 return AuthenticationStatus.FailedAuth(error_reason);
             } else {
                 // Successful authentication, store and return true
-                String token = new JSONObject(Constants.readFullStream(connection.getInputStream())).getString("token");
+                String token = new JSONObject(SH22Utils.readFullStream(connection.getInputStream())).getString("token");
                 setLocalToken(context, token);
                 connection.disconnect();
                 return AuthenticationStatus.SuccessAuth();
@@ -119,7 +120,7 @@ public class AuthenticationHandler {
             int response_code = connection.getResponseCode();
             if (response_code != 202) {
                 Log.e("sh22", "BackendInterface::tryLogin server returned failure code " + response_code);
-                String error_reason = Constants.readFullStream(connection.getErrorStream());
+                String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
                 connection.disconnect();
                 return AuthenticationStatus.FailedAuth(error_reason);
             } else {
