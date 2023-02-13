@@ -48,6 +48,7 @@ import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
@@ -95,8 +96,51 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         int resultColor = ColorUtils.blendARGB(bad_colour, good_colour, appliance_score);
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
+        ArrayList<BarEntry> barEntriesArrayList = new ArrayList<>();
+        barEntriesArrayList.add(new BarEntry(1f, 10000));
+        barEntriesArrayList.add(new BarEntry(2f,15000));
+        barEntriesArrayList.add(new BarEntry(3f, 20000));
+        BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
+        holder.barData = new BarData(barDataSet);
+        holder.barChart.getXAxis().setDrawGridLines(false);
+        holder.barChart.getAxisLeft().setDrawGridLines(false);
+        holder.barChart.getAxisRight().setDrawGridLines(false);
+        holder.barChart.getXAxis().setDrawAxisLine(false);
+        holder.barChart.getAxisLeft().setDrawAxisLine(false);
+        holder.barChart.getAxisRight().setDrawAxisLine(true);
+        holder.barChart.getXAxis().setTextColor(Color.TRANSPARENT);
+        holder.barChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
+        holder.barData.setDrawValues(false);
+        holder.barChart.getDescription().setEnabled(false);
+        holder.barChart.setData(holder.barData);
+        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+
+        // setting text color.
+        barDataSet.setValueTextColor(Color.BLACK);
+
+        // setting text size
+        barDataSet.setValueTextSize(16f);
+
+
+        Legend legend = holder.barChart.getLegend();
+
+        legend.setCustom(new LegendEntry[]{new LegendEntry("Current", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[0]),
+                new LegendEntry("Initial", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[1]),
+                new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[2])});
+        //move the label to the top left
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+//stack the labels
+
+        legend.setEnabled(true);
+
+
+
+
+
 
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -438,65 +482,6 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                                                       if (!isCompareExpanded[0]) {
 
-                                                          getBarEntries();
-
-                                                          // creating a new bar data set.
-                                                          BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
-                                                          // creating a new bar data and
-                                                          // passing our bar data set.
-                                                          barData = new BarData(barDataSet);
-                                                          barChart.getXAxis().setDrawGridLines(false);
-                                                          barChart.getAxisLeft().setDrawGridLines(false);
-                                                          barChart.getAxisRight().setDrawGridLines(false);
-                                                          barChart.getXAxis().setDrawAxisLine(false);
-                                                          barChart.getAxisLeft().setDrawAxisLine(false);
-                                                          barChart.getAxisRight().setDrawAxisLine(true);
-                                                          barChart.getXAxis().setTextColor(Color.TRANSPARENT);
-                                                          barChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
-                                                          barData.setDrawValues(false);
-                                                          //get rid of description label in bottom right
-                                                          barChart.getDescription().setEnabled(false);
-
-
-                                                          // below line is to set data
-                                                          // to our bar chart.
-                                                          barChart.setData(barData);
-//make the bars rounded at the edges
-
-
-                                                          // adding color to our bar data set.
-                                                          barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-
-                                                          // setting text color.
-                                                          barDataSet.setValueTextColor(Color.BLACK);
-
-                                                          // setting text size
-                                                          barDataSet.setValueTextSize(16f);
-
-
-                                                          Legend legend = barChart.getLegend();
-
-                                                          legend.setCustom(new LegendEntry[]{new LegendEntry("You", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[0]),
-                                                                  new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[1]),
-                                                                  new LegendEntry("Your Friend", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[2])});
-                                                          //move the label to the top left
-                                                          legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//stack the labels
-
-                                                          legend.setEnabled(true);
-
-
-                                                          barChart.setVisibility(View.VISIBLE);
-                                                          barChart.animateXY(500, 500);
-
-                                                          isCompareExpanded[0] = true;
-                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-
-                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
-
-                                                          Context context = view.getContext();
-                                                          int color = context.getResources().getColor(R.color.white);
-                                                          BreakDownButton.setTextColor(color);
 
 
                                                           // Set the start and end values for the height and width animations
@@ -559,7 +544,17 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                           // Create ValueAnimator objects to animate the height and width
                                                           ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
 
+                                                          barChart.setVisibility(View.VISIBLE);
+                                                          barChart.animateXY(500, 500);
 
+                                                          isCompareExpanded[0] = true;
+                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
+
+                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
+
+                                                          Context context = view.getContext();
+                                                          int color = context.getResources().getColor(R.color.white);
+                                                          BreakDownButton.setTextColor(color);
                                                           // Set the duration and interpolator for the animations
                                                           heightAnimator.setDuration(200);
                                                           heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -637,16 +632,6 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                       }
                                                   }
 
-                                                  private void getBarEntries() {
-                                                      barEntriesArrayList = new ArrayList<>();
-
-                                                      // adding new entry to our array list with bar
-                                                      // entry and passing x and y axis value to it.
-                                                      barEntriesArrayList.add(new BarEntry(1f, 7));
-                                                      barEntriesArrayList.add(new BarEntry(2f, 6));
-                                                      barEntriesArrayList.add(new BarEntry(3f, 8));
-
-                                                  }
                                               }
 
 
