@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BackendInterface {
-    private static final String appliance_url_str = "http://10.0.2.2:8000/api/usage/appliances";
     private static ApplianceData cached_appliance = null;
     private static Map<String, Double> cached_national_averages = null;
     private static UserInfo cached_user_info = null;
@@ -47,9 +46,10 @@ public class BackendInterface {
                 return cached_appliance;
             }
 
+            String url_str = Constants.SERVER_BASE_URL + "/usage/appliances";
             URL apiURL = null;
             try {
-                apiURL = new URL(appliance_url_str);
+                apiURL = new URL(url_str);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
