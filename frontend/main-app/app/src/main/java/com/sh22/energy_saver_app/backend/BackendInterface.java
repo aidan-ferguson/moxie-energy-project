@@ -25,30 +25,26 @@ import org.json.JSONObject;
 
 public class BackendInterface {
     private static final String appliance_url_str = "http://10.0.2.2:8000/api/usage/appliances";
-    private static ApplianceData cached_data = null;
-    static Object lock = new Object();
+    private static ApplianceData cached_appliance = null;
+    private static Map<String, Double> cached_national_averages = null;
+    private static UserInfo cached_user_info = null;
 
-        // Function to get the past weeks energy usage and todays energy usage per device
+    // mutex like object used to stop multiple calls to the backend at once
+    private static final Object lock = new Object();
+
+    // Clear the local cache, used when the user signs out
+    public static void ClearCache() {
+        cached_appliance = null;
+        cached_national_averages = null;
+        cached_user_info = null;
+    }
+
+    // Function to get the past weeks energy usage and todays energy usage per device
     public static ApplianceData get_appliance_data() throws IOException, JSONException {
-        // Just for debugging
-//        ApplianceData applianceDataDebug = new ApplianceData();
-//        applianceDataDebug.labels.add("aggregate");
-//        applianceDataDebug.labels.add("kettle");
-//        applianceDataDebug.labels.add("freezer");
-//        applianceDataDebug.labels.add("lights");
-//        applianceDataDebug.weekly_average.add(286.72630231842936);
-//        applianceDataDebug.weekly_average.add(13.089364192815548);
-//        applianceDataDebug.weekly_average.add(33.90864177934743);
-//        applianceDataDebug.weekly_average.add(5.90864177934743);
-//        applianceDataDebug.today.add(351.7993889313242);
-//        applianceDataDebug.today.add(21.88229984028887);
-//        applianceDataDebug.today.add(39.5259356989098);
-//        applianceDataDebug.today.add(4.90864177934743);
-//        cached_data = applianceDataDebug;
 
         synchronized (lock) {
-            if (cached_data != null) {
-                return cached_data;
+            if (cached_appliance != null) {
+                return cached_appliance;
             }
 
             URL apiURL = null;
@@ -90,78 +86,106 @@ public class BackendInterface {
             connection.getInputStream().close();
             reader.close();
 
-            cached_data = applianceData;
+            cached_appliance = applianceData;
             lock.notifyAll();
         }
-        return cached_data;
+        return cached_appliance;
     }
 
     // Method to get the national averages from the database
     public static Map<String, Double> GetNationalAverages() {
-        String url_str = Constants.SERVER_BASE_URL + "/usage/national-average";
-        URL url = null;
-        try { url = new URL(url_str); }
-        catch (MalformedURLException e) {e.printStackTrace(); return null;}
 
-        try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            int response_code = connection.getResponseCode();
-            if (response_code != 200) {
-                String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
-                Log.e("sh22", "BackendInterface::GetNationalAverages server returned code " + response_code);
-                Log.e("moxie", "BackendInterface::GetNationalAverages server returned: " + error_reason);
-                connection.disconnect();
-                return null;
-            } else {
-                // Successful authentication, store and return true
-                Map<String, Double> averages = new HashMap<>();
-                String response = SH22Utils.readFullStream(connection.getInputStream());
-                JSONObject json_data = new JSONObject(response);
-                for (Iterator<String> it = json_data.keys(); it.hasNext(); ) {
-                    String key = it.next();
-
-                    averages.put(key, json_data.getDouble(key));
-                }
-                return averages;
+        synchronized (lock) {
+            if (cached_national_averages != null) {
+                return cached_national_averages;
             }
-        } catch (IOException | JSONException e) { e.printStackTrace(); return null;}
+
+            String url_str = Constants.SERVER_BASE_URL + "/usage/national-average";
+            URL url = null;
+            try {
+                url = new URL(url_str);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            try {
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                int response_code = connection.getResponseCode();
+                if (response_code != 200) {
+                    String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
+                    Log.e("sh22", "BackendInterface::GetNationalAverages server returned code " + response_code);
+                    Log.e("moxie", "BackendInterface::GetNationalAverages server returned: " + error_reason);
+                    connection.disconnect();
+                    return null;
+                } else {
+                    // Successful authentication, store and return true
+                    Map<String, Double> averages = new HashMap<>();
+                    String response = SH22Utils.readFullStream(connection.getInputStream());
+                    JSONObject json_data = new JSONObject(response);
+                    for (Iterator<String> it = json_data.keys(); it.hasNext(); ) {
+                        String key = it.next();
+                        averages.put(key, json_data.getDouble(key));
+                    }
+                    cached_national_averages = averages;
+                    return averages;
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     public static UserInfo GetUserInfo(Context context) throws AuthenticationException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // Attempt to connect to endpoint and authenticate
-        String url_str = Constants.SERVER_BASE_URL + "/user/information";
-        URL url = null;
-        try { url = new URL(url_str); }
-        catch (MalformedURLException e) {e.printStackTrace(); return null;}
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Authorization", "Token " + token);
-            connection.connect();
-
-            // If the response code is anything but success, get the error string and return false
-            int response_code = connection.getResponseCode();
-            if (response_code != 200) {
-                String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
-                Log.e("sh22", "BackendInterface::GetUserInfo server returned code " + response_code);
-                Log.e("moxie", "BackendInterface::GetUserInfo server returned: " + error_reason);
-                connection.disconnect();
-                return null;
-            } else {
-                // Successful authentication, store and return true
-                String response = SH22Utils.readFullStream(connection.getInputStream());
-                JSONObject json_data = new JSONObject(response).getJSONObject("user_data");
-                UserInfo userInfo = new UserInfo(
-                        json_data.getString("username"),
-                        json_data.getString("firstname"),
-                        json_data.getString("surname"));
-                connection.disconnect();
-                return userInfo;
+        synchronized (lock) {
+            if (cached_user_info != null) {
+                return cached_user_info;
             }
-        } catch (IOException | JSONException e) { e.printStackTrace(); return null;}
+
+            // Attempt to connect to endpoint and authenticate
+            String url_str = Constants.SERVER_BASE_URL + "/user/information";
+            URL url = null;
+            try {
+                url = new URL(url_str);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            try {
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Authorization", "Token " + token);
+                connection.connect();
+
+                // If the response code is anything but success, get the error string and return false
+                int response_code = connection.getResponseCode();
+                if (response_code != 200) {
+                    String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
+                    Log.e("sh22", "BackendInterface::GetUserInfo server returned code " + response_code);
+                    Log.e("moxie", "BackendInterface::GetUserInfo server returned: " + error_reason);
+                    connection.disconnect();
+                    return null;
+                } else {
+                    // Successful authentication, store and return true
+                    String response = SH22Utils.readFullStream(connection.getInputStream());
+                    JSONObject json_data = new JSONObject(response).getJSONObject("user_data");
+                    UserInfo userInfo = new UserInfo(
+                            json_data.getString("username"),
+                            json_data.getString("firstname"),
+                            json_data.getString("surname"));
+                    connection.disconnect();
+                    cached_user_info = userInfo;
+                    return userInfo;
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 }

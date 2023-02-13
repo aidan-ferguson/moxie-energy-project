@@ -42,6 +42,12 @@ public class AuthenticationHandler {
         editor.apply();
     }
 
+    // Method to logout, will also clear BackendHandler cache
+    public static void Logout(Context context) {
+        clearLocalToken(context);
+        BackendInterface.ClearCache();
+    }
+
     // Method to clear any stored tokens
     public static void clearLocalToken(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
