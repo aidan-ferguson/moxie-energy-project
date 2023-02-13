@@ -8,6 +8,7 @@ urlpatterns = [
     path('auth/logout', views.logout_user, name='logout'),
     path('usage/appliances', views.get_appliances, name='get_appliances'),
     path('usage/tips', views.get_tips, name="get_tips"),
+    path('usage/national-average', views.NationalAverage.as_view(), name='national-average'),
     path('auth/get-token', obtain_auth_token, name='token_auth'),
     path('user/information', views.UserInfoView.as_view(), name='user-information')
 ]

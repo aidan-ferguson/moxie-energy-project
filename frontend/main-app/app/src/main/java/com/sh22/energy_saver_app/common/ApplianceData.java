@@ -7,5 +7,6 @@ public class ApplianceData {
     public ArrayList<Double> initial_usage = new ArrayList<Double>();
     public ArrayList<Double> weekly_average = new ArrayList<Double>();
     public ArrayList<Double> today = new ArrayList<Double>();
+    public ArrayList<Double> national_averages = new ArrayList<Double>();
 }
 

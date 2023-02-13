@@ -13,6 +13,8 @@ from rest_framework import permissions
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.staticfiles.storage import staticfiles_storage
+import json
 
 data_provider = DALEDataProvider
 
@@ -43,6 +45,13 @@ class UserInfoView(views.APIView):
                                  'firstname':request.user.first_name,
                                  'surname':request.user.last_name}}
         return Response(content)
+    
+class NationalAverage(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+    
+    def get(self, request):
+        with open(staticfiles_storage.path("datasets/dale/house_averages.dat"), "r") as file:
+            return Response(json.loads(file.read()))
         
 
 # Returns the difference in aggreate power usage for different devices compared to last month 

@@ -15,13 +15,13 @@ public class SH22Utils {
     }
 
     // Will return a normalised energy rating in the range (0, 1)
-    // https://www.desmos.com/calculator/4xkdff7daf
+    // https://www.desmos.com/calculator/mifnjmnoy4
     public static float normaliseEnergyRating(float rating) {
         float a = Constants.ENERGY_NORMALISATION_SIGMOID_STRECH;
         return sigmoid((1/a) * (rating - (a * 5)));
     }
 
-    // Calculate and return a normalised energy score for a given device
+    // Calculate and return a normalised energy score for a given device that compares today with the past week
     public static float getEnergyScore(ApplianceData data, String label) {
         int index = data.labels.indexOf(label);
         if(index < 0){

@@ -14,6 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -91,6 +94,38 @@ public class BackendInterface {
             lock.notifyAll();
         }
         return cached_data;
+    }
+
+    // Method to get the national averages from the database
+    public static Map<String, Double> GetNationalAverages() {
+        String url_str = Constants.SERVER_BASE_URL + "/usage/national-average";
+        URL url = null;
+        try { url = new URL(url_str); }
+        catch (MalformedURLException e) {e.printStackTrace(); return null;}
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            int response_code = connection.getResponseCode();
+            if (response_code != 200) {
+                String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
+                Log.e("sh22", "BackendInterface::GetNationalAverages server returned code " + response_code);
+                Log.e("moxie", "BackendInterface::GetNationalAverages server returned: " + error_reason);
+                connection.disconnect();
+                return null;
+            } else {
+                // Successful authentication, store and return true
+                Map<String, Double> averages = new HashMap<>();
+                String response = SH22Utils.readFullStream(connection.getInputStream());
+                JSONObject json_data = new JSONObject(response);
+                for (Iterator<String> it = json_data.keys(); it.hasNext(); ) {
+                    String key = it.next();
+
+                    averages.put(key, json_data.getDouble(key));
+                }
+                return averages;
+            }
+        } catch (IOException | JSONException e) { e.printStackTrace(); return null;}
     }
 
     public static UserInfo GetUserInfo(Context context) throws AuthenticationException {

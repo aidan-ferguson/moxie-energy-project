@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AppliancesFragment extends Fragment {
@@ -49,35 +52,43 @@ public class AppliancesFragment extends Fragment {
         new Thread(() -> {
             try {
                 ApplianceData appliance_data = BackendInterface.get_appliance_data();
+                Map<String, Double> national_averages = BackendInterface.GetNationalAverages();
+
                 // When we get the data, update the UI
-
-                FragmentActivity activity = getActivity();
-                if(activity != null) {
-                    activity.runOnUiThread(() -> {
-                        // Construct the list of ApplianceCardData
-                        ArrayList<ApplianceCardData> appliances = new ArrayList<ApplianceCardData>();
-                        for(int idx = 0; idx < appliance_data.labels.size(); idx++){
-                            // For now we just divide by some big number if the appliance is not the
-                            //   aggregate
-                            if(!appliance_data.labels.get(idx).equals("aggregate")) {
-                                ApplianceCardData new_data = new ApplianceCardData(
-                                        appliance_data.labels.get(idx),
-                                        appliance_data.initial_usage.get(idx).floatValue(),
-                                        appliance_data.today.get(idx).floatValue(),
-                                        appliance_data.weekly_average.get(idx).floatValue()
-                                );
-                                appliances.add(new_data);
+                if(appliance_data != null && national_averages != null) {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            // Construct the list of ApplianceCardData
+                            ArrayList<ApplianceCardData> appliances = new ArrayList<ApplianceCardData>();
+                            for (int idx = 0; idx < appliance_data.labels.size(); idx++) {
+                                // For now we just divide by some big number if the appliance is not the
+                                //   aggregate
+                                if (!appliance_data.labels.get(idx).equals("aggregate")) {
+                                    Double national_average = national_averages.getOrDefault(appliance_data.labels.get(idx), 0.0);
+                                    if(national_average == null){
+                                        national_average = 0.0;
+                                    }
+                                    ApplianceCardData new_data = new ApplianceCardData(
+                                            appliance_data.labels.get(idx),
+                                            appliance_data.initial_usage.get(idx).floatValue(),
+                                            appliance_data.today.get(idx).floatValue(),
+                                            appliance_data.weekly_average.get(idx).floatValue(),
+                                            national_average.floatValue()
+                                    );
+                                    appliances.add(new_data);
+                                }
                             }
-                        }
 
-                        // Now attach the recycler view class to the view in the layout
-                        RecyclerView recyclerView = activity.findViewById(R.id.appliance_recycler_view);
-                        ApplianceRecyclerViewAdapter adapter = new ApplianceRecyclerViewAdapter(activity, appliances);
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+                            // Now attach the recycler view class to the view in the layout
+                            RecyclerView recyclerView = activity.findViewById(R.id.appliance_recycler_view);
+                            ApplianceRecyclerViewAdapter adapter = new ApplianceRecyclerViewAdapter(activity, appliances);
+                            recyclerView.setAdapter(adapter);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
 
-                    });
+                        });
+                    }
                 }
 
             } catch (IOException | JSONException e) {

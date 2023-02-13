@@ -45,10 +45,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sh22.energy_saver_app.R;
 
+import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
@@ -72,7 +75,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
     @Override
     public void onBindViewHolder(@NonNull ApplianceRecyclerViewAdapter.MyViewHolder holder, int position) {
-        // Assigning values to the already created views
+
         // Capitalise the first letter
         String pretty_name = appliance_data.get(position).getApplianceName();
         pretty_name = pretty_name.substring(0, 1).toUpperCase() + pretty_name.substring(1);
@@ -87,7 +90,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.DeviceTitle.setTypeface(type);
 
         // Set the progress position and colour of the progress bar
-        float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getWeeklyUsage() / appliance_data.get(position).getUsageToday());
+        float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getInitialUsage() / appliance_data.get(position).getUsageToday());
         holder.progressBar.setProgress((int) (appliance_score * 100), true);
 //        holder.progressBar.setProgress(32);
 
@@ -97,23 +100,23 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
         ArrayList<BarEntry> barEntriesArrayList = new ArrayList<>();
-        barEntriesArrayList.add(new BarEntry(1f, 10000));
-        barEntriesArrayList.add(new BarEntry(2f,15000));
-        barEntriesArrayList.add(new BarEntry(3f, 20000));
+        barEntriesArrayList.add(new BarEntry(1f, appliance_data.get(position).getUsageToday()));
+        barEntriesArrayList.add(new BarEntry(2f,appliance_data.get(position).getInitialUsage()));
+        barEntriesArrayList.add(new BarEntry(3f, appliance_data.get(position).getNationalAverage()));
         BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
         holder.barData = new BarData(barDataSet);
         holder.barChart.getXAxis().setDrawGridLines(false);
-        holder.barChart.getAxisLeft().setDrawGridLines(false);
+        holder.barChart.getAxisLeft().setDrawGridLines(true);
         holder.barChart.getAxisRight().setDrawGridLines(false);
         holder.barChart.getXAxis().setDrawAxisLine(false);
         holder.barChart.getAxisLeft().setDrawAxisLine(false);
-        holder.barChart.getAxisRight().setDrawAxisLine(true);
+        holder.barChart.getAxisRight().setDrawAxisLine(false);
         holder.barChart.getXAxis().setTextColor(Color.TRANSPARENT);
         holder.barChart.getAxisLeft().setTextColor(Color.TRANSPARENT);
         holder.barData.setDrawValues(false);
         holder.barChart.getDescription().setEnabled(false);
         holder.barChart.setData(holder.barData);
-        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSet.setColors(ColorTemplate.PASTEL_COLORS);
 
         // setting text color.
         barDataSet.setValueTextColor(Color.BLACK);
@@ -124,9 +127,9 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
         Legend legend = holder.barChart.getLegend();
 
-        legend.setCustom(new LegendEntry[]{new LegendEntry("Current", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[0]),
-                new LegendEntry("Initial", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[1]),
-                new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.MATERIAL_COLORS[2])});
+        legend.setCustom(new LegendEntry[]{new LegendEntry("Current Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[0]),
+                new LegendEntry("Initial Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[1]),
+                new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[2])});
         //move the label to the top left
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
 //stack the labels
