@@ -2,6 +2,11 @@ package com.sh22.energy_saver_app.common;
 
 import android.content.Context;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class SH22Utils {
 
     // Sigmoid function
@@ -25,7 +30,20 @@ public class SH22Utils {
         return SH22Utils.normaliseEnergyRating((float)(data.weekly_average.get(index)/data.today.get(index)));
     }
 
+    // Convert dp units to pixels for this device
     public static int dpToPixels(Context context, int dp) {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);
+    }
+
+    // Utility function to read a full input stream into a string
+    public static String readFullStream(InputStream stream) throws IOException {
+        InputStreamReader inputStream = new InputStreamReader(stream);
+        BufferedReader reader = new BufferedReader(inputStream);
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while((line = reader.readLine())!= null){
+            buffer.append(line);
+        }
+        return buffer.toString();
     }
 }

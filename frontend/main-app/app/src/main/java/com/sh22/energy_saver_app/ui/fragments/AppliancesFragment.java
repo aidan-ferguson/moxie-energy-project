@@ -62,8 +62,9 @@ public class AppliancesFragment extends Fragment {
                             if(!appliance_data.labels.get(idx).equals("aggregate")) {
                                 ApplianceCardData new_data = new ApplianceCardData(
                                         appliance_data.labels.get(idx),
-                                        (float) (appliance_data.today.get(idx) / 50),
-                                        (float) (appliance_data.weekly_average.get(idx) / 50)
+                                        appliance_data.initial_usage.get(idx).floatValue(),
+                                        appliance_data.today.get(idx).floatValue(),
+                                        appliance_data.weekly_average.get(idx).floatValue()
                                 );
                                 appliances.add(new_data);
                             }

@@ -51,6 +51,14 @@ def get_appliances(request):
     DALE_START_DATE = 1362840007
     DALE_END_DATE = 1380602255
     
+    # Initial energy usage
+    start_time = DALE_START_DATE
+    start_time = datetime.datetime.fromtimestamp(start_time)
+    end_time = start_time + relativedelta(weeks=4)
+    initial_usage = data_provider.get_energy_data("house_4", start_time, end_time)
+    if len(initial_usage["data"]) == 0:
+        return return_error("Data for current month could not be loaded")
+    
     start_time = DALE_START_DATE + (int(time.time()) % (DALE_END_DATE - DALE_START_DATE))
     start_time = datetime.datetime.fromtimestamp(start_time)
     end_time = start_time + relativedelta(days=1)
@@ -65,10 +73,11 @@ def get_appliances(request):
         return return_error("Data for previous month could not be loaded")
 
     # Calculate averages for each device in the current and previous months
+    initial_usage_averages = np.mean(initial_usage["data"], axis=0)
     prev_week_averages = np.mean(prev_week["data"], axis=0)
     curr_day_averages = np.mean(curr_day["data"], axis=0)
 
-    return return_success({"labels": prev_week["labels"], "previous_week": list(prev_week_averages), "today": list(curr_day_averages)})
+    return return_success({"labels": prev_week["labels"], "initial_usage": list(initial_usage_averages), "previous_week": list(prev_week_averages), "today": list(curr_day_averages)})
 
 
 # View to generate and return unique energy saving tips to the user
