@@ -9,4 +9,5 @@ urlpatterns = [
     path('usage/appliances', views.get_appliances, name='get_appliances'),
     path('usage/tips', views.get_tips, name="get_tips"),
     path('auth/get-token', obtain_auth_token, name='token_auth'),
+    path('user/information', views.UserInfoView.as_view(), name='user-information')
 ]

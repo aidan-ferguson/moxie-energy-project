@@ -30,12 +30,12 @@ plugins {
 // Is a tool that will not be forgot.
 task copy_unity_files {
     if (project.hasProperty("BuildUnity")) {
-        def src = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragmentUnity.java")
-        def dst = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java")
+        def src = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentUnity.java")
+        def dst = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragment.java")
         dst.write(src.text)
     } else {
-        def src = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragmentNoUnity.java")
-        def dst = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java")
+        def src = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentNoUnity.java")
+        def dst = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragment.java")
         dst.write(src.text)
     }
 }
@@ -85,8 +85,8 @@ android {
         main {
             java {
                 // Exclude both template ecosystem fragment files and copy the appropriate one to EcosystemFragment.java
-                exclude 'com/sh22/energy_saver_app/EcosystemFragmentNoUnity.java'
-                exclude 'com/sh22/energy_saver_app/EcosystemFragmentUnity.java'
+                exclude 'com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentNoUnity.java'
+                exclude 'com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentUnity.java'
             }
         }
     }

@@ -21,7 +21,7 @@ class TestView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        content = {'message': 'Successfully connected'}
+        content = {'message': 'Successfully connected as ' + request.user.username}
         return Response(content)
     
 # User registration endpoint
@@ -33,11 +33,17 @@ class RegisterView(views.APIView):
         serializer = RegisterSerializer(data=self.request.data, context={ 'request': self.request })
         serializer.is_valid(raise_exception=True)
         return Response(None, status=status.HTTP_202_ACCEPTED)
-
-
-# Function that will send a valid CSRF token to the client for inclusion in POST requests
-def get_csrf_token(request):
-    return return_success({"token": csrf.get_token(request)})
+    
+# For getting and updating user info
+class UserInfoView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        content = {'user_data': {'username':request.user.username,
+                                 'firstname':request.user.first_name,
+                                 'surname':request.user.last_name}}
+        return Response(content)
+        
 
 # Returns the difference in aggreate power usage for different devices compared to last month 
 def get_appliances(request):

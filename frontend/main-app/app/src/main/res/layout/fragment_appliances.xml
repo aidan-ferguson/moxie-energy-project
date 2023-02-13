@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:foregroundTint="@color/light_blue"
     android:background="@color/blue_whale"
-    tools:context=".AppliancesFragment">
+    tools:context=".ui.fragments.AppliancesFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
