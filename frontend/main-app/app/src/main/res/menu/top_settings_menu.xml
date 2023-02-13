@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Home"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:id="@+id/home"
+        tools:ignore="HardcodedText"/>
+    <item android:title="Appliances"
+        android:icon="@drawable/ic_baseline_tv_24"
+        android:id="@+id/appliances"
+        tools:ignore="HardcodedText"/>
+    <item android:title="EcoSystem"
+        android:icon="@drawable/ic_baseline_photo_size_select_actual_24"
+        android:id="@+id/ecosystem"
+        tools:ignore="HardcodedText" />
+    <item android:title="Settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:id="@+id/settings"
+        tools:ignore="HardcodedText"/>
+
+</menu>
