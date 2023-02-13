@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app.backendhandler;
+package com.sh22.energy_saver_app.common;
 
 import java.util.ArrayList;
 

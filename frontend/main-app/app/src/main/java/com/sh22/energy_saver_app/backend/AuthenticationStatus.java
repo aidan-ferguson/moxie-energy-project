@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.backend;
 
 // Utility class used as a return value by AuthenticationHandler to tell the rest of the code why an operation failed
 public class AuthenticationStatus {

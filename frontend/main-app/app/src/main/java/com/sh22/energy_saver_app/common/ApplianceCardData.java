@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app.backendhandler;
+package com.sh22.energy_saver_app.common;
 
 // The class used in the recycler view used for each individual entry
 public class ApplianceCardData {

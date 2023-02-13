@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app.backendhandler;
+package com.sh22.energy_saver_app.common;
 
 public class UserInfo {
     public String username;

@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.sh22.energy_saver_app.backendhandler.BackendInterface;
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.BackendInterface;
 // import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;

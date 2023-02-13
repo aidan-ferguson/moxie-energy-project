@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sh22.energy_saver_app.backendhandler.AuthenticationHandler;
+import com.sh22.energy_saver_app.activites.LoginActivity;
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.AuthenticationHandler;
 
 /**
  * A simple {@link Fragment} subclass.

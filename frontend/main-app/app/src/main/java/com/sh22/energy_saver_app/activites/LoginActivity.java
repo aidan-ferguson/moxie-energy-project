@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.sh22.energy_saver_app.backendhandler.AuthenticationHandler;
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.AuthenticationHandler;
+import com.sh22.energy_saver_app.ui.fragments.LoginFragment;
+import com.sh22.energy_saver_app.ui.fragments.LoginLoadingFragment;
 
 
 public class LoginActivity extends AppCompatActivity {

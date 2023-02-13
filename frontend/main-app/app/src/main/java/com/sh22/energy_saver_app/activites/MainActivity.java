@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.activites;
 
 import android.os.Bundle;
 
@@ -7,13 +7,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.sh22.energy_saver_app.backendhandler.ApplianceData;
-import com.sh22.energy_saver_app.backendhandler.BackendInterface;
+import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
-
-import org.json.JSONException;
-
-import java.io.IOException;
+import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
+import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;
+import com.sh22.energy_saver_app.ui.fragments.HomeFragment;
+import com.sh22.energy_saver_app.ui.fragments.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity {

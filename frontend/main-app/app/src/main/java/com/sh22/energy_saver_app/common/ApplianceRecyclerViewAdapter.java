@@ -1,21 +1,7 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.common;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.IOException;
 
 import android.graphics.Color;
-import android.util.Size;
 import android.view.animation.LinearInterpolator;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -26,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,18 +30,13 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sh22.energy_saver_app.backendhandler.ApplianceCardData;
-
-import org.json.JSONException;
+import com.sh22.energy_saver_app.R;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 

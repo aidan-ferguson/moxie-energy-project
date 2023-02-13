@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.ui.fragments;
 
 import android.os.Bundle;
 
@@ -7,14 +7,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sh22.energy_saver_app.backendhandler.ApplianceCardData;
-import com.sh22.energy_saver_app.backendhandler.ApplianceData;
-import com.sh22.energy_saver_app.backendhandler.BackendInterface;
+import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.common.ApplianceCardData;
+import com.sh22.energy_saver_app.common.ApplianceData;
+import com.sh22.energy_saver_app.backend.BackendInterface;
 
 import org.json.JSONException;
 

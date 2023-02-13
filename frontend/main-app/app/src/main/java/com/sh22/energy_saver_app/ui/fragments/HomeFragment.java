@@ -1,10 +1,7 @@
-package com.sh22.energy_saver_app;
+package com.sh22.energy_saver_app.ui.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.BackgroundServiceStartNotAllowedException;
 import android.content.res.ColorStateList;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -19,10 +16,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sh22.energy_saver_app.backendhandler.ApplianceData;
-import com.sh22.energy_saver_app.backendhandler.AuthenticationException;
-import com.sh22.energy_saver_app.backendhandler.BackendInterface;
-import com.sh22.energy_saver_app.backendhandler.UserInfo;
+import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.common.ApplianceData;
+import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.UserInfo;
 
 import org.json.JSONException;
 
