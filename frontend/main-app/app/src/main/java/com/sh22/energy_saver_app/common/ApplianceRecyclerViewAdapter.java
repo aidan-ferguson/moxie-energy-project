@@ -2,6 +2,7 @@ package com.sh22.energy_saver_app.common;
 
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -75,13 +76,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.DeviceTitle.setTypeface(type);
 
         // Set the progress position and colour of the progress bar
-
-        //holder.progressBar.setProgress((int) (appliance_data.get(position).getUsageToday() * 100), true);
-        holder.progressBar.setProgress(32);
+        float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getWeeklyUsage() / appliance_data.get(position).getUsageToday());
+        holder.progressBar.setProgress((int) (appliance_score * 100), true);
+//        holder.progressBar.setProgress(32);
 
         int good_colour = ContextCompat.getColor(context, R.color.good_usage);
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
-        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, appliance_data.get(position).getUsageToday());
+        int resultColor = ColorUtils.blendARGB(bad_colour, good_colour, appliance_score);
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
 

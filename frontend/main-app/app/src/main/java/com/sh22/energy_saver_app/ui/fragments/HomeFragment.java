@@ -59,32 +59,31 @@ public class HomeFragment extends Fragment {
         new Thread(() -> {
             try {
                 ApplianceData appliance_data = BackendInterface.get_appliance_data();
+                if(appliance_data == null) {
+                    Log.e("SH22", "Error loading appliance data");
+                    throw new IOException();
+                }
+
                 // When we get the data, update the UI
-
-
                 // Some time may have passed so we need to check if the activity is now null
                 FragmentActivity activity = getActivity();
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        Double aggregate_daily = appliance_data.today.get(0);
-                        Log.d("moxie", String.valueOf(aggregate_daily));
-                        Double limit = appliance_data.weekly_average.get(0);
-                        float score = SH22Utils.normaliseEnergyRating((float)(aggregate_daily/limit));
-//                        float score = (float)(aggregate_daily/limit);
+                        float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
 
-                        Integer progress = Math.round(score * 100);
+                        int progress = Math.round(score * 100);
                         ProgressBar progressBar = view.findViewById(R.id.progress_bar);
                         TextView textView = view.findViewById(R.id.text_view_progress);
                         progressBar.setProgress(progress, true);
-                        textView.setText(progress.toString());
-                        int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
-                        int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        textView.setText(Integer.toString(progress));
+                        int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
 
                         // Clamp upper bound of the colour
                         if(score > 1.0) {
-                            resultColor = bad_colour;
+                            resultColor = good_colour;
                         }
 
                         progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
