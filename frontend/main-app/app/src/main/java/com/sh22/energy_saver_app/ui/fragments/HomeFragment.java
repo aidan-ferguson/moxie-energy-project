@@ -20,6 +20,7 @@ import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 
 import org.json.JSONException;
@@ -69,7 +70,8 @@ public class HomeFragment extends Fragment {
                         Double aggregate_daily = appliance_data.today.get(0);
                         Log.d("moxie", String.valueOf(aggregate_daily));
                         Double limit = appliance_data.weekly_average.get(0);
-                        float score = (float)(aggregate_daily / limit);
+                        float score = SH22Utils.normaliseEnergyRating((float)(aggregate_daily/limit));
+//                        float score = (float)(aggregate_daily/limit);
 
                         Integer progress = Math.round(score * 100);
                         ProgressBar progressBar = view.findViewById(R.id.progress_bar);

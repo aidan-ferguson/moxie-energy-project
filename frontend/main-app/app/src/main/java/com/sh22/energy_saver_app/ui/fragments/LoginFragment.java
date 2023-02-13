@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.sh22.energy_saver_app.backend.AuthenticationStatus;
-import com.sh22.energy_saver_app.activites.LoginActivity;
-import com.sh22.energy_saver_app.activites.MainActivity;
+import com.sh22.energy_saver_app.ui.activites.LoginActivity;
+import com.sh22.energy_saver_app.ui.activites.MainActivity;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
 

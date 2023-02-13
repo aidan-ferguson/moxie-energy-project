@@ -1,4 +1,4 @@
-package com.sh22.energy_saver_app.activites;
+package com.sh22.energy_saver_app.ui.activites;
 
 import android.content.Intent;
 import android.os.Bundle;

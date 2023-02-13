@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sh22.energy_saver_app.activites.LoginActivity;
+import com.sh22.energy_saver_app.ui.activites.LoginActivity;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
 
