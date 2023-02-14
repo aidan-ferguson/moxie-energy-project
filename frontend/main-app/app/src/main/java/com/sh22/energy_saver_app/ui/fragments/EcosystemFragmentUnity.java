@@ -9,11 +9,13 @@ import android.widget.FrameLayout;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
@@ -44,22 +46,6 @@ public class EcosystemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ecosystem, container, false);
-        // TODO: move unity to new scoring system
-        ApplianceData applianceData = null;
-        try {
-            applianceData = Objects.requireNonNull(BackendInterface.get_appliance_data(view.getContext()));
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-        Double limit = 500.0;
-        float score = (float) (1.0 - (float)(applianceData.today.get(0) / applianceData.weekly_average.get(0)));
-
-        // Clamp to 0-1
-        if (score < 0) {
-            score = 0;
-        } else if (score > 1) {
-            score = 1;
-        }
 
          // Create unity player and view
          if(mUnityPlayer == null) {
@@ -81,8 +67,25 @@ public class EcosystemFragment extends Fragment {
         mUnityPlayer.resume();
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-         // Set the eco-score of the player
-        UnityPlayer.UnitySendMessage("HealthManager", "SetHealth", String.valueOf(score));
+        // Set the eco-score of the player
+        new Thread(() -> {
+            try {
+                ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
+                if(appliance_data != null) {
+                    float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            UnityPlayer.UnitySendMessage("HealthManager", "SetHealth", String.valueOf(score));
+                        });
+                    }
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         return view;
     }
 
