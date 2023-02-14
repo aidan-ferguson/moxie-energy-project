@@ -17,6 +17,7 @@ import com.sh22.energy_saver_app.ui.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+    int currentFragment = R.id.home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,21 +28,23 @@ public class MainActivity extends AppCompatActivity {
 
         // Navigation bar stuff
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(item ->{
-            switch(item.getItemId()){
-                case R.id.home:
-                    replaceFragment(HomeFragment.newInstance());
-                    break;
-                case R.id.appliances:
-                    replaceFragment(new AppliancesFragment());
-                    break;
-                case R.id.ecosystem:
-                    replaceFragment(EcosystemFragment.newInstance());
-                    break;
-                case R.id.settings:
-                    replaceFragment(new SettingsFragment());
-                    break;
+            if(item.getItemId() != currentFragment) {
+                currentFragment = item.getItemId();
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        replaceFragment(HomeFragment.newInstance());
+                        break;
+                    case R.id.appliances:
+                        replaceFragment(new AppliancesFragment());
+                        break;
+                    case R.id.ecosystem:
+                        replaceFragment(EcosystemFragment.newInstance());
+                        break;
+                    case R.id.settings:
+                        replaceFragment(new SettingsFragment());
+                        break;
+                }
             }
-
             return true;
         });
     }
