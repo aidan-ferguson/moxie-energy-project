@@ -1,11 +1,23 @@
 package com.sh22.energy_saver_app.common;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.sh22.energy_saver_app.backend.AuthenticationException;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class SH22Utils {
 
@@ -45,5 +57,36 @@ public class SH22Utils {
             buffer.append(line);
         }
         return buffer.toString();
+    }
+
+    // Method to get a view from the backend
+    public static String getBackendView(String view_url, HashMap<String, String> requestProperties) throws AuthenticationException, IOException {
+        String url_str = Constants.SERVER_BASE_URL + view_url;
+        URL url;
+        try {
+            url = new URL(url_str);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new IOException();
+        }
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        if (requestProperties != null) {
+            for(String key : requestProperties.keySet()) {
+                connection.addRequestProperty(key, requestProperties.get(key));
+            }
+        }
+        connection.connect();
+
+        int response_code = connection.getResponseCode();
+        if (response_code != 200) {
+            String error_reason = SH22Utils.readFullStream(connection.getErrorStream());
+            Log.e("sh22", "BackendInterface::GetNationalAverages server returned code " + response_code);
+            Log.e("moxie", "BackendInterface::GetNationalAverages server returned: " + error_reason);
+            connection.disconnect();
+            throw new IOException();
+        } else {
+            return SH22Utils.readFullStream(connection.getInputStream());
+        }
     }
 }

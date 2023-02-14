@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
@@ -51,7 +52,7 @@ public class AppliancesFragment extends Fragment {
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
-                ApplianceData appliance_data = BackendInterface.get_appliance_data();
+                ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 Map<String, Double> national_averages = BackendInterface.GetNationalAverages();
 
                 // When we get the data, update the UI
@@ -91,7 +92,7 @@ public class AppliancesFragment extends Fragment {
                     }
                 }
 
-            } catch (IOException | JSONException e) {
+            } catch (AuthenticationException e) {
                 e.printStackTrace();
             }
         }).start();

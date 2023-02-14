@@ -1,5 +1,5 @@
 from django.contrib import admin, auth
-from api.models import User
+from api.models import User, Tip, TOTD
 
 class UserAdmin(auth.admin.UserAdmin):
     model = User
@@ -9,3 +9,5 @@ class UserAdmin(auth.admin.UserAdmin):
     )
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Tip)
+admin.site.register(TOTD)

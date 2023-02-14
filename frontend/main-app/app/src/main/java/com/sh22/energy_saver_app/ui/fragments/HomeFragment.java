@@ -1,6 +1,7 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +61,7 @@ public class HomeFragment extends Fragment {
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
-                ApplianceData appliance_data = BackendInterface.get_appliance_data();
+                ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 if(appliance_data == null) {
                     Log.e("SH22", "Error loading appliance data");
                     throw new IOException();
@@ -88,17 +90,44 @@ public class HomeFragment extends Fragment {
                         }
 
                         progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
-                        TextView textView2 = view.findViewById(R.id.text_view);
-                        textView2.setText("Use a power strip: Connecting multiple electronics to a power strip and turning off the strip when not in use can reduce standby power usage.");
 
-                        TextView textView3 = view.findViewById(R.id.text_view2);
-                        //hacky solution to make the last fews lines of text not cut out in the scroll view
-                        String message ="You seem to have used less energy on lights compared to last month. This is great and shows that you are taking steps to conserve electricity. However, we've noticed an increase in the use of your electric heater. This could be due to the colder weather or a change in your habits. It's important to keep an eye on your energy usage and find ways to reduce your consumption and save on energy costs. Keep up the good work!";
-                        String empty = ".                                                                                                    .";
-                    textView3.setText(message+empty+empty+empty);
                     });
                 }
-            } catch (IOException | JSONException e) {
+            } catch (AuthenticationException | IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        // Start new thread to get tips and usage report, these may take a while given OpenAI's inference time
+        new Thread(() -> {
+            try {
+                String totd = BackendInterface.GetTOTD(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Tip of the day
+                        TextView textView = view.findViewById(R.id.text_view);
+                        textView.setText(totd + "\n\n\n");
+                    });
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                String energy_report = BackendInterface.GetEnergyReport(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Usage report
+                        TextView textView2 = view.findViewById(R.id.text_view2);
+                        textView2.setText(energy_report + "\n\n\n");
+                        textView2.setGravity(Gravity.START);
+                    });
+                }
+            } catch (AuthenticationException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -108,7 +137,12 @@ public class HomeFragment extends Fragment {
             try {
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
                 if(userInfo != null) {
-                    ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome " + userInfo.firstname);
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome, " + userInfo.firstname);
+                        });
+                    }
                 }
             } catch (AuthenticationException e) {
                 e.printStackTrace();
