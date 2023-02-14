@@ -58,6 +58,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Network calls are ordered by what will be the quickest
+
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
@@ -98,6 +100,23 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
+        // Get user info to display on homepage
+        new Thread(() -> {
+            try {
+                UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
+                if(userInfo != null) {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome, " + userInfo.firstname);
+                        });
+                    }
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         // Start new thread to get tips and usage report, these may take a while given OpenAI's inference time
         new Thread(() -> {
             try {
@@ -126,23 +145,6 @@ public class HomeFragment extends Fragment {
                         textView2.setText(energy_report + "\n\n\n");
                         textView2.setGravity(Gravity.START);
                     });
-                }
-            } catch (AuthenticationException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        // Get user info to display on homepage
-        new Thread(() -> {
-            try {
-                UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
-                if(userInfo != null) {
-                    FragmentActivity activity = getActivity();
-                    if (activity != null) {
-                        activity.runOnUiThread(() -> {
-                            ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome, " + userInfo.firstname);
-                        });
-                    }
                 }
             } catch (AuthenticationException e) {
                 e.printStackTrace();

@@ -100,8 +100,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
         ArrayList<BarEntry> barEntriesArrayList = new ArrayList<>();
-        barEntriesArrayList.add(new BarEntry(1f, appliance_data.get(position).getUsageToday()));
-        barEntriesArrayList.add(new BarEntry(2f,appliance_data.get(position).getInitialUsage()));
+        barEntriesArrayList.add(new BarEntry(1f,appliance_data.get(position).getInitialUsage()));
+        barEntriesArrayList.add(new BarEntry(2f, appliance_data.get(position).getUsageToday()));
         barEntriesArrayList.add(new BarEntry(3f, appliance_data.get(position).getNationalAverage()));
         BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
         holder.barData = new BarData(barDataSet);
@@ -127,8 +127,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
         Legend legend = holder.barChart.getLegend();
 
-        legend.setCustom(new LegendEntry[]{new LegendEntry("Current Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[0]),
-                new LegendEntry("Initial Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[1]),
+        legend.setCustom(new LegendEntry[]{new LegendEntry("Initial Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[0]),
+                new LegendEntry("Current Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[1]),
                 new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[2])});
         //move the label to the top left
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);

@@ -1,24 +1,16 @@
 package com.sh22.energy_saver_app.backend;
 
-import android.content.AbstractThreadedSyncAdapter;
 import android.content.Context;
 import android.util.Log;
 
-import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +24,12 @@ public class BackendInterface {
     private static String cached_report = null;
 
     // mutex like object used to stop multiple calls to the backend at once
-    private static final Object lock = new Object();
+    private static final Object appliance_lock = new Object();
+    private static final Object national_average_lock = new Object();
+    private static final Object user_info_lock = new Object();
+    private static final Object totd_lock = new Object();
+    private static final Object report_lock = new Object();
+
 
     // Clear the local cache, used when the user signs out
     public static void ClearCache() {
@@ -47,9 +44,7 @@ public class BackendInterface {
     public static ApplianceData get_appliance_data(Context context) throws AuthenticationException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        synchronized (lock) {
             if (cached_appliance != null) {
-                lock.notifyAll();
                 return cached_appliance;
             }
 
@@ -80,20 +75,18 @@ public class BackendInterface {
                 }
 
                 cached_appliance = applianceData;
-                lock.notifyAll();
                 return applianceData;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
+
     }
 
     // Method to get the national averages from the database
     public static Map<String, Double> GetNationalAverages() {
-        synchronized (lock) {
+
             if (cached_national_averages != null) {
-                lock.notifyAll();
                 return cached_national_averages;
             }
             try {
@@ -106,22 +99,21 @@ public class BackendInterface {
                     averages.put(key, json_data.getDouble(key));
                 }
                 cached_national_averages = averages;
-                lock.notifyAll();
+
                 return averages;
             } catch (IOException | JSONException | AuthenticationException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
+
     }
 
     // Get user information stored in the backend
     public static UserInfo GetUserInfo(Context context) throws AuthenticationException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        synchronized (lock) {
+
             if (cached_user_info != null) {
-                lock.notifyAll();
                 return cached_user_info;
             }
 
@@ -137,21 +129,18 @@ public class BackendInterface {
                         json_data.getString("firstname"),
                         json_data.getString("surname"));
                 cached_user_info = userInfo;
-                lock.notifyAll();
                 return userInfo;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
+
     }
 
     public static String GetTOTD(Context context) throws AuthenticationException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        synchronized (lock) {
             if (cached_totd != null) {
-                lock.notifyAll();
                 return cached_totd;
             }
 
@@ -163,21 +152,18 @@ public class BackendInterface {
                 String response = SH22Utils.getBackendView("/tips/totd", requestProperties);
                 String totd = new JSONObject(response).getString("data");
                 cached_totd = totd;
-                lock.notifyAll();
                 return totd;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
+
     }
 
     public static String GetEnergyReport(Context context) throws AuthenticationException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        synchronized (lock) {
             if (cached_report != null) {
-                lock.notifyAll();
                 return cached_report;
             }
 
@@ -189,12 +175,10 @@ public class BackendInterface {
                 String response = SH22Utils.getBackendView("/tips/energy-report", requestProperties);
                 String report = new JSONObject(response).getString("data");
                 cached_report = report;
-                lock.notifyAll();
                 return report;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 return null;
             }
-        }
     }
 }
