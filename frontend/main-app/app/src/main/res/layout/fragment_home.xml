@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
 
     <!--Add ProgressBar. Main Attribute used here are
        style="@style/CircularDeterminateProgressBar" that
@@ -13,28 +13,21 @@
         android:progressDrawable="@drawable/circle" that has been
        created in circle.xml file above.-->
 
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@android:style/Widget.ProgressBar"
-        android:layout_width="261dp"
-        android:layout_height="240dp"
-        android:indeterminateBehavior="repeat"
-        android:indeterminateOnly="false"
-        android:progress="0"
-        android:progressDrawable="@drawable/circle"
-        android:rotation="0"
+    <com.ekn.gruzer.gaugelibrary.HalfGauge
+        android:id="@+id/halfGauge"
+        android:layout_width="276dp"
+        android:layout_height="254dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414"
-        tools:progress="0" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <TextView
         android:id="@+id/text_view_progress"
-        android:layout_width="180dp"
-        android:layout_height="174dp"
+        android:layout_width="178dp"
+        android:layout_height="172dp"
         android:gravity="center"
         android:shadowDx="1.5"
         android:shadowDy="1.3"
@@ -42,25 +35,31 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
         android:textSize="70sp"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar" />
+        app:layout_constraintBottom_toBottomOf="@+id/halfGauge"
+        app:layout_constraintEnd_toEndOf="@+id/halfGauge"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="@+id/halfGauge"
+        app:layout_constraintTop_toTopOf="@+id/halfGauge"
+        app:layout_constraintVertical_bias="0.454" />
 
     <TextView
-        android:id="@+id/usage_info"
-        android:layout_width="wrap_content"
-<<<<<<< Updated upstream
-        android:layout_height="wrap_content"
-        android:layout_marginStart="53dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginBottom="269dp"
-        android:text="Today's power usage compared to the last week "
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/home_fragment_heading"
+        android:layout_width="294dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="28dp"
+        android:text="Welcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#04244C"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_progress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
-=======
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"></LinearLayout>
 
@@ -69,7 +68,7 @@
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
-        android:background="@drawable/outlined_box"
+        android:background="@drawable/layout_bg"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
@@ -79,13 +78,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/halfGauge" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="324dp"
         android:layout_height="49dp"
-        android:background="@drawable/outlined_box"
+        android:background="@drawable/layout_bg"
         android:backgroundTint="#04244C"
         android:gravity="center"
         android:paddingLeft="20dp"
@@ -103,7 +102,7 @@
         android:layout_width="324dp"
         android:layout_height="49dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/outlined_box"
+        android:background="@drawable/layout_bg"
         android:backgroundTint="#04244C"
         android:gravity="center"
         android:paddingLeft="20dp"
@@ -123,7 +122,7 @@
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:background="@drawable/outlined_box"
+        android:background="@drawable/layout_bg"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
@@ -140,27 +139,26 @@
         android:layout_width="32dp"
         android:layout_height="30dp"
         android:src="@drawable/bulb"
+        android:tint="#DEB276"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
+        app:layout_constraintHorizontal_bias="0.174"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.485"
-        app:tint="#DEB276" />
+        app:layout_constraintVertical_bias="0.469" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="32dp"
         android:layout_height="30dp"
         android:src="@drawable/bulb"
-        app:tint="#DEB276"
+        android:tint="#DEB276"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
+        app:layout_constraintHorizontal_bias="0.174"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.634" />
->>>>>>> Stashed changes
+        app:layout_constraintVertical_bias="0.617" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

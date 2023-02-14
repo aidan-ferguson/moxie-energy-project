@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.sh22.energy_saver_app.backendhandler.ApplianceData;
 import com.sh22.energy_saver_app.backendhandler.BackendInterface;
 
@@ -70,10 +71,8 @@ public class HomeFragment extends Fragment {
                         Double limit = appliance_data.weekly_average.get(0);
                         float score = (float)(aggregate_daily / limit);
 
-                        Integer progress = Math.round(score * 100);
-                        ProgressBar progressBar = view.findViewById(R.id.progress_bar);
+                        Integer progress = Math.round(score * 100)-50;
                         TextView textView = view.findViewById(R.id.text_view_progress);
-                        progressBar.setProgress(progress);
                         textView.setText(progress.toString());
                         int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
@@ -84,7 +83,11 @@ public class HomeFragment extends Fragment {
                             resultColor = bad_colour;
                         }
 
-                        progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
+                        HalfGauge gauge = view.findViewById(R.id.halfGauge);
+                        gauge.setMinValue(-50);
+                        gauge.setMaxValue((50));
+                        gauge.setValue(progress);
+                        gauge.setBackgroundColor(resultColor);
                     });
                 }
             } catch (IOException | JSONException e) {
