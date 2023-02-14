@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sh22.energy_saver_app.R;
@@ -88,7 +89,13 @@ public class HomeFragment extends Fragment {
 
                         progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
                         TextView textView2 = view.findViewById(R.id.text_view);
-                        textView2.setText("Your text here rjgnfd adkfgbdfg aoifghaoufghaf agobaofhg aogubaofigaoif agbaofgbdaofu afgbaofighoaif aoghadfoihgoifda ah0ghafiogh eojrhgoierhg adfoighaopidrhgn a goaidhgoifadhgoifd aofghoiafhdgioahfg aghoafhgoiafshgoifs g aohsgioashgoiasg as gofshagoifadhgoidfg afogiuhsafoihasfog asfkmg fskjgao[htpqw4htrh gdn;mkxc htv4qnepysah d'lNSAkriyet9hnfds gh9gon");
+                        textView2.setText("Use a power strip: Connecting multiple electronics to a power strip and turning off the strip when not in use can reduce standby power usage.");
+
+                        TextView textView3 = view.findViewById(R.id.text_view2);
+                        //hacky solution to make the last fews lines of text not cut out in the scroll view
+                        String message ="You seem to have used less energy on lights compared to last month. This is great and shows that you are taking steps to conserve electricity. However, we've noticed an increase in the use of your electric heater. This could be due to the colder weather or a change in your habits. It's important to keep an eye on your energy usage and find ways to reduce your consumption and save on energy costs. Keep up the good work!";
+                        String empty = ".                                                                                                    .";
+                    textView3.setText(message+empty+empty+empty);
                     });
                 }
             } catch (IOException | JSONException e) {
