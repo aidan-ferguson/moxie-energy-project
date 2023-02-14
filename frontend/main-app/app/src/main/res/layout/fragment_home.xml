@@ -26,21 +26,22 @@
 
     <TextView
         android:id="@+id/text_view_progress"
-        android:layout_width="178dp"
-        android:layout_height="172dp"
+        android:layout_width="168dp"
+        android:layout_height="148dp"
         android:gravity="center"
         android:shadowDx="1.5"
         android:shadowDy="1.3"
         android:shadowRadius="1.6"
+        android:text="0"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
         android:textSize="70sp"
         app:layout_constraintBottom_toBottomOf="@+id/halfGauge"
         app:layout_constraintEnd_toEndOf="@+id/halfGauge"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/halfGauge"
         app:layout_constraintTop_toTopOf="@+id/halfGauge"
-        app:layout_constraintVertical_bias="0.454" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/home_fragment_heading"
@@ -56,6 +57,19 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+    <TextView
+        android:id="@+id/home_fragment_letter_grade"
+        android:layout_width="76dp"
+        android:layout_height="60dp"
+        android:text="A+"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#04244C"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.817"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="57dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"

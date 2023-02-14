@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -23,6 +24,7 @@ import com.sh22.energy_saver_app.backendhandler.ApplianceData;
 import com.sh22.energy_saver_app.backendhandler.BackendInterface;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -88,6 +90,49 @@ public class HomeFragment extends Fragment {
                         gauge.setMaxValue((50));
                         gauge.setValue(progress);
                         gauge.setBackgroundColor(resultColor);
+
+                        TextView letterGrade = view.findViewById(R.id.home_fragment_heading);
+                        if(progress <= 50)
+                        {
+                            letterGrade.setText("F-");
+                        }
+                        else if (progress <= 40)
+                        {
+                            letterGrade.setText("F+");
+                        }
+                        else if(progress <= -30)
+                        {
+                            letterGrade.setText("D-");
+                        }
+                        else if(progress <= -20)
+                        {
+                            letterGrade.setText("D+");
+                        }
+                        else if (progress <= -10)
+                        {
+                            letterGrade.setText("C-");
+                        }
+                        else if (progress <= 10)
+                        {
+                            letterGrade.setText("C+");
+                        }
+                        else if (progress <= 20)
+                        {
+                            letterGrade.setText("B-");
+                        }
+                        else if (progress <= 30)
+                        {
+                            letterGrade.setText("B+");
+                        }
+                        else if (progress > 40)
+                        {
+                            letterGrade.setText("A-");
+                        }
+                        else if (progress > 50)
+                        {
+                            letterGrade.setText("A+");
+                        }
+                        letterGrade.setTextColor(resultColor);
                     });
                 }
             } catch (IOException | JSONException e) {
