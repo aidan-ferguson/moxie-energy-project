@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
 
     <!--Add ProgressBar. Main Attribute used here are
        style="@style/CircularDeterminateProgressBar" that
@@ -170,9 +171,59 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.174"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.617" />
+        app:layout_constraintVertical_bias="0.629">
 
+        <TextView
+            android:id="@+id/text_view2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+
+            android:backgroundTint="#DEB276"
+
+
+            android:gravity="center"
+            android:maxLines="1000"
+            android:text="We are fetching your report"
+            android:textColor="@color/black"
+
+            android:textSize="16dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text3" />
+    </ScrollView>
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="304dp"
+        android:layout_height="47dp"
+
+        android:layout_marginTop="8dp"
+        android:background="@drawable/layout_bg"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="0dp"
+        android:paddingRight="20sp"
+        android:text="Your Usage Report"
+        android:textColor="@color/blue_whale"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrollView4" />
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="32dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:src="@android:drawable/sym_contact_card"
+        android:tint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/text4"
+        app:layout_constraintStart_toStartOf="@+id/text3"
+        app:layout_constraintTop_toTopOf="@+id/text4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

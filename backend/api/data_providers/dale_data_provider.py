@@ -13,7 +13,7 @@ import time
 import os
 
 # Resolution of the DALE dataset in seconds
-DALE_RESOLUTION = 6
+DALE_RESOLUTION = 30*60
 
 DALE_FOLDER = staticfiles_storage.path("datasets/dale")
 
