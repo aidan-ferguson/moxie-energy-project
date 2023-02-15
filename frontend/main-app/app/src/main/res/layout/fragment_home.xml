@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+
     tools:context=".ui.fragments.HomeFragment">
 
     <!--Add ProgressBar. Main Attribute used here are
@@ -57,119 +58,52 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView3"
-        android:layout_width="317dp"
-        android:layout_height="176dp"
-        android:layout_marginTop="16dp"
-
-        android:background="@drawable/curved_border"
-        android:padding="10dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95">
-
-        <TextView
-            android:id="@+id/text_view"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-
-            android:backgroundTint="#DEB276"
-            android:gravity="center"
-
-            android:paddingTop="10dp"
-
-            android:text="We are getting the tip of the day"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text3" />
-    </ScrollView>
-
     <TextView
-        android:id="@+id/text3"
-        android:layout_width="304dp"
-        android:layout_height="47dp"
+        android:id="@+id/text4"
+        android:layout_width="162dp"
+        android:layout_height="139dp"
 
-        android:layout_marginTop="8dp"
-        android:background="@drawable/layout_bg"
+        android:background="@drawable/layout_bg2"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="0dp"
         android:paddingRight="20sp"
-        android:text="Tip of the Day"
+        android:text="Your Usage Report"
         android:textColor="@color/blue_whale"
         android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView3" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="32dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/bulb"
-        android:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/text3"
-        app:layout_constraintStart_toStartOf="@+id/text3"
-        app:layout_constraintTop_toTopOf="@+id/text3" />
-
-
-    <ScrollView
-        android:id="@+id/scrollView4"
-        android:layout_width="317dp"
-        android:layout_height="176dp"
-        android:layout_marginTop="16dp"
-
-        android:background="@drawable/curved_border"
-
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="153dp"
+        android:layout_height="139dp"
+
+        android:background="@drawable/layout_bg2"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="0dp"
+        android:paddingRight="20sp"
+        android:text="Your Usage Report"
+        android:textColor="@color/blue_whale"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.708"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.629">
+        app:layout_constraintVertical_bias="0.501" />
 
-        <TextView
-            android:id="@+id/text_view2"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-
-            android:backgroundTint="#DEB276"
-
-
-            android:gravity="center"
-            android:maxLines="1000"
-            android:text="We are fetching your report"
-            android:textColor="@color/black"
-
-            android:textSize="16dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text3" />
-    </ScrollView>
     <TextView
-        android:id="@+id/text4"
-        android:layout_width="304dp"
-        android:layout_height="47dp"
+        android:id="@+id/text8"
+        android:layout_width="153dp"
+        android:layout_height="139dp"
 
-        android:layout_marginTop="8dp"
-        android:background="@drawable/layout_bg"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/layout_bg2"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingTop="0dp"
@@ -178,19 +112,28 @@
         android:textColor="@color/blue_whale"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.708"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView4" />
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="32dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:src="@android:drawable/sym_contact_card"
-        android:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/text4"
-        app:layout_constraintStart_toStartOf="@+id/text3"
-        app:layout_constraintTop_toTopOf="@+id/text4" />
+        app:layout_constraintTop_toBottomOf="@+id/text3" />
+
+    <TextView
+        android:id="@+id/text5"
+        android:layout_width="162dp"
+        android:layout_height="138dp"
+
+        android:layout_marginTop="24dp"
+        android:background="@drawable/layout_bg2"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="0dp"
+        android:paddingRight="20sp"
+        android:text="Your Usage Report"
+        android:textColor="@color/blue_whale"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text4" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

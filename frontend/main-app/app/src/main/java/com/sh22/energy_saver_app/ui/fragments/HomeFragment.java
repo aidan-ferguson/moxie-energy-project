@@ -165,8 +165,8 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Tip of the day
-                        TextView textView = view.findViewById(R.id.text_view);
-                        textView.setText(totd + "\n\n\n");
+                        //TextView textView = view.findViewById(R.id.text_view);
+                        //textView.setText(totd + "\n\n\n");
                     });
                 }
             } catch (AuthenticationException e) {
@@ -181,9 +181,9 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Usage report
-                        TextView textView2 = view.findViewById(R.id.text_view2);
-                        textView2.setText(energy_report + "\n\n\n");
-                        textView2.setGravity(Gravity.START);
+                        //TextView textView2 = view.findViewById(R.id.text_view2);
+                        //textView2.setText(energy_report + "\n\n\n");
+                        //textView2.setGravity(Gravity.START);
                     });
                 }
             } catch (AuthenticationException e) {
