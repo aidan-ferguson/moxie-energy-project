@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HomeFragment">
-    tools:context=".ui.fragments.HomeFragment">
 
     <!--Add ProgressBar. Main Attribute used here are
        style="@style/CircularDeterminateProgressBar" that
@@ -174,10 +173,10 @@
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.629">
+        app:layout_constraintVertical_bias="0.629" />
 
         <TextView
-            android:id="@+id/text_view2"
+            android:id="@+id/text_view5"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
@@ -195,7 +194,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text3" />
-    </ScrollView>
+
     <TextView
         android:id="@+id/text4"
         android:layout_width="304dp"
@@ -212,8 +211,7 @@
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView4" />
+        app:layout_constraintStart_toStartOf="parent" />
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="32dp"
