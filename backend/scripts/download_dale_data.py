@@ -5,6 +5,8 @@
 import requests
 import os
 import subprocess
+import numpy as np
+import json 
 
 # URL, which files we want from the server and the depth of files we want to download
 BASE_URL = "https://data.ukedc.rl.ac.uk/mget/edc/efficiency/residential/EnergyConsumption/Domestic/UK-DALE-2015/UK-DALE-disaggregated"
@@ -12,6 +14,7 @@ FILES_TO_DOWNLOAD = "*"
 DEPTH = 1
 COMPRESSION_RATIO = 3  # For printing accurate(ish) percentages during downloading
 TIME_RESOLUTION = 30*60  # Resolution that the data will be stored at in seconds
+NATIONAL_AVERAGES_FILE = "house_averages.dat" # Where the average data will be stored
 
 
 # Get the filesize of the file we want, not essential and is specific to the UK-DALE website
@@ -30,8 +33,14 @@ def dale_get_file_size(url):
 
 
 # Will download the file in chuncks, periodically saving them to disk
-def dale_download_file(folder):
-    for house in ["house_3", "house_4"]:
+def dale_download_files(folder, houses_to_exclude):
+    if houses_to_exclude == None:
+        houses_to_exclude = []
+    default_houses = ["house_1", "house_2", "house_3", "house_4", "house_5"]
+    for house in default_houses:
+        if house in houses_to_exclude:
+            continue
+        
         print(f"Downloading {house} dataset")
         base_url = f"{BASE_URL}/{house}.tgz"
         final_url = f"{base_url}?glob={FILES_TO_DOWNLOAD}&depth={DEPTH}"
@@ -121,6 +130,43 @@ def decrease_dale_resolution(house_folder):
             with open(os.path.join(house_folder, filename), "w") as file:
                 file.write('\n'.join(new_readings))
 
+# Calculate the averages for each channel in the dataset and store it in a new folder
+def dale_calculate_averages(dale_folder):
+    print("Calculating national averages")
+    houses = {}
+    for foldername in os.listdir(dale_folder):
+        folderpath = os.path.join(dale_folder, foldername)
+        if os.path.isdir(folderpath):
+            # Read labels, get name of channels, average them, then save to dict
+            device_usages = {}
+            with open(os.path.join(folderpath, "labels.dat"), "r") as file:
+                labels = file.readlines()
+            for label in labels:
+                with open(os.path.join(folderpath, f"channel_{int(label.split(' ')[0])}.dat")) as file:
+                    # Read energy readings
+                    energy_readings = [int(line.split(" ")[1]) for line in file.readlines()]
+                    device_usages[label.split(" ")[1].strip()] = np.mean(energy_readings)
+            houses[foldername] = device_usages
+
+    # Now congregate all readings from the houses
+    final_averages = {}
+    for house in houses:
+        for reading in houses[house]:
+            reading_array = final_averages.get(reading, [])
+            reading_array.append(houses[house][reading])
+            final_averages[reading] = reading_array
+            
+    print(final_averages)
+            
+    # Finally average them
+    for reading in final_averages:
+        final_averages[reading] = np.mean(final_averages[reading])
+        
+    # Output to file
+    with open(os.path.join(dale_folder, NATIONAL_AVERAGES_FILE), "w") as file:
+        file.write(json.dumps(final_averages))
+    
+    print("Finished averaging")
 
 if __name__ == "__main__":
-    dale_download_file(".")
+    dale_calculate_averages(".")#dale_download_file(".")

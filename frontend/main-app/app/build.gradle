@@ -30,12 +30,12 @@ plugins {
 // Is a tool that will not be forgot.
 task copy_unity_files {
     if (project.hasProperty("BuildUnity")) {
-        def src = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragmentUnity.java")
-        def dst = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java")
+        def src = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentUnity.java")
+        def dst = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragment.java")
         dst.write(src.text)
     } else {
-        def src = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragmentNoUnity.java")
-        def dst = new File("app/src/main/java/com/sh22/energy_saver_app/EcosystemFragment.java")
+        def src = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentNoUnity.java")
+        def dst = new File(project.projectDir.toString() + "/src/main/java/com/sh22/energy_saver_app/ui/fragments/EcosystemFragment.java")
         dst.write(src.text)
     }
 }
@@ -85,8 +85,8 @@ android {
         main {
             java {
                 // Exclude both template ecosystem fragment files and copy the appropriate one to EcosystemFragment.java
-                exclude 'com/sh22/energy_saver_app/EcosystemFragmentNoUnity.java'
-                exclude 'com/sh22/energy_saver_app/EcosystemFragmentUnity.java'
+                exclude 'com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentNoUnity.java'
+                exclude 'com/sh22/energy_saver_app/ui/fragments/EcosystemFragmentUnity.java'
             }
         }
     }
@@ -99,6 +99,7 @@ dependencies {
         implementation project(':unityLibrary')
         implementation fileTree(dir: project(':unityLibrary').projectDir.toString() + '/libs', include: ['*.jar'])
     }
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.squareup.okhttp3:okhttp:4.8.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.5.0'
@@ -109,6 +110,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
