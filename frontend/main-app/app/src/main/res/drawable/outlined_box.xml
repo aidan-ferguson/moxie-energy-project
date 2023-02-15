@@ -5,11 +5,3 @@
     <corners android:radius="30dp"/>
     <padding android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp" />
 </shape>
-
-<solid android:color="#DEB276"/>
-    <corners
-        android:radius="6dp"/>
-    <stroke
-        android:width="2dp"
-        android:color="#04244C"/>
-</shape>

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
 
     <!--Add ProgressBar. Main Attribute used here are
        style="@style/CircularDeterminateProgressBar" that
@@ -13,48 +14,41 @@
         android:progressDrawable="@drawable/circle" that has been
        created in circle.xml file above.-->
 
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@android:style/Widget.ProgressBar"
-        android:layout_width="261dp"
-        android:layout_height="240dp"
-        android:indeterminateBehavior="repeat"
-        android:indeterminateOnly="false"
-        android:progress="0"
-        android:progressDrawable="@drawable/circle"
-        android:rotation="0"
+    <com.ekn.gruzer.gaugelibrary.HalfGauge
+        android:id="@+id/halfGauge"
+        android:layout_width="276dp"
+        android:layout_height="254dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.126"
-        tools:progress="0" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <TextView
         android:id="@+id/text_view_progress"
-        android:layout_width="180dp"
-        android:layout_height="174dp"
+        android:layout_width="168dp"
+        android:layout_height="148dp"
         android:gravity="center"
         android:shadowDx="1.5"
         android:shadowDy="1.3"
         android:shadowRadius="1.6"
+        android:text="0"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#000000"
         android:textSize="70sp"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar"
-        app:layout_constraintVertical_bias="0.454" />
+        app:layout_constraintBottom_toBottomOf="@+id/halfGauge"
+        app:layout_constraintEnd_toEndOf="@+id/halfGauge"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="@+id/halfGauge"
+        app:layout_constraintTop_toTopOf="@+id/halfGauge"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/home_fragment_heading"
-        android:layout_width="match_parent"
+        android:layout_width="294dp"
         android:layout_height="53dp"
         android:layout_marginBottom="28dp"
-        android:gravity="center"
         android:text="Welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#04244C"
@@ -65,87 +59,118 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <ScrollView
-        android:id="@+id/scrollView3"
-        android:layout_width="317dp"
-        android:layout_height="176dp"
-        android:layout_marginTop="16dp"
-
-        android:background="@drawable/curved_border"
-        android:padding="10dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/home_fragment_letter_grade"
+        android:layout_width="76dp"
+        android:layout_height="60dp"
+        android:text="A+"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#04244C"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.817"
         app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="57dp" />
 
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95">
-
-        <TextView
-            android:id="@+id/text_view"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-
-            android:backgroundTint="#DEB276"
-            android:gravity="center"
-
-            android:paddingTop="10dp"
-
-            android:text="We are getting the tip of the day"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text3" />
-    </ScrollView>
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
 
     <TextView
-        android:id="@+id/text3"
-        android:layout_width="304dp"
-        android:layout_height="47dp"
-
-        android:layout_marginTop="8dp"
+        android:id="@+id/text_view2"
+        android:layout_width="324dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
         android:background="@drawable/layout_bg"
         android:gravity="center"
         android:paddingLeft="20dp"
-        android:paddingTop="0dp"
+        android:paddingTop="10dp"
         android:paddingRight="20sp"
-        android:text="Tip of the Day"
-        android:textColor="@color/blue_whale"
-        android:textSize="20dp"
+        android:text="Your text here"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView3" />
+        app:layout_constraintTop_toBottomOf="@+id/halfGauge" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="324dp"
+        android:layout_height="49dp"
+        android:background="@drawable/layout_bg"
+        android:backgroundTint="#04244C"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20sp"
+        android:text="TIP OF THE DAY"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="324dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/layout_bg"
+        android:backgroundTint="#04244C"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20sp"
+        android:text="TIP OF THE DAY"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view2" />
+
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="324dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/layout_bg"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20sp"
+        android:text="Your text here"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text3" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="32dp"
+        android:layout_height="30dp"
+        android:src="@drawable/bulb"
+        android:tint="#DEB276"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.469" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="32dp"
         android:layout_height="30dp"
-        android:layout_marginStart="16dp"
         android:src="@drawable/bulb"
-        android:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/text3"
-        app:layout_constraintStart_toStartOf="@+id/text3"
-        app:layout_constraintTop_toTopOf="@+id/text3" />
-
-
-    <ScrollView
-        android:id="@+id/scrollView4"
-        android:layout_width="317dp"
-        android:layout_height="176dp"
-        android:layout_marginTop="16dp"
-
-        android:background="@drawable/curved_border"
-
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
+        android:tint="#DEB276"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.174"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
