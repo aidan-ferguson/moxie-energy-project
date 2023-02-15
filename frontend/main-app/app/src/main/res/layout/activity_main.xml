@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background = "@drawable/background_cropped"
+
     tools:context=".MainActivity">
 
 
@@ -13,7 +13,7 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/blue_whale"
         app:itemIconTint="@color/harvest_gold"
         app:itemTextColor="@color/harvest_gold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,12 +38,6 @@
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/div_line"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:src="@drawable/div_line"
-        app:layout_constraintBottom_toBottomOf="@+id/frame_layout"
-        tools:layout_editor_absoluteX="-8dp"></ImageView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

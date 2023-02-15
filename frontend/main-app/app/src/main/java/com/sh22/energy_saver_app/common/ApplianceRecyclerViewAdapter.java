@@ -268,9 +268,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
 
-                        Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/MicroFLF.ttf");
-                        BreakDownButton.setTypeface(type);
-                        TipsButton.setTypeface(type);
+
                         AnimatorSet animatorSet = new AnimatorSet();
                         animatorSet.playTogether(heightAnimator, widthAnimator);
 

@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
@@ -76,23 +77,62 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        score=0.7f;
 
                         int progress = Math.round(score * 100);
-                        ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-                        TextView textView = view.findViewById(R.id.text_view_progress);
-                        progressBar.setProgress(progress, true);
-                        textView.setText(Integer.toString(progress));
+
                         int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+                        
+                        HalfGauge gauge = view.findViewById(R.id.halfGauge);
+                        gauge.setMinValue(0);
+                        gauge.setMaxValue(100);
+                        gauge.setValue(progress);
+                        gauge.setGaugeBackGroundColor(resultColor);
 
-                        // Clamp upper bound of the colour
-                        if(score > 1.0) {
-                            resultColor = good_colour;
+                        TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
+                        if(progress <= 50)
+                        {
+                            letterGrade.setText("F-");
                         }
-
-                        progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
-
+                        else if (progress <= 40)
+                        {
+                            letterGrade.setText("F+");
+                        }
+                        else if(progress <= -30)
+                        {
+                            letterGrade.setText("D-");
+                        }
+                        else if(progress <= -20)
+                        {
+                            letterGrade.setText("D+");
+                        }
+                        else if (progress <= -10)
+                        {
+                            letterGrade.setText("C-");
+                        }
+                        else if (progress <= 10)
+                        {
+                            letterGrade.setText("C+");
+                        }
+                        else if (progress <= 20)
+                        {
+                            letterGrade.setText("B-");
+                        }
+                        else if (progress <= 30)
+                        {
+                            letterGrade.setText("B+");
+                        }
+                        else if (progress > 40)
+                        {
+                            letterGrade.setText("A-");
+                        }
+                        else if (progress > 50)
+                        {
+                            letterGrade.setText("A+");
+                        }
+                        letterGrade.setTextColor(resultColor);
                     });
                 }
             } catch (AuthenticationException | IOException e) {
@@ -125,8 +165,8 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Tip of the day
-                        TextView textView = view.findViewById(R.id.text_view);
-                        textView.setText(totd + "\n\n\n");
+                        //TextView textView = view.findViewById(R.id.text_view);
+                        //textView.setText(totd + "\n\n\n");
                     });
                 }
             } catch (AuthenticationException e) {
@@ -141,9 +181,9 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Usage report
-                        TextView textView2 = view.findViewById(R.id.text_view2);
-                        textView2.setText(energy_report + "\n\n\n");
-                        textView2.setGravity(Gravity.START);
+                        //TextView textView2 = view.findViewById(R.id.text_view2);
+                        //textView2.setText(energy_report + "\n\n\n");
+                        //textView2.setGravity(Gravity.START);
                     });
                 }
             } catch (AuthenticationException e) {

@@ -7,28 +7,24 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
-import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-import com.sh22.energy_saver_app.common.SH22Utils;
-import com.unity3d.player.UnityPlayer;
+// import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.Objects;
 
-// Template file for when building with unity version
+// // All comments in this file should have double 
 
 public class EcosystemFragment extends Fragment {
 
     // // Unity player variables
-    private static UnityPlayer mUnityPlayer = null;
+    // private static UnityPlayer mUnityPlayer = null;
     FrameLayout frameLayoutForUnity;
 
     public EcosystemFragment() {
@@ -47,63 +43,56 @@ public class EcosystemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ecosystem, container, false);
 
+        Double aggregate_daily = 0.0;
+        try {
+            aggregate_daily = Objects.requireNonNull(BackendInterface.get_appliance_data(view.getContext())).today.get(0);
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+        // TODO: Unity not using new score yet
+        Double limit = 500.0;
+        float score = (float)(aggregate_daily / limit);
+
          // Create unity player and view
-         if(mUnityPlayer == null) {
-             mUnityPlayer = new UnityPlayer(getActivity());
-         }
+        //  if(mUnityPlayer == null) {
+        //      mUnityPlayer = new UnityPlayer(getActivity());
+        //  }
 
          // We need to remove any old parent
-         if(mUnityPlayer.getParent() != null) {
-             ((CardView)mUnityPlayer.getParent()).removeView(mUnityPlayer);
-         }
+        //  if(mUnityPlayer.getParent() != null) {
+        //      ((CardView)mUnityPlayer.getParent()).removeView(mUnityPlayer);
+        //  }
 
         this.frameLayoutForUnity = view.findViewById(R.id.frameLayoutForUnity);
-        this.frameLayoutForUnity.addView(mUnityPlayer.getView(),
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        // this.frameLayoutForUnity.addView(mUnityPlayer.getView(),
+        //         FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
 
          // Initialise view
-        mUnityPlayer.requestFocus();
-        mUnityPlayer.windowFocusChanged(true);
-        mUnityPlayer.resume();
+        // mUnityPlayer.requestFocus();
+        // mUnityPlayer.windowFocusChanged(true);
+        // mUnityPlayer.resume();
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Set the eco-score of the player
-        new Thread(() -> {
-            try {
-                ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
-                if(appliance_data != null) {
-                    float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-
-                    FragmentActivity activity = getActivity();
-                    if (activity != null) {
-                        activity.runOnUiThread(() -> {
-                            UnityPlayer.UnitySendMessage("HealthManager", "SetHealth", String.valueOf(score));
-                        });
-                    }
-                }
-            } catch (AuthenticationException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+         // Set the eco-score of the player
+        // UnityPlayer.UnitySendMessage("HealthManager", "SetHealth", String.valueOf(score));
         return view;
     }
 
     @Override
     public void onDestroy() {
-        mUnityPlayer.pause();
+        // mUnityPlayer.pause();
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        mUnityPlayer.pause();
+        // mUnityPlayer.pause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        mUnityPlayer.resume();
+        // mUnityPlayer.resume();
         super.onResume();
     }
 }
