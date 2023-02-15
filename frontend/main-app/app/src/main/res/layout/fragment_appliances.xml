@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="@color/light_blue"
-    android:background="@color/blue_whale"
+
     tools:context=".ui.fragments.AppliancesFragment">
 
 

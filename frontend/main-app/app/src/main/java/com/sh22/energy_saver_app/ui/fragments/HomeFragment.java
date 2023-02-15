@@ -77,10 +77,10 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        score=0.7f;
 
                         int progress = Math.round(score * 100);
-                        TextView textView = view.findViewById(R.id.text_view_progress);
-                        textView.setText(Integer.toString(progress));
+
                         int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
                         gauge.setValue(progress);
                         gauge.setGaugeBackGroundColor(resultColor);
 
-                        TextView letterGrade = view.findViewById(R.id.home_fragment_heading);
+                        TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
                         if(progress <= 50)
                         {
                             letterGrade.setText("F-");
