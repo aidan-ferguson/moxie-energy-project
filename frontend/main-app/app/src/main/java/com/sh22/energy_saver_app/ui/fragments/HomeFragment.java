@@ -81,7 +81,6 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-                        score = 0.8f;
 
                         int progress = Math.round(score * 100);
 
