@@ -78,13 +78,13 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-                        score=0.7f;
+                        score=0.0f;
 
                         int progress = Math.round(score * 100) - 50;
 
-                        int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
-                        int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
+                        int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
 
                         int resultColor = 0;
 
@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
                         }
                         else
                         {
-                            resultColor = ColorUtils.blendARGB(good_colour, mid_colour, score);
+                            resultColor = ColorUtils.blendARGB(mid_colour, good_colour, score);
                         }
 
 
@@ -103,25 +103,25 @@ public class HomeFragment extends Fragment {
                         gauge.setMinValue(-100);
                         gauge.setMaxValue(100);
                         gauge.setValue(progress);
+                        for(int i = -50; i < 50; i++)
+                        {
+                            Range range = new Range();
+                            int colorToSet = ColorUtils.blendARGB(bad_colour, mid_colour, (i+50)/100f);
+                            range.setColor(colorToSet);
+                            range.setFrom(i-50);
+                            range.setTo(i-49);
+                            gauge.addRange(range);
+                        }
 
-                        Range range1 = new Range();
-                        range1.setColor(bad_colour);
-                        range1.setFrom(-100);
-                        range1.setTo(33.4);
-
-                        Range range2 = new Range();
-                        range2.setColor(mid_colour);
-                        range2.setFrom(-33.4);
-                        range2.setTo(33.4);
-
-                        Range range3 = new Range();
-                        range2.setColor(good_colour);
-                        range2.setFrom(33.4);
-                        range2.setTo(100);
-
-                        gauge.addRange(range1);
-                        gauge.addRange(range2);
-                        gauge.addRange(range3);
+                        for(int i = -50; i < 50; i++)
+                        {
+                            Range range = new Range();
+                            int colorToSet = ColorUtils.blendARGB(mid_colour, good_colour, (i+50)/100f);
+                            range.setColor(colorToSet);
+                            range.setFrom(i+50);
+                            range.setTo(i+49);
+                            gauge.addRange(range);
+                        }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
                         if(progress <= 50)

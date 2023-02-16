@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="good_usage">#77DD76</color>
-    <color name="good_usage_light">#2877DD76</color>
-
+    <color name="mid_usage">#fff066</color>
     <color name="bad_usage">#FF6961</color>
     <color name="yellow_metal">#7D633F</color>
     <color name="harvest_gold">#DEB276</color>
