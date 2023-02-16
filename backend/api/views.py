@@ -86,7 +86,7 @@ class EnergyReportView(views.APIView):
             return Response(json_success(cached.first().text))
         
         try:
-            prompt = Prompts.get_energy_report_prompt(json.loads(AppliancesView.get(request).content)['data'])
+            prompt = Prompts.get_energy_report_prompt(get_user_energy_data(request.user)['data'])
             response = prompt_gpt3(prompt).strip()
             models.Tip.objects.create(device="aggregate", text=response, user=request.user)
             return Response(json_success(response))
