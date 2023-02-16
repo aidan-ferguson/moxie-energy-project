@@ -3,9 +3,9 @@
 
 from rest_framework import serializers
 from api.models import User
-from rest_framework.authtoken.models import Token
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(
@@ -35,7 +35,7 @@ class RegisterSerializer(serializers.Serializer):
         surname = request.get("surname", None)
 
         if username and password and firstname and surname:
-            if User.objects.filter(username=username).exists() == True:
+            if User.objects.filter(username=username).exists() is True:
                 # User already exists
                 raise serializers.ValidationError("A user with that email already exists", code='email-in-use')
             
@@ -46,10 +46,10 @@ class RegisterSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Please enter a valid email address", code='invalid-email')
             
             User.objects.create_user(username=username,
-                                    password=password,
-                                    email=username,
-                                    first_name=firstname,
-                                    last_name=surname)
+                                     password=password,
+                                     email=username,
+                                     first_name=firstname,
+                                     last_name=surname)
             return True
         else:
             raise serializers.ValidationError("You need to enter all fields.", code='authorization')

@@ -6,7 +6,7 @@ import requests
 import os
 import subprocess
 import numpy as np
-import json 
+import json
 
 # URL, which files we want from the server and the depth of files we want to download
 BASE_URL = "https://data.ukedc.rl.ac.uk/mget/edc/efficiency/residential/EnergyConsumption/Domestic/UK-DALE-2015/UK-DALE-disaggregated"
@@ -14,7 +14,7 @@ FILES_TO_DOWNLOAD = "*"
 DEPTH = 1
 COMPRESSION_RATIO = 3  # For printing accurate(ish) percentages during downloading
 TIME_RESOLUTION = 30*60  # Resolution that the data will be stored at in seconds
-NATIONAL_AVERAGES_FILE = "house_averages.dat" # Where the average data will be stored
+NATIONAL_AVERAGES_FILE = "house_averages.dat"  # Where the average data will be stored
 
 
 # Get the filesize of the file we want, not essential and is specific to the UK-DALE website
@@ -34,7 +34,7 @@ def dale_get_file_size(url):
 
 # Will download the file in chuncks, periodically saving them to disk
 def dale_download_files(folder, houses_to_exclude):
-    if houses_to_exclude == None:
+    if houses_to_exclude is None:
         houses_to_exclude = []
     default_houses = ["house_1", "house_2", "house_3", "house_4", "house_5"]
     for house in default_houses:
@@ -130,6 +130,7 @@ def decrease_dale_resolution(house_folder):
             with open(os.path.join(house_folder, filename), "w") as file:
                 file.write('\n'.join(new_readings))
 
+
 # Calculate the averages for each channel in the dataset and store it in a new folder
 def dale_calculate_averages(dale_folder):
     print("Calculating national averages")
@@ -168,5 +169,7 @@ def dale_calculate_averages(dale_folder):
     
     print("Finished averaging")
 
+
 if __name__ == "__main__":
-    dale_calculate_averages(".")#dale_download_file(".")
+    dale_download_files(".", None)
+    dale_calculate_averages()
