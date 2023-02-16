@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-                        score=0.7f;
+                        score = 0.8f;
 
                         int progress = Math.round(score * 100);
 
@@ -86,29 +86,29 @@ public class HomeFragment extends Fragment {
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
                         
                         HalfGauge gauge = view.findViewById(R.id.halfGauge);
-                        gauge.setMinValue(0);
-                        gauge.setMaxValue(100);
-                        gauge.setValue(progress);
+                        gauge.setMinValue(-50);
+                        gauge.setMaxValue(50);
+                        gauge.setValue((progress-50));
                         gauge.setGaugeBackGroundColor(resultColor);
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= 50)
+                        if(progress <= -40)
                         {
                             letterGrade.setText("F-");
                         }
-                        else if (progress <= 40)
+                        else if (progress <= -30)
                         {
                             letterGrade.setText("F+");
                         }
-                        else if(progress <= -30)
+                        else if(progress <= -20)
                         {
                             letterGrade.setText("D-");
                         }
-                        else if(progress <= -20)
+                        else if(progress <= -10)
                         {
                             letterGrade.setText("D+");
                         }
-                        else if (progress <= -10)
+                        else if (progress <= -5)
                         {
                             letterGrade.setText("C-");
                         }
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress > 50)
+                        else if (progress > 45)
                         {
                             letterGrade.setText("A+");
                         }
