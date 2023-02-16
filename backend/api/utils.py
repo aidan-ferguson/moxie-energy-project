@@ -2,6 +2,7 @@ import openai
 import os
 from api.data_providers.dale_data_provider import DALEDataProvider
 
+
 # Function used to simplify returning JSON structures
 def json_error(reason):
     return {"success": False, "reason": reason}
@@ -31,6 +32,7 @@ def prompt_gpt3(prompt):
     
     return response["choices"][0]["text"]
 
+
 # Class that will hold prompt templates for prompting gpt3
 class Prompts:
     def get_energy_report_prompt(energy_usage):
@@ -57,6 +59,7 @@ class Prompts:
     def get_tipoftheday_prompt():
         prompt = "A brief energy saving fun fact:\n"
         return prompt
+    
     
 # Rules to choose which data provider to use depending on the users preference
 def get_user_energy_data(user):
