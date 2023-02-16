@@ -2,11 +2,9 @@ package com.sh22.energy_saver_app.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
@@ -17,12 +15,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
+import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
@@ -62,7 +60,6 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
         // Network calls are ordered by what will be the quickest
 
         // Await appliance data coming in and update the page accordingly
@@ -81,37 +78,69 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        score=0.7f;
 
-                        int progress = Math.round(score * 100);
+                        int progress = Math.round(score * 100) - 50;
 
                         int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
                         int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
-                        int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+
+                        int resultColor = 0;
+
+                        if(score < 0.5)
+                        {
+                            resultColor = ColorUtils.blendARGB(mid_colour, bad_colour, score);
+                        }
+                        else
+                        {
+                            resultColor = ColorUtils.blendARGB(good_colour, mid_colour, score);
+                        }
+
+
                         
                         HalfGauge gauge = view.findViewById(R.id.halfGauge);
-                        gauge.setMinValue(-50);
-                        gauge.setMaxValue(50);
-                        gauge.setValue((progress-50));
-                        gauge.setGaugeBackGroundColor(resultColor);
+                        gauge.setMinValue(-100);
+                        gauge.setMaxValue(100);
+                        gauge.setValue(progress);
+
+                        Range range1 = new Range();
+                        range1.setColor(bad_colour);
+                        range1.setFrom(-100);
+                        range1.setTo(33.4);
+
+                        Range range2 = new Range();
+                        range2.setColor(mid_colour);
+                        range2.setFrom(-33.4);
+                        range2.setTo(33.4);
+
+                        Range range3 = new Range();
+                        range2.setColor(good_colour);
+                        range2.setFrom(33.4);
+                        range2.setTo(100);
+
+                        gauge.addRange(range1);
+                        gauge.addRange(range2);
+                        gauge.addRange(range3);
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= -40)
+                        if(progress <= 50)
                         {
                             letterGrade.setText("F-");
                         }
-                        else if (progress <= -30)
+                        else if (progress <= 40)
                         {
                             letterGrade.setText("F+");
                         }
-                        else if(progress <= -20)
+                        else if(progress <= -30)
                         {
                             letterGrade.setText("D-");
                         }
-                        else if(progress <= -10)
+                        else if(progress <= -20)
                         {
                             letterGrade.setText("D+");
                         }
-                        else if (progress <= -5)
+                        else if (progress <= -10)
                         {
                             letterGrade.setText("C-");
                         }
@@ -131,7 +160,7 @@ public class HomeFragment extends Fragment {
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress > 45)
+                        else if (progress > 50)
                         {
                             letterGrade.setText("A+");
                         }
@@ -142,7 +171,6 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-
 
         // Get user info to display on homepage
         new Thread(() -> {
@@ -194,12 +222,8 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }).start();
-        //onlick listener for the button
 
         // Return the inflated view
         return view;
-
     }
-
-
 }
