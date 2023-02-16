@@ -24,7 +24,7 @@ class DALEDataProvider(DataProvider):
     @staticmethod
     def get_energy_data(house):
         # Get the start and end timestamps of the dataset
-        with open(os.path.join(os.path.join(DALE_FOLDER, house), f"channel_1.dat"), "r") as file:
+        with open(os.path.join(os.path.join(DALE_FOLDER, house), "channel_1.dat"), "r") as file:
             data = file.readlines()
         DALE_START_DATE = int(data[0].split(" ")[0])
         DALE_END_DATE = int(data[-1].split(" ")[0])
@@ -35,7 +35,7 @@ class DALEDataProvider(DataProvider):
         end_time = start_time + relativedelta(weeks=4)
         initial_usage = DALEDataProvider.read_dale_data("house_4", start_time, end_time)
         if len(initial_usage["data"]) == 0:
-            return {"success":False, "reason":"Data for inital month could not be loaded"}
+            return {"success": False, "reason": "Data for inital month could not be loaded"}
         
         # Loop the data
         start_time = DALE_START_DATE + (int(time.time()) % (DALE_END_DATE - DALE_START_DATE))
@@ -43,20 +43,20 @@ class DALEDataProvider(DataProvider):
         end_time = start_time + relativedelta(days=1)
         curr_day = DALEDataProvider.read_dale_data("house_4", start_time, end_time)
         if len(curr_day["data"]) == 0:
-            return {"success":False, "reason":"Data for today could not be loaded"}
+            return {"success": False, "reason": "Data for today could not be loaded"}
 
         end_time = start_time
         start_time = start_time - relativedelta(days=7)
         prev_week = DALEDataProvider.read_dale_data("house_4", start_time, end_time)
         if len(prev_week["data"]) == 0:
-            return {"success":False, "reason":"Data for previous week could not be loaded"}
+            return {"success": False, "reason": "Data for previous week could not be loaded"}
 
         # Calculate averages for each device in the current and previous months
         initial_usage_averages = np.mean(initial_usage["data"], axis=0)
         prev_week_averages = np.mean(prev_week["data"], axis=0)
         curr_day_averages = np.mean(curr_day["data"], axis=0)
         
-        return {"success":True, "data":{"labels": prev_week["labels"], "initial_usage": list(initial_usage_averages), "previous_week": list(prev_week_averages), "today": list(curr_day_averages)}}
+        return {"success": True, "data": {"labels": prev_week["labels"], "initial_usage": list(initial_usage_averages), "previous_week": list(prev_week_averages), "today": list(curr_day_averages)}}
         
     @staticmethod
     def read_dale_data(house, start_date, end_date):

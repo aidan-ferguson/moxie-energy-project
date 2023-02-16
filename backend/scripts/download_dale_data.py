@@ -6,7 +6,7 @@ import requests
 import os
 import subprocess
 import numpy as np
-import json 
+import json
 
 # URL, which files we want from the server and the depth of files we want to download
 BASE_URL = "https://data.ukedc.rl.ac.uk/mget/edc/efficiency/residential/EnergyConsumption/Domestic/UK-DALE-2015/UK-DALE-disaggregated"
@@ -14,7 +14,7 @@ FILES_TO_DOWNLOAD = "*"
 DEPTH = 1
 COMPRESSION_RATIO = 3  # For printing accurate(ish) percentages during downloading
 TIME_RESOLUTION = 30*60  # Resolution that the data will be stored at in seconds
-NATIONAL_AVERAGES_FILE = "house_averages.dat" # Where the average data will be stored
+NATIONAL_AVERAGES_FILE = "house_averages.dat"  # Where the average data will be stored
 
 
 # Get the filesize of the file we want, not essential and is specific to the UK-DALE website

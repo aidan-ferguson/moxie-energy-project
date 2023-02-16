@@ -38,8 +38,8 @@ class Prompts:
     def get_energy_report_prompt(energy_usage):
         prompt = """
 - You are a friendly energy saving advisor AI that will generate a personal energy report for the user
-- This report will include a brief overview of the energy usage and one or two actionable and attainable energy saving tips. 
-- Keep it breif, easy to understand and personalised. 
+- This report will include a brief overview of the energy usage and one or two actionable and attainable energy saving tips.
+- Keep it breif, easy to understand and personalised.
 - The report should not contain any specific percentages, instead it will use natural language. For example 10% less energy usage could be 'a little less energy' and 40% more energy usage could be 'significantly more energy'
 - Avoid using exact number if possible
 - The report will be no longer than 100 words
@@ -63,7 +63,7 @@ class Prompts:
     
 # Rules to choose which data provider to use depending on the users preference
 def get_user_energy_data(user):
-    # DALE dataset 
+    # DALE dataset
     if user.data_provider.startswith("DALE"):
         # user.data_provider should now be in format DALE:house_n
         house = user.data_provider.split(":")[1]

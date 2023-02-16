@@ -42,7 +42,8 @@ class UserInfoView(views.APIView):
         # TODO: Change to json success/failure
         return Response(content)
     
-# View for returning the national averages of devices 
+
+# View for returning the national averages of devices
 class NationalAverageView(views.APIView):
     permission_classes = (permissions.AllowAny,)
     
@@ -51,6 +52,7 @@ class NationalAverageView(views.APIView):
             # TODO: Change to json success/failure
             return Response(json.loads(file.read()))
         
+
 # View to get the tip of the day
 class TOTDView(views.APIView):
     permission_classes = (permissions.IsAuthenticated, )
@@ -97,7 +99,7 @@ class EnergyReportView(views.APIView):
 class AppliancesView(views.APIView):
     permission_classes = (permissions.IsAuthenticated, )
     
-    # Returns the difference in aggreate power usage for different devices compared to last month 
+    # Returns the difference in aggreate power usage for different devices compared to last month
     def get(self, request):
         return Response(get_user_energy_data(request.user))
 

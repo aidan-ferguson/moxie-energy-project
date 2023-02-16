@@ -1,7 +1,7 @@
 """
 The DataProvider base class guarentees that every sub-class provides the following functionality:
 
-- get_energy_data() 
+- get_energy_data()
 
 Note the function can take any parameters it requires (such as the user)
 
@@ -28,6 +28,7 @@ Note that all arrays must be the same length.
 
 The subclasses can interpret data from any source (CSV, external API, etc...) so long as it is returned in this format
 """
+
 
 class DataProvider(object):
     # Function to be overridden
