@@ -169,3 +169,6 @@ static/datasets/*
 venv
 Pipfile
 Pipfile.lock
+
+# db migrations
+api/migrations
