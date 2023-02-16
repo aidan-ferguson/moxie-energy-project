@@ -1,18 +1,13 @@
-import json
 import openai
 import os
 
 # Function used to simplify returning JSON structures
-def return_json(obj):
-    return json.dumps(obj)
-
-
 def json_error(reason):
-    return return_json({"success": False, "reason": reason})
+    return {"success": False, "reason": reason}
 
 
 def json_success(return_dict):
-    return return_json({"success": True, "data": return_dict})
+    return {"success": True, "data": return_dict}
 
 # Used for querying OpenAI GPT3
 def prompt_gpt3(prompt):
