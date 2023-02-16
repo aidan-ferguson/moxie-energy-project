@@ -1,5 +1,6 @@
 import openai
 import os
+from api.data_providers.dale_data_provider import DALEDataProvider
 
 # Function used to simplify returning JSON structures
 def json_error(reason):
@@ -8,6 +9,7 @@ def json_error(reason):
 
 def json_success(return_dict):
     return {"success": True, "data": return_dict}
+
 
 # Used for querying OpenAI GPT3
 def prompt_gpt3(prompt):
@@ -55,3 +57,11 @@ class Prompts:
     def get_tipoftheday_prompt():
         prompt = "A brief energy saving fun fact:\n"
         return prompt
+    
+# Rules to choose which data provider to use depending on the users preference
+def get_user_energy_data(user):
+    # DALE dataset 
+    if user.data_provider.startswith("DALE"):
+        # user.data_provider should now be in format DALE:house_n
+        house = user.data_provider.split(":")[1]
+        return DALEDataProvider.get_energy_data(house)

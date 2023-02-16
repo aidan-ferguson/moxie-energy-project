@@ -6,6 +6,9 @@ from django.db import models
 
 # Extensible user account with custom parameters
 class User(AbstractUser):
+    # Will indicate which data source the user wants to use, can be mock data or an API
+    data_provider = models.TextField(name="data_provider", default="DALE:house_4")
+    
     def save(self, *args, **kwargs):
         super(User, self).save(*args, **kwargs)
         # We want a token for every created user
