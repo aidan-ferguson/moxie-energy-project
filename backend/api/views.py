@@ -36,7 +36,8 @@ class UserInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
-        content = {'user_data': {'username': request.user.username,
+        content = {'user_data': {'id': request.user.id,
+                                 'username': request.user.username,
                                  'firstname': request.user.first_name,
                                  'surname': request.user.last_name}}
         # TODO: Change to json success/failure
@@ -74,7 +75,7 @@ class TOTDView(views.APIView):
             print(f"{str(e.__class__.__name__ )}: {e}")
             return Response(json_error("An internal error occured with generating tips"))
 
-
+#TODO: all json_errors explicitly 
 # View for generating energy reports
 class EnergyReportView(views.APIView):
     permission_classes = (permissions.IsAuthenticated, )
@@ -86,7 +87,7 @@ class EnergyReportView(views.APIView):
             return Response(json_success(cached.first().text))
         
         try:
-            prompt = Prompts.get_energy_report_prompt(json.loads(AppliancesView.get(request).content)['data'])
+            prompt = Prompts.get_energy_report_prompt(get_user_energy_data(request.user)['data'])
             response = prompt_gpt3(prompt).strip()
             models.Tip.objects.create(device="aggregate", text=response, user=request.user)
             return Response(json_success(response))
@@ -111,3 +112,57 @@ class LogoutView(views.APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+# Get or add new freinds
+class FriendView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    
+    # Get list of friends and incoming friend requests
+    def get(self, request):
+        ret_val = {}
+        
+        ret_val["friends"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_user_friends(request.user)]
+        ret_val["requests"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_friend_requests(request.user)]
+        
+        return Response(json_success(ret_val))
+    
+    def post(self, request):
+        action = request.data.get("action", None)
+        other_user_id = request.data.get("user_id", None)
+        try:
+            other_user_id = int(other_user_id)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("User ID must be an integer"))
+
+        if (action is None) or (other_user_id is None):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You need to send a user id and an action"))
+        
+        other_user = models.User.objects.filter(id=other_user_id)
+        if not other_user.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND, data=json_error("Could not find a user with that ID"))
+        other_user = other_user.first()
+        
+        if action == "make_request":
+            # User wants to make friend request
+            # Check there is not already a request
+            if models.Friendship.objects.filter(from_user=request.user, to_user=other_user):
+                return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You have already sent a friend request"))
+            
+            # In the case that a request from the other user to the current user already exists, then just accept it
+            previous_request = models.Friendship.objects.filter(from_user=other_user, to_user=request.user)
+            if previous_request.exists():
+                previous_request.update(has_accepted=True)
+            else:
+                models.Friendship.objects.get_or_create(from_user=request.user, to_user=other_user, has_accepted=False)
+            return Response(json_success("Added request"))
+        
+        elif action == "accept_request":
+            # User wants to accept request
+            existing_request = models.Friendship.objects.filter(from_user=other_user, to_user=request.user)
+            if not existing_request.exists():
+                return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("That friend request does not exist"))
+            existing_request.update(has_accepted=True)
+            return Response(json_success("Accepted friend request"))
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))

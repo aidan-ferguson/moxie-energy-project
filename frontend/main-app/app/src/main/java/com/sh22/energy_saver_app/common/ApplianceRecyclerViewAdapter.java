@@ -85,9 +85,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         }
         holder.DeviceTitle.setText(pretty_name);
 
-        // Set the font
-        Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/MicroFLF.ttf");
-        holder.DeviceTitle.setTypeface(type);
+
 
         // Set the progress position and colour of the progress bar
         float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getInitialUsage() / appliance_data.get(position).getUsageToday());
@@ -154,18 +152,6 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public void showPopUp(String message) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("TIP");
-            builder.setMessage(message);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    // Do something when the OK button is clicked
-                }
-            });
-            builder.show();
-        }
 
         TextView DeviceTitle;
         ProgressBar progressBar;
@@ -183,6 +169,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         BarDataSet barDataSet;
         ArrayList barEntriesArrayList;
         Button dropdownButton;
+        Button button;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -204,6 +191,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             cautionLevel = itemView.findViewById(R.id.home_icon2);
             barChart = itemView.findViewById(R.id.idBarChart);
             tipsCard = itemView.findViewById(R.id.tips);
+             button= itemView.findViewById(R.id.button1);
 
 
 
@@ -677,7 +665,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                }
             );
 
-            //define get fra
+
+
         }}}
 
 

@@ -1,6 +1,9 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.ui.activites.MainActivity;
 // import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
@@ -42,6 +46,10 @@ public class EcosystemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ecosystem, container, false);
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
+        ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Your Ecosystem</font></div></center>"));
 
         Double aggregate_daily = 0.0;
         try {
