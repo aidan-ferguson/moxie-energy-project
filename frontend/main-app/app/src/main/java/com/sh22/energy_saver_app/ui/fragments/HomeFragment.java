@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -98,7 +101,7 @@ public class HomeFragment extends Fragment {
                         }
 
 
-                        
+
                         HalfGauge gauge = view.findViewById(R.id.halfGauge);
                         gauge.setMinValue(-100);
                         gauge.setMaxValue(100);

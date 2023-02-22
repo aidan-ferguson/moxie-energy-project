@@ -12,9 +12,9 @@
 
     <TextView
         android:id="@+id/home_fragment_heading"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="355dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="Welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
