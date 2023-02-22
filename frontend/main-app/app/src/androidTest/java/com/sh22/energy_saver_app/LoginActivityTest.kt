@@ -37,6 +37,8 @@ class LoginActivityTest {
 
         onView(withId(R.id.password)).perform(click()).perform(typeText("password"))
 
+        onView(withId(R.id.imageView2)).perform(click())
+
         onView(withId(R.id.login_button)).perform(click())
 
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))

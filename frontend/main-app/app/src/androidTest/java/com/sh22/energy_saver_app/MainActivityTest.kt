@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sh22.energy_saver_app.ui.activites.MainActivity
+import com.sh22.energy_saver_app.ui.fragments.HomeFragment
 import com.sh22.energy_saver_app.ui.fragments.SettingsFragment
 
 import org.junit.Test
@@ -28,9 +29,26 @@ class MainActivityTest {
     fun NavBarTest() {
         // launches main activity and checks whether nav bar is in view
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        val fragmentScenario = launchFragmentInContainer<HomeFragment>()
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
 
         //check nav bar can switch between fragments
+
+        //check appliance page is displayed correctly
+        onView(withId(R.id.appliances)).perform(click())
+        onView(withId(R.id.appliance_heading)).check(matches(isDisplayed()))
+        onView(withId(R.id.appliance_usage_bar)).check(matches(isDisplayed()))
+        onView(withId(R.id.appliance_recycler_view)).check(matches(isDisplayed()))
+
+        //check ecosystem page is displayed correctly
+        onView(withId(R.id.ecosystem)).perform(click())
+        onView(withId(R.id.ecosystem_header2)).check(matches(isDisplayed()))
+
+        //check home page is displayed correctly
+        onView(withId(R.id.home)).perform(click())
+        onView(withId(R.id.home_fragment_heading)).check(matches(isDisplayed()))
+        onView(withId(R.id.home_fragment_heading)).check(matches(isDisplayed()))
+
 
     }
     @Test
