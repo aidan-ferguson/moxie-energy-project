@@ -169,10 +169,7 @@ public void increaseHeight(View view){
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
-
-
 
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
         ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -195,8 +192,7 @@ public void increaseHeight(View view){
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-                        score=0.0f;
+                        float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
 
                         int progress = Math.round(score * 100) - 50;
 

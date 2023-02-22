@@ -1,4 +1,4 @@
-from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data
+from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data, calculate_energy_score
 import datetime
 from api.serialisers import RegisterSerializer
 from rest_framework import permissions
@@ -102,7 +102,10 @@ class AppliancesView(views.APIView):
     
     # Returns the difference in aggreate power usage for different devices compared to last month
     def get(self, request):
-        return Response(get_user_energy_data(request.user))
+        energy_data = get_user_energy_data(request.user)
+        if energy_data["success"]:
+            energy_data["data"]["energy_score"] = calculate_energy_score(energy_data["data"])
+        return Response(energy_data)
 
 
 # Will delete the currently stored token of a user

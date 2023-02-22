@@ -71,6 +71,7 @@ public class BackendInterface {
                 JSONArray json_previous_week = json_data.getJSONArray("previous_week");
                 JSONArray json_current_day = json_data.getJSONArray("today");
                 ApplianceData applianceData = new ApplianceData();
+                applianceData.energy_score = (float)json_data.getDouble("energy_score");
                 for (int i = 0; i < json_labels.length(); i++) {
                     applianceData.labels.add(json_labels.getString(i));
                 }

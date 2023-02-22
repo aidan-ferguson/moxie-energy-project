@@ -72,7 +72,7 @@ public class EcosystemFragment extends Fragment {
             try {
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 if(appliance_data != null) {
-                    float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                    float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
 
                     FragmentActivity activity = getActivity();
                     if (activity != null) {

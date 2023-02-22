@@ -1,7 +1,11 @@
 import openai
 import os
 from api.data_providers.dale_data_provider import DALEDataProvider
+import numpy as np
 
+
+ENERGY_SIGMOID_GRADIANT_STEEPNESS = 0.4
+ENERGY_NORMALISATION_SIGMOID_STRECH = 0.2
 
 # Function used to simplify returning JSON structures
 def json_error(reason):
@@ -68,3 +72,15 @@ def get_user_energy_data(user):
         # user.data_provider should now be in format DALE:house_n
         house = user.data_provider.split(":")[1]
         return DALEDataProvider.get_energy_data(house)
+
+def sigmoid(x):
+    return 1/(1+np.exp(-x * ENERGY_SIGMOID_GRADIANT_STEEPNESS))
+
+# Will return a normalised energy rating in the range (0, 1)
+# https://www.desmos.com/calculator/mifnjmnoy4
+def normalise_energy_rating(rating):
+    a = ENERGY_NORMALISATION_SIGMOID_STRECH;
+    return sigmoid((1/a) * (rating - (a * 5)));
+
+def calculate_energy_score(data):
+    return normalise_energy_rating((data["previous_week"][0]/data["today"][0]))
