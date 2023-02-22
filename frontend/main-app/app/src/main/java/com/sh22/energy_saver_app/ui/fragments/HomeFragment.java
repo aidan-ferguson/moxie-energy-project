@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -345,6 +346,10 @@ public void increaseHeight(View view){
         TextView EnergyReportText;
         Button back2;
 
+        TextView Krew;
+        RecyclerView KrewView;
+        Button back3;
+
         //Tip of the day elements -small view
         button1= view.findViewById(R.id.button1);
         icon1= view.findViewById(R.id.icon1);
@@ -366,10 +371,16 @@ public void increaseHeight(View view){
         EnergyReportText= view.findViewById(R.id.energy_report);
         back2= view.findViewById(R.id.dd2);
 
-
+       //Krew elements -small view
         button3= view.findViewById(R.id.button3);
         icon3= view.findViewById(R.id.icon3);
         label3= view.findViewById(R.id.button3Text);
+
+        //Krew elements -big view
+        Krew= view.findViewById(R.id.title3);
+        KrewView= view.findViewById(R.id.krew_recycler);
+        back3= view.findViewById(R.id.dd3);
+
 
         button4= view.findViewById(R.id.button4);
         icon4= view.findViewById(R.id.icon4);
@@ -778,8 +789,77 @@ public void increaseHeight(View view){
 
                 ViewGroup.LayoutParams layoutParams = button3.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (button3.getWidth()*2)+ parent.getWidth()-amount-(2*button3.getWidth());
-                int newHeight = (button3.getHeight()*2)+ parent.getHeight()-amount-(2*button3.getHeight());
+                int newWidth = (button1.getWidth() * 2) + parent.getWidth() - amount - (2 * button1.getWidth())+150;
+                int newHeight = card.getHeight()*2-100;
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(button3.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(button3.getWidth(), newWidth);
+
+                heightAnimator.setDuration(200);
+                heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                widthAnimator.setDuration(200);
+                widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int value = (int) animation.getAnimatedValue();
+                        layoutParams.height = value;
+                        button3.setLayoutParams(layoutParams);
+                    }
+                });
+                widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int value = (int) animation.getAnimatedValue();
+                        layoutParams.width = value;
+                        button3.setLayoutParams(layoutParams);
+                    }
+                });
+
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(heightAnimator, widthAnimator);
+
+                increaseHeight(view);
+                animatorSet.start();
+
+
+                button1.setVisibility(View.GONE);
+                button2.setVisibility(View.GONE);
+                button4.setVisibility(View.GONE);
+
+                icon1.setVisibility(View.GONE);
+                icon2.setVisibility(View.GONE);
+                icon4.setVisibility(View.GONE);
+                icon3.setVisibility(View.GONE);
+
+
+                label1.setVisibility(View.GONE);
+                label2.setVisibility(View.GONE);
+                label4.setVisibility(View.GONE);
+                label3.setVisibility(View.GONE);
+                back3.setVisibility(View.VISIBLE);
+
+                Krew.setVisibility(View.VISIBLE);
+                KrewView.setVisibility(View.VISIBLE);
+
+                button3.setClickable(false);
+
+
+
+            }
+        });
+
+
+        back3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button3.setBackground(getResources().getDrawable(R.drawable.layout_bg3));
+
+
+                button3.setClickable(true);
+                ViewGroup.LayoutParams layoutParams = button3.getLayoutParams();
+                Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
+                int newWidth = button2.getWidth();
+                int newHeight = button2.getHeight();
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(button3.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(button3.getWidth(), newWidth);
 
@@ -808,25 +888,33 @@ public void increaseHeight(View view){
                 animatorSet.playTogether(heightAnimator, widthAnimator);
 
                 // Start the animation
+                decreaseHeight(view);
                 animatorSet.start();
 
 
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-                button4.setVisibility(View.GONE);
+                button2.setVisibility(View.VISIBLE);
+                button1.setVisibility(View.VISIBLE);
+                button4.setVisibility(View.VISIBLE);
+                button3.setVisibility(View.VISIBLE);
 
-                icon1.setVisibility(View.GONE);
-                icon2.setVisibility(View.GONE);
-                icon4.setVisibility(View.GONE);
+                icon2.setVisibility(View.VISIBLE);
+                icon1.setVisibility(View.VISIBLE);
+                icon4.setVisibility(View.VISIBLE);
+                icon3.setVisibility(View.VISIBLE);
 
-                label1.setVisibility(View.GONE);
-                label2.setVisibility(View.GONE);
-                label4.setVisibility(View.GONE);
+                label2.setVisibility(View.VISIBLE);
+                label1.setVisibility(View.VISIBLE);
+                label4.setVisibility(View.VISIBLE);
+                label3.setVisibility(View.VISIBLE);
 
-
-
+                label1.setVisibility(View.VISIBLE);
+                icon1.setVisibility(View.VISIBLE);
+                Krew.setVisibility(View.GONE);
+                KrewView.setVisibility(View.GONE);
+                back3.setVisibility(View.GONE);
             }
         });
+
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
