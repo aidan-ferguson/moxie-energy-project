@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +38,7 @@ import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
+import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
 import java.io.IOException;
 
@@ -159,6 +163,11 @@ public void increaseHeight(View view){
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
+        ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
+
+
         // Network calls are ordered by what will be the quickest
 
         // Await appliance data coming in and update the page accordingly
@@ -279,7 +288,8 @@ public void increaseHeight(View view){
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-                            ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome, " + userInfo.firstname);
+                            ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+                            ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome, " + userInfo.firstname + "</font></div></center>"));
                         });
                     }
                 }

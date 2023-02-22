@@ -52,9 +52,7 @@ public class AppliancesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appliances, container, false);
-        ColorDrawable colorDrawable
-                = new ColorDrawable(Color.parseColor("#04244C"));
-        // Set BackgroundDrawable
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Appliances</font></div></center>"));
         // Await appliance data coming in and update the page accordingly
