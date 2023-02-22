@@ -9,16 +9,23 @@ DB_PATH = "./db.sqlite3"
 MIGRATIONS_DIR = "./api/migrations"
 
 
+# Recursive directory deletion
+def remove_dir(dir):
+    if os.path.exists(dir):
+        for item in os.listdir(dir):
+            if os.path.isfile(os.path.join(dir, item)):
+                os.remove(os.path.join(dir, item))
+            elif os.path.isdir(os.path.join(dir, item)):
+                remove_dir(os.path.join(dir, item))
+
+
 def reset():
     print("Re-migrating database")
 
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
 
-    if os.path.exists(MIGRATIONS_DIR):
-        for item in os.listdir(MIGRATIONS_DIR):
-            if os.path.isfile(item):
-                os.remove(os.path.join(MIGRATIONS_DIR, item))
+    remove_dir(MIGRATIONS_DIR)
 
     django.setup()
 
