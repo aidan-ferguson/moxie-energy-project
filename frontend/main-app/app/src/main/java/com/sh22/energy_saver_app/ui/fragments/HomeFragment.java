@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.cardview.widget.CardView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -166,8 +167,8 @@ public void increaseHeight(View view){
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
-
-
+        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
         // Network calls are ordered by what will be the quickest
 
         // Await appliance data coming in and update the page accordingly

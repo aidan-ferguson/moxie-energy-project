@@ -45,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
                 = new ColorDrawable(Color.parseColor("#04244C"));
         // Set BackgroundDrawable
         actionBar.setBackgroundDrawable(colorDrawable);
-        actionBar.setTitle(Html.fromHtml("<font color='#DEB276'>Welcome</font>"));
+        actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Welcome</font>"));
+        actionBar.setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
