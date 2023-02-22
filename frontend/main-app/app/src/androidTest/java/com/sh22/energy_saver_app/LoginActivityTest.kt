@@ -4,6 +4,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sh22.energy_saver_app.ui.activites.LoginActivity
@@ -29,5 +31,13 @@ class LoginActivityTest {
         onView(withId(R.id.username)).perform(typeText("admin"))
         onView(withId(R.id.password)).perform(typeText("password"))
         onView(withId(R.id.login_button)).perform(click())
+
+        onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
+    }
+
+    fun RegisterNewUserTest(){
+        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
+
+        onView(withId(R.id.register_button)).perform(click())
     }
 }
