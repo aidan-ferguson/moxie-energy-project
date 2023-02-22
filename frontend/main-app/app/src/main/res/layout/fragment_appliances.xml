@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="@color/light_blue"
-    android:background="@color/blue_whale"
+
     tools:context=".ui.fragments.AppliancesFragment">
 
 
@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="147dp"
         android:text="@string/appliance_page_heading"
-        android:textColor="@color/white"
+        android:textColor="@color/blue_whale"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

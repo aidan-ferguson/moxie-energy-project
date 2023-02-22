@@ -1,5 +1,6 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +56,14 @@ public class LoginFragment extends Fragment {
                         // TODO: Change to one error textbox
                         email.setError(login_status.data);
                     } else {
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        startActivity(intent);
+                        Activity activity = getActivity();
+                        if(activity != null) {
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            startActivity(intent);
+                            activity.finish(); // Disallow user going back after logout has ended
+                        } else {
+                            Log.e("SH22", "NullPtrException activity in login");
+                        }
                     }
                 });
             }).start();

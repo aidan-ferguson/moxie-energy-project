@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[ExecuteInEditMode]
 public class HealthManager : MonoBehaviour
 {
     [SerializeField]
@@ -10,9 +12,11 @@ public class HealthManager : MonoBehaviour
     bool continuousUpdate;
     [SerializeField]
     bool isUpdating;
+    [Range(0,1)]
     [SerializeField]
     float health;
     UpdatableHealthObject[] updatables;
+
 
     private void Awake()
     {

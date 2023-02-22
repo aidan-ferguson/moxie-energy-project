@@ -1,0 +1,2 @@
+# For our weird build system we should gitignore EcosystemFragment.java as it will be replaced whenever we build
+./EcosystemFragment.java

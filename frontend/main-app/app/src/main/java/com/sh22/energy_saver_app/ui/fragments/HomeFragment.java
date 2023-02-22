@@ -1,6 +1,7 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -10,12 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
@@ -55,44 +59,83 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Network calls are ordered by what will be the quickest
+
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
-                ApplianceData appliance_data = BackendInterface.get_appliance_data();
+                ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
+                if(appliance_data == null) {
+                    Log.e("SH22", "Error loading appliance data");
+                    throw new IOException();
+                }
+
                 // When we get the data, update the UI
-
-
                 // Some time may have passed so we need to check if the activity is now null
                 FragmentActivity activity = getActivity();
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        Double aggregate_daily = appliance_data.today.get(0);
-                        Log.d("moxie", String.valueOf(aggregate_daily));
-                        Double limit = appliance_data.weekly_average.get(0);
-                        float score = SH22Utils.normaliseEnergyRating((float)(aggregate_daily/limit));
-//                        float score = (float)(aggregate_daily/limit);
+                        float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        score=0.7f;
 
-                        Integer progress = Math.round(score * 100);
-                        ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-                        TextView textView = view.findViewById(R.id.text_view_progress);
-                        progressBar.setProgress(progress, true);
-                        textView.setText(progress.toString());
-                        int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
-                        int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int progress = Math.round(score * 100);
+
+                        int good_colour = ContextCompat.getColor(activity, R.color.bad_usage);
+                        int bad_colour = ContextCompat.getColor(activity, R.color.good_usage);
                         int resultColor = ColorUtils.blendARGB(good_colour, bad_colour, score);
+                        
+                        HalfGauge gauge = view.findViewById(R.id.halfGauge);
+                        gauge.setMinValue(0);
+                        gauge.setMaxValue(100);
+                        gauge.setValue(progress);
+                        gauge.setGaugeBackGroundColor(resultColor);
 
-                        // Clamp upper bound of the colour
-                        if(score > 1.0) {
-                            resultColor = bad_colour;
+                        TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
+                        if(progress <= 50)
+                        {
+                            letterGrade.setText("F-");
                         }
-
-                        progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
-                        TextView textView2 = view.findViewById(R.id.text_view);
-                        textView2.setText("Your text here rjgnfd adkfgbdfg aoifghaoufghaf agobaofhg aogubaofigaoif agbaofgbdaofu afgbaofighoaif aoghadfoihgoifda ah0ghafiogh eojrhgoierhg adfoighaopidrhgn a goaidhgoifadhgoifd aofghoiafhdgioahfg aghoafhgoiafshgoifs g aohsgioashgoiasg as gofshagoifadhgoidfg afogiuhsafoihasfog asfkmg fskjgao[htpqw4htrh gdn;mkxc htv4qnepysah d'lNSAkriyet9hnfds gh9gon");
+                        else if (progress <= 40)
+                        {
+                            letterGrade.setText("F+");
+                        }
+                        else if(progress <= -30)
+                        {
+                            letterGrade.setText("D-");
+                        }
+                        else if(progress <= -20)
+                        {
+                            letterGrade.setText("D+");
+                        }
+                        else if (progress <= -10)
+                        {
+                            letterGrade.setText("C-");
+                        }
+                        else if (progress <= 10)
+                        {
+                            letterGrade.setText("C+");
+                        }
+                        else if (progress <= 20)
+                        {
+                            letterGrade.setText("B-");
+                        }
+                        else if (progress <= 30)
+                        {
+                            letterGrade.setText("B+");
+                        }
+                        else if (progress > 40)
+                        {
+                            letterGrade.setText("A-");
+                        }
+                        else if (progress > 50)
+                        {
+                            letterGrade.setText("A+");
+                        }
+                        letterGrade.setTextColor(resultColor);
                     });
                 }
-            } catch (IOException | JSONException e) {
+            } catch (AuthenticationException | IOException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -102,7 +145,46 @@ public class HomeFragment extends Fragment {
             try {
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
                 if(userInfo != null) {
-                    ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome " + userInfo.firstname);
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            ((TextView) view.findViewById(R.id.home_fragment_heading)).setText("Welcome, " + userInfo.firstname);
+                        });
+                    }
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        // Start new thread to get tips and usage report, these may take a while given OpenAI's inference time
+        new Thread(() -> {
+            try {
+                String totd = BackendInterface.GetTOTD(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Tip of the day
+                        //TextView textView = view.findViewById(R.id.text_view);
+                        //textView.setText(totd + "\n\n\n");
+                    });
+                }
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                String energy_report = BackendInterface.GetEnergyReport(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Usage report
+                        //TextView textView2 = view.findViewById(R.id.text_view2);
+                        //textView2.setText(energy_report + "\n\n\n");
+                        //textView2.setGravity(Gravity.START);
+                    });
                 }
             } catch (AuthenticationException e) {
                 e.printStackTrace();
