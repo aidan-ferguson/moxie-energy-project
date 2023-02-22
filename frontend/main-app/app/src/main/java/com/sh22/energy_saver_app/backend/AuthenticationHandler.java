@@ -71,6 +71,7 @@ public class AuthenticationHandler {
     // Method that will attempt to get and store a new token from the backend given an email & password
     public static AuthenticationStatus tryLogin(Context context, String email, String password) {
         // Attempt to connect to endpoint and authenticate
+        // TODO: move to getBackendView
         String url_str = Constants.SERVER_BASE_URL + "/auth/get-token";
         URL url = null;
         try { url = new URL(url_str); }

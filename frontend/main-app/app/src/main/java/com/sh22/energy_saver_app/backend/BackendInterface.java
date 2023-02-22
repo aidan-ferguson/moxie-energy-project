@@ -4,10 +4,20 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sh22.energy_saver_app.common.ApplianceData;
+import com.sh22.energy_saver_app.common.Constants;
+import com.sh22.energy_saver_app.common.FriendRelationship;
+import com.sh22.energy_saver_app.common.FriendRequest;
+import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -125,6 +135,7 @@ public class BackendInterface {
                 String response = SH22Utils.getBackendView("/user/information", requestProperties);
                 JSONObject json_data = new JSONObject(response).getJSONObject("user_data");
                 UserInfo userInfo = new UserInfo(
+                        json_data.getInt("id"),
                         json_data.getString("username"),
                         json_data.getString("firstname"),
                         json_data.getString("surname"));
@@ -181,4 +192,121 @@ public class BackendInterface {
                 return null;
             }
     }
-}
+
+    // Will return a friends object which contains actual friends and friend requests
+    public static Friends GetFriends(Context context) throws AuthenticationException {
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // TODO: cache
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.getBackendView("/user/friends", requestProperties);
+            Log.d("SH22", response);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")) {
+                json_response = json_response.getJSONObject("data");
+
+                // Add current friends
+                ArrayList<FriendRelationship> friends = new ArrayList<>();
+                JSONArray friends_array =  json_response.getJSONArray("friends");
+                for(int idx = 0; idx < friends_array.length(); idx++) {
+                    JSONObject friend_json = (JSONObject)friends_array.get(idx);
+                    FriendRelationship friend = new FriendRelationship(friend_json.getInt("id"), friend_json.getString("firstname"), friend_json.getString("surname"));
+                    friends.add(friend);
+                }
+
+                // Add friend requests
+                ArrayList<FriendRequest> requests = new ArrayList<>();
+                JSONArray requests_json_array =  json_response.getJSONArray("requests");
+                for(int idx = 0; idx < requests_json_array.length(); idx++) {
+                    JSONObject request_json = (JSONObject)requests_json_array.get(idx);
+                    FriendRequest request = new FriendRequest(request_json.getInt("id"), request_json.getString("firstname"), request_json.getString("surname"));
+                    requests.add(request);
+                }
+
+
+                return new Friends(friends, requests);
+            } else {
+                throw new IOException(json_response.getString("reason"));
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Attempt to connect to endpoint and authenticate
+    public static boolean AcceptFriendRequest(Context context, int user_id) throws AuthenticationException {
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // TODO: cache
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.postBackendView("/user/friends", requestProperties, "action=accept_request&user_id=" + user_id);
+            Log.d("SH22", response);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                return true;
+            } else {
+                throw new IOException(json_response.getString("reason"));
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Create a new friend request
+    public static boolean CreateFriendRequest(Context context, int user_id) throws AuthenticationException {
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // TODO: cache
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.postBackendView("/user/friends", requestProperties, "action=make_request&user_id=" + user_id);
+            Log.d("SH22", response);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                return true;
+            } else {
+                throw new IOException(json_response.getString("reason"));
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Deny a new friend request
+    public static boolean DenyFriendRequest(Context context, int user_id) throws AuthenticationException {
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // TODO: cache
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.postBackendView("/user/friends", requestProperties, "action=deny_request&user_id=" + user_id);
+            Log.d("SH22", response);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                return true;
+            } else {
+                throw new IOException(json_response.getString("reason"));
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+ }

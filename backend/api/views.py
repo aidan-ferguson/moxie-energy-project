@@ -129,7 +129,7 @@ class FriendView(views.APIView):
     
     def post(self, request):
         action = request.data.get("action", None)
-        other_user_id = request.data.get("user_id", None)
+        other_user_id = request.data.get("user_id", "")
         try:
             other_user_id = int(other_user_id)
         except ValueError:
@@ -164,5 +164,10 @@ class FriendView(views.APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("That friend request does not exist"))
             existing_request.update(has_accepted=True)
             return Response(json_success("Accepted friend request"))
+        
+        elif action == "deny_request":
+            models.Friendship.objects.filter(from_user=other_user, to_user=request.user).delete()
+            return Response(json_success("Deleted"))
+        
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))

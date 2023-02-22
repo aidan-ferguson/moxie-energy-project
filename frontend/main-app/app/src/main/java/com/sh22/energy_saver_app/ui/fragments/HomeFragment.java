@@ -36,6 +36,9 @@ import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.FriendRelationship;
+import com.sh22.energy_saver_app.common.FriendRequest;
+import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
@@ -331,6 +334,17 @@ public void increaseHeight(View view){
                 e.printStackTrace();
             }
         }).start();
+
+        new Thread(() -> {
+            try {
+                Friends friends = BackendInterface.GetFriends(view.getContext());
+                // TODO: put friends somewhere
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+
         Button button1;
         Button button2;
         Button button3;
