@@ -1,5 +1,6 @@
 package com.sh22.energy_saver_app
 
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -22,21 +23,23 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
+
     @Test
-    fun LogoutButtonTest(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        onView(withId(R.id.settings_logout_button)).perform(click())
-
-    }
-
     fun NavBarTest() {
         // launches main activity and checks whether nav bar is in view
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
-    }
 
-//    fun LogOutButtonTest(){
-//        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-//        val fragmentScenario = FragmentScenario.launch(SettingsFragment::class.java)
-//    }
+        //check nav bar can switch between fragments
+
+    }
+    @Test
+    fun LogOutButtonTest(){
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        val scenario = launchFragmentInContainer<SettingsFragment>()
+        onView(withId(R.id.settings_logout_button)).perform(click())
+
+        onView(withId(R.id.login_heading)).check(matches(isDisplayed()))
+
+    }
 }
