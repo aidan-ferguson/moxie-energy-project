@@ -163,9 +163,9 @@ public void increaseHeight(View view){
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
 
 
         // Network calls are ordered by what will be the quickest
@@ -288,8 +288,9 @@ public void increaseHeight(View view){
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
+
                             ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-                            ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome, " + userInfo.firstname + "</font></div></center>"));
+                            ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome, " + userInfo.firstname + "</font></div></center>"));
                         });
                     }
                 }

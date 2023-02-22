@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
         // using parseColor method
         // with color hash code as its parameter
         ColorDrawable colorDrawable
-                = new ColorDrawable(Color.parseColor("#04244C"));
+                = new ColorDrawable(Color.parseColor("#FFFFFF"));
         // Set BackgroundDrawable
         actionBar.setBackgroundDrawable(colorDrawable);
-        actionBar.setTitle(Html.fromHtml("<font color='#DEB276'>Welcome</font>"));
+        actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Welcome</font>"));
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
