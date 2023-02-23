@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.tv.interactive.AppLinkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
@@ -31,6 +32,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class SH22Utils {
+    // Variable to hold the one error toast for the application
+    public static Toast error_toast = null;
 
     // Sigmoid function
     private static float sigmoid(float x) {
@@ -167,5 +170,17 @@ public class SH22Utils {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
         main_activity.finish(); // Disable user from going back
+    }
+
+    // Will create a toast when any backend exception occurs
+    public static void ToastException(Context context, String error) {
+        ((Activity)context).runOnUiThread(() -> {
+            // Ensure only one toast is shown even if multiple errors occur
+            if(SH22Utils.error_toast != null) {
+                SH22Utils.error_toast.cancel();
+            }
+            SH22Utils.error_toast = Toast.makeText(context, error, Toast.LENGTH_LONG);
+            error_toast.show();
+        });
     }
 }

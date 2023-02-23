@@ -87,9 +87,12 @@ public class BackendInterface {
 
                 cached_appliance = applianceData;
                 return applianceData;
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                throw new BackendException("Error occurred when speaking to the backend");
+                throw new BackendException("An error occurred when trying to speak to the server");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new BackendException("An error occurred when processing your data");
             }
 
     }
@@ -117,10 +120,13 @@ public class BackendInterface {
                 cached_national_averages = averages;
 
                 return averages;
-            } catch (IOException | JSONException | AuthenticationException e) {
+            } catch (IOException | AuthenticationException e) {
                 // Catch AuthenticationException as the national averages view is accessible to anyone
                 e.printStackTrace();
-                throw new BackendException("Error occurred when speaking to the backend");
+                throw new BackendException("An error occurred when trying to speak to the server");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new BackendException("An error occurred when processing your data");
             }
 
     }
@@ -152,9 +158,12 @@ public class BackendInterface {
                         json_data.getString("surname"));
                 cached_user_info = userInfo;
                 return userInfo;
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                throw new BackendException("Error occurred when speaking to the backend");
+                throw new BackendException("An error occurred when trying to speak to the server");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new BackendException("An error occurred when processing your data");
             }
 
     }
@@ -179,9 +188,12 @@ public class BackendInterface {
                 }
                 cached_totd = totd;
                 return totd;
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                throw new BackendException("Error occurred when speaking to the backend");
+                throw new BackendException("An error occurred when trying to speak to the server");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new BackendException("An error occurred when processing your data");
             }
 
     }
@@ -206,9 +218,12 @@ public class BackendInterface {
                 String report = json_response.getString("data");
                 cached_report = report;
                 return report;
-            } catch (IOException | JSONException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                throw new BackendException("Error occurred when speaking to the backend");
+                throw new BackendException("An error occurred when trying to speak to the server");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new BackendException("An error occurred when processing your data");
             }
     }
 
@@ -251,9 +266,12 @@ public class BackendInterface {
             } else {
                 throw new BackendException(json_response.getString("reason"));
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new BackendException("Error occurred when speaking to the backend");
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
         }
     }
 
@@ -275,9 +293,12 @@ public class BackendInterface {
             } else {
                 throw new BackendException(json_response.getString("reason"));
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new BackendException("Error occurred when speaking to the backend");
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
         }
     }
 
@@ -299,9 +320,12 @@ public class BackendInterface {
             } else {
                 throw new BackendException(json_response.getString("reason"));
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new BackendException("Error occurred when speaking to the backend");
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
         }
     }
 
@@ -322,9 +346,12 @@ public class BackendInterface {
             } else {
                 throw new BackendException(json_response.getString("reason"));
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new BackendException("Error occurred when speaking to the backend");
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
         }
     }
  }
