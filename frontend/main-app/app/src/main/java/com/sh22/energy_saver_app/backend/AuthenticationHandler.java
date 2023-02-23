@@ -95,6 +95,7 @@ public class AuthenticationHandler {
         try {
 
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             // TODO: change form data to key value pairs
@@ -130,6 +131,7 @@ public class AuthenticationHandler {
 
         try {
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             String form_data = "username=" + username + "&password=" + password + "&firstname=" + firstname + "&surname=" + surname;

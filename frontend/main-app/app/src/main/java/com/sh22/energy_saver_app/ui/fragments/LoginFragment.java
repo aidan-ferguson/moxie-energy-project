@@ -14,12 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sh22.energy_saver_app.backend.AuthenticationStatus;
+import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.ui.activites.LoginActivity;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LoginFragment extends Fragment {
@@ -52,12 +58,39 @@ public class LoginFragment extends Fragment {
                         email.getText().toString(), password.getText().toString());
                 // Jump back on UI thread
                 new Handler(Looper.getMainLooper()).post(() -> {
+                    ((TextView) view.findViewById(R.id.login_error_box)).setText("");
                     if (!login_status.success) {
-                        // TODO: Change to one error textbox
-                        email.setError(login_status.data);
+                        // Parse the error
+                        try {
+                            JSONObject json_response = new JSONObject(login_status.data);
+                            if (json_response.has("non_field_errors")) {
+                                JSONArray response_array = json_response.getJSONArray("non_field_errors");
+                                if (response_array.length() > 0) {
+                                    ((TextView) view.findViewById(R.id.login_error_box)).setText(response_array.getString(0));
+                                }
+                            }
+
+                            // Parse individual field errors and show them
+                            if (json_response.has("username")) {
+                                JSONArray response_array = json_response.getJSONArray("username");
+                                if (response_array.length() > 0) {
+                                    email.setError(response_array.getString(0));
+                                }
+                            }
+                            if (json_response.has("password")) {
+                                JSONArray response_array = json_response.getJSONArray("password");
+                                if (response_array.length() > 0) {
+                                    password.setError(response_array.getString(0));
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            ((TextView) view.findViewById(R.id.login_error_box)).setText(Constants.INTERNAL_ERROR);
+                            e.printStackTrace();
+                        }
                     } else {
                         Activity activity = getActivity();
-                        if(activity != null) {
+                        if (activity != null) {
                             Intent intent = new Intent(activity, MainActivity.class);
                             startActivity(intent);
                             activity.finish(); // Disallow user going back after logout has ended
@@ -74,8 +107,8 @@ public class LoginFragment extends Fragment {
 
         RegisterButton.setOnClickListener((View v) -> {
             // Switch fragment
-            LoginActivity activity = (LoginActivity)getActivity();
-            if(activity != null) {
+            LoginActivity activity = (LoginActivity) getActivity();
+            if (activity != null) {
                 ((LoginActivity) getActivity()).replaceFragment(RegisterFragment.newInstance(email.getText().toString(), password.getText().toString()));
             }
         });

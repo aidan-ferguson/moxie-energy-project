@@ -81,6 +81,7 @@ public class SH22Utils {
         }
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
         if (requestProperties != null) {
             for(String key : requestProperties.keySet()) {
                 connection.addRequestProperty(key, requestProperties.get(key));
@@ -124,6 +125,7 @@ public class SH22Utils {
         }
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
