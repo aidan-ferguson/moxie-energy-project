@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sh22.energy_saver_app.common.ApplianceData;
+import com.sh22.energy_saver_app.common.CacheObject;
 import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.FriendRelationship;
 import com.sh22.energy_saver_app.common.FriendRequest;
@@ -27,11 +28,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BackendInterface {
-    private static ApplianceData cached_appliance = null;
-    private static Map<String, Double> cached_national_averages = null;
-    private static UserInfo cached_user_info = null;
-    private static String cached_totd = null;
-    private static String cached_report = null;
+    private static CacheObject<ApplianceData> cached_appliance = new CacheObject<>();
+    private static CacheObject<Map<String, Double>> cached_national_averages = new CacheObject<>();
+    private static CacheObject<UserInfo> cached_user_info = new CacheObject<>();
+    private static CacheObject<String> cached_totd = new CacheObject<>();
+    private static CacheObject<String> cached_report = new CacheObject<>();
 
 
     // Clear the local cache, used when the user signs out
@@ -49,8 +50,8 @@ public class BackendInterface {
     public static ApplianceData get_appliance_data(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-            if (cached_appliance != null) {
-                return cached_appliance;
+            if (cached_appliance.GetObject() != null) {
+                return cached_appliance.GetObject();
             }
 
             try {
@@ -85,7 +86,7 @@ public class BackendInterface {
                     applianceData.today.add(json_current_day.getDouble(i));
                 }
 
-                cached_appliance = applianceData;
+                cached_appliance.SetObject(applianceData);
                 return applianceData;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,8 +101,8 @@ public class BackendInterface {
     // Method to get the national averages from the database
     public static Map<String, Double> GetNationalAverages() throws BackendException {
 
-            if (cached_national_averages != null) {
-                return cached_national_averages;
+            if (cached_national_averages.GetObject() != null) {
+                return cached_national_averages.GetObject();
             }
             try {
                 // Successful authentication, store and return true
@@ -117,7 +118,7 @@ public class BackendInterface {
                     String key = it.next();
                     averages.put(key, national_data.getDouble(key));
                 }
-                cached_national_averages = averages;
+                cached_national_averages.SetObject(averages);
 
                 return averages;
             } catch (IOException | AuthenticationException e) {
@@ -136,8 +137,8 @@ public class BackendInterface {
         String token = AuthenticationHandler.getLocalToken(context);
 
 
-            if (cached_user_info != null) {
-                return cached_user_info;
+            if (cached_user_info.GetObject() != null) {
+                return cached_user_info.GetObject();
             }
 
             HashMap<String, String> requestProperties = new HashMap<>();
@@ -156,7 +157,7 @@ public class BackendInterface {
                         json_data.getString("username"),
                         json_data.getString("firstname"),
                         json_data.getString("surname"));
-                cached_user_info = userInfo;
+                cached_user_info.SetObject(userInfo);
                 return userInfo;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -171,8 +172,8 @@ public class BackendInterface {
     public static String GetTOTD(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-            if (cached_totd != null) {
-                return cached_totd;
+            if (cached_totd.GetObject() != null) {
+                return cached_totd.GetObject();
             }
 
             HashMap<String, String> requestProperties = new HashMap<>();
@@ -186,7 +187,7 @@ public class BackendInterface {
                 if(!json_response.getBoolean("success")){
                     throw new BackendException(json_response.getString("reason"));
                 }
-                cached_totd = totd;
+                cached_totd.SetObject(totd);
                 return totd;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -201,8 +202,8 @@ public class BackendInterface {
     public static String GetEnergyReport(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-            if (cached_report != null) {
-                return cached_report;
+            if (cached_report.GetObject() != null) {
+                return cached_report.GetObject();
             }
 
             HashMap<String, String> requestProperties = new HashMap<>();
@@ -216,7 +217,7 @@ public class BackendInterface {
                     throw new BackendException(json_response.getString("reason"));
                 }
                 String report = json_response.getString("data");
-                cached_report = report;
+                cached_report.SetObject(report);
                 return report;
             } catch (IOException e) {
                 e.printStackTrace();
