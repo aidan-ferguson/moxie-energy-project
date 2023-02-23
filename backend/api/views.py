@@ -17,7 +17,7 @@ class TestView(views.APIView):
 
     def get(self, request):
         content = {'message': 'Successfully connected as ' + request.user.username}
-        return Response(content)
+        return Response(json_success(content))
     
 
 # User registration endpoint
@@ -36,12 +36,12 @@ class UserInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
-        content = {'user_data': {'id': request.user.id,
-                                 'username': request.user.username,
-                                 'firstname': request.user.first_name,
-                                 'surname': request.user.last_name}}
+        content = {'id': request.user.id,
+                    'username': request.user.username,
+                    'firstname': request.user.first_name,
+                    'surname': request.user.last_name}
         # TODO: Change to json success/failure
-        return Response(content)
+        return Response(json_success(content))
     
 
 # View for returning the national averages of devices
@@ -50,8 +50,10 @@ class NationalAverageView(views.APIView):
     
     def get(self, request):
         with open(staticfiles_storage.path("datasets/dale/house_averages.dat"), "r") as file:
-            # TODO: Change to json success/failure
-            return Response(json.loads(file.read()))
+            try:
+                return Response(json_success(json.loads(file.read())))
+            except FileNotFoundError:
+                return Response(json_error("Could not load national averages"))
         
 
 # View to get the tip of the day
@@ -105,6 +107,8 @@ class AppliancesView(views.APIView):
         energy_data = get_user_energy_data(request.user)
         if energy_data["success"]:
             energy_data["data"]["energy_score"] = calculate_energy_score(energy_data["data"])
+            
+        # get_user_energy_data already returns a json object so we don't need to use the utility functions
         return Response(energy_data)
 
 

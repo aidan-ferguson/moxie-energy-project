@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
@@ -281,7 +282,9 @@ public void increaseHeight(View view){
                         letterGrade.setTextColor(resultColor);
                     });
                 }
-            } catch (AuthenticationException | IOException e) {
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException | IOException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -301,6 +304,8 @@ public void increaseHeight(View view){
                     }
                 }
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -318,6 +323,8 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -335,6 +342,8 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -344,6 +353,8 @@ public void increaseHeight(View view){
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 // TODO: put friends somewhere
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();

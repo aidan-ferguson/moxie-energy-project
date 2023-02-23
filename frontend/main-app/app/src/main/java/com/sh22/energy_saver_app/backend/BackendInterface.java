@@ -33,13 +33,6 @@ public class BackendInterface {
     private static String cached_totd = null;
     private static String cached_report = null;
 
-    // mutex like object used to stop multiple calls to the backend at once
-    private static final Object appliance_lock = new Object();
-    private static final Object national_average_lock = new Object();
-    private static final Object user_info_lock = new Object();
-    private static final Object totd_lock = new Object();
-    private static final Object report_lock = new Object();
-
 
     // Clear the local cache, used when the user signs out
     public static void ClearCache() {
@@ -49,9 +42,11 @@ public class BackendInterface {
         cached_totd = null;
         cached_report = null;
     }
+    // TODO: logout on all authentication exceptions with error
+    // handle all backend exceptions
 
     // Function to get the past weeks energy usage and todays energy usage per device
-    public static ApplianceData get_appliance_data(Context context) throws AuthenticationException {
+    public static ApplianceData get_appliance_data(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
             if (cached_appliance != null) {
@@ -64,14 +59,19 @@ public class BackendInterface {
 
                 String data = SH22Utils.getBackendView("/usage/appliances", requestProperties);
                 Log.d("SH22", data);
+                JSONObject json_response = new JSONObject(data);
+                if(!json_response.getBoolean("success")){
+                    throw new BackendException(json_response.getString("reason"));
+                }
 
-                JSONObject json_data = new JSONObject(data).getJSONObject("data");
-                JSONArray json_labels = json_data.getJSONArray("labels");
-                JSONArray json_initial_usage = json_data.getJSONArray("initial_usage");
-                JSONArray json_previous_week = json_data.getJSONArray("previous_week");
-                JSONArray json_current_day = json_data.getJSONArray("today");
+                JSONObject energy_json = json_response.getJSONObject("data");
+                JSONArray json_labels = energy_json.getJSONArray("labels");
+                JSONArray json_initial_usage = energy_json.getJSONArray("initial_usage");
+                JSONArray json_previous_week = energy_json.getJSONArray("previous_week");
+                JSONArray json_current_day = energy_json.getJSONArray("today");
                 ApplianceData applianceData = new ApplianceData();
-                applianceData.energy_score = (float)json_data.getDouble("energy_score");
+
+                applianceData.energy_score = (float)energy_json.getDouble("energy_score");
                 for (int i = 0; i < json_labels.length(); i++) {
                     applianceData.labels.add(json_labels.getString(i));
                 }
@@ -89,13 +89,13 @@ public class BackendInterface {
                 return applianceData;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                return null;
+                throw new BackendException("Error occurred when speaking to the backend");
             }
 
     }
 
     // Method to get the national averages from the database
-    public static Map<String, Double> GetNationalAverages() {
+    public static Map<String, Double> GetNationalAverages() throws BackendException {
 
             if (cached_national_averages != null) {
                 return cached_national_averages;
@@ -104,23 +104,29 @@ public class BackendInterface {
                 // Successful authentication, store and return true
                 String response = SH22Utils.getBackendView("/usage/national-average", null);
                 Map<String, Double> averages = new HashMap<>();
-                JSONObject json_data = new JSONObject(response);
-                for (Iterator<String> it = json_data.keys(); it.hasNext(); ) {
+                JSONObject json_response = new JSONObject(response);
+                if(!json_response.getBoolean("success")){
+                    throw new BackendException(json_response.getString("reason"));
+                }
+
+                JSONObject national_data = json_response.getJSONObject("data");
+                for (Iterator<String> it = national_data.keys(); it.hasNext(); ) {
                     String key = it.next();
-                    averages.put(key, json_data.getDouble(key));
+                    averages.put(key, national_data.getDouble(key));
                 }
                 cached_national_averages = averages;
 
                 return averages;
             } catch (IOException | JSONException | AuthenticationException e) {
+                // Catch AuthenticationException as the national averages view is accessible to anyone
                 e.printStackTrace();
-                return null;
+                throw new BackendException("Error occurred when speaking to the backend");
             }
 
     }
 
     // Get user information stored in the backend
-    public static UserInfo GetUserInfo(Context context) throws AuthenticationException {
+    public static UserInfo GetUserInfo(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
 
@@ -134,7 +140,11 @@ public class BackendInterface {
             try {
                 // Successful authentication, store and return true
                 String response = SH22Utils.getBackendView("/user/information", requestProperties);
-                JSONObject json_data = new JSONObject(response).getJSONObject("user_data");
+                JSONObject json_response = new JSONObject(response);
+                if(!json_response.getBoolean("success")){
+                    throw new BackendException(json_response.getString("reason"));
+                }
+                JSONObject json_data = json_response.getJSONObject("data");
                 UserInfo userInfo = new UserInfo(
                         json_data.getInt("id"),
                         json_data.getString("username"),
@@ -144,12 +154,12 @@ public class BackendInterface {
                 return userInfo;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                return null;
+                throw new BackendException("Error occurred when speaking to the backend");
             }
 
     }
 
-    public static String GetTOTD(Context context) throws AuthenticationException {
+    public static String GetTOTD(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
             if (cached_totd != null) {
@@ -162,17 +172,21 @@ public class BackendInterface {
             try {
                 // Successful authentication, store and return true
                 String response = SH22Utils.getBackendView("/tips/totd", requestProperties);
-                String totd = new JSONObject(response).getString("data");
+                JSONObject json_response = new JSONObject(response);
+                String totd = json_response.getString("data");
+                if(!json_response.getBoolean("success")){
+                    throw new BackendException(json_response.getString("reason"));
+                }
                 cached_totd = totd;
                 return totd;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                return null;
+                throw new BackendException("Error occurred when speaking to the backend");
             }
 
     }
 
-    public static String GetEnergyReport(Context context) throws AuthenticationException {
+    public static String GetEnergyReport(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
             if (cached_report != null) {
@@ -185,17 +199,21 @@ public class BackendInterface {
             try {
                 // Successful authentication, store and return true
                 String response = SH22Utils.getBackendView("/tips/energy-report", requestProperties);
-                String report = new JSONObject(response).getString("data");
+                JSONObject json_response = new JSONObject(response);
+                if(!json_response.getBoolean("success")){
+                    throw new BackendException(json_response.getString("reason"));
+                }
+                String report = json_response.getString("data");
                 cached_report = report;
                 return report;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                return null;
+                throw new BackendException("Error occurred when speaking to the backend");
             }
     }
 
     // Will return a friends object which contains actual friends and friend requests
-    public static Friends GetFriends(Context context) throws AuthenticationException {
+    public static Friends GetFriends(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
         // TODO: cache
@@ -231,16 +249,16 @@ public class BackendInterface {
 
                 return new Friends(friends, requests);
             } else {
-                throw new IOException(json_response.getString("reason"));
+                throw new BackendException(json_response.getString("reason"));
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            return null;
+            throw new BackendException("Error occurred when speaking to the backend");
         }
     }
 
     // Attempt to connect to endpoint and authenticate
-    public static boolean AcceptFriendRequest(Context context, int user_id) throws AuthenticationException {
+    public static boolean AcceptFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
         // TODO: cache
@@ -255,16 +273,16 @@ public class BackendInterface {
             if(json_response.getBoolean("success")){
                 return true;
             } else {
-                throw new IOException(json_response.getString("reason"));
+                throw new BackendException(json_response.getString("reason"));
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            return false;
+            throw new BackendException("Error occurred when speaking to the backend");
         }
     }
 
     // Create a new friend request
-    public static boolean CreateFriendRequest(Context context, int user_id) throws AuthenticationException {
+    public static boolean CreateFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
         // TODO: cache
@@ -279,16 +297,16 @@ public class BackendInterface {
             if(json_response.getBoolean("success")){
                 return true;
             } else {
-                throw new IOException(json_response.getString("reason"));
+                throw new BackendException(json_response.getString("reason"));
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            return false;
+            throw new BackendException("Error occurred when speaking to the backend");
         }
     }
 
     // Deny a new friend request
-    public static boolean DenyFriendRequest(Context context, int user_id) throws AuthenticationException {
+    public static boolean DenyFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
         // TODO: cache
@@ -298,16 +316,15 @@ public class BackendInterface {
         try {
             // Successful authentication, store and return true
             String response = SH22Utils.postBackendView("/user/friends", requestProperties, "action=deny_request&user_id=" + user_id);
-            Log.d("SH22", response);
             JSONObject json_response = new JSONObject(response);
             if(json_response.getBoolean("success")){
                 return true;
             } else {
-                throw new IOException(json_response.getString("reason"));
+                throw new BackendException(json_response.getString("reason"));
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            return false;
+            throw new BackendException("Error occurred when speaking to the backend");
         }
     }
  }
