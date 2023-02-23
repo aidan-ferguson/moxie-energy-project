@@ -17,11 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
 import org.json.JSONException;
@@ -102,6 +104,8 @@ public class AppliancesFragment extends Fragment {
                 }
 
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();

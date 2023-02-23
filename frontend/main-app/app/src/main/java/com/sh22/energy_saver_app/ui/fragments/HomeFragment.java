@@ -34,9 +34,11 @@ import android.widget.TextView;
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.FriendRelationship;
 import com.sh22.energy_saver_app.common.FriendRequest;
 import com.sh22.energy_saver_app.common.Friends;
@@ -281,8 +283,12 @@ public void increaseHeight(View view){
                         letterGrade.setTextColor(resultColor);
                     });
                 }
-            } catch (AuthenticationException | IOException e) {
-                e.printStackTrace();
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (IOException e) {
+                SH22Utils.ToastException(view.getContext(), Constants.INTERNAL_ERROR);
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -301,7 +307,9 @@ public void increaseHeight(View view){
                     }
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -318,7 +326,9 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -335,7 +345,9 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -344,7 +356,9 @@ public void increaseHeight(View view){
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 // TODO: put friends somewhere
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 

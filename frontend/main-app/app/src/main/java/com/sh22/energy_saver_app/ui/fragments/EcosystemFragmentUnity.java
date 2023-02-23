@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.SH22Utils;
@@ -72,7 +73,7 @@ public class EcosystemFragment extends Fragment {
             try {
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 if(appliance_data != null) {
-                    float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                    float score = appliance_data.energy_score;
 
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
@@ -82,6 +83,8 @@ public class EcosystemFragment extends Fragment {
                     }
                 }
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();

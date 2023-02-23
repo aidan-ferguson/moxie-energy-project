@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 
 public class FriendRequest {
@@ -21,6 +22,8 @@ public class FriendRequest {
             boolean ret_val = BackendInterface.AcceptFriendRequest(context, this.userInfo.user_id);
             Log.d("SH22", String.valueOf(ret_val));
         } catch (AuthenticationException e) {
+            SH22Utils.Logout(context);
+        } catch (BackendException e) {
             e.printStackTrace();
         }
     }
@@ -30,6 +33,8 @@ public class FriendRequest {
             boolean ret_val = BackendInterface.DenyFriendRequest(context, this.userInfo.user_id);
             Log.d("SH22", String.valueOf(ret_val));
         } catch (AuthenticationException e) {
+            SH22Utils.Logout(context);
+        } catch (BackendException e) {
             e.printStackTrace();
         }
     }

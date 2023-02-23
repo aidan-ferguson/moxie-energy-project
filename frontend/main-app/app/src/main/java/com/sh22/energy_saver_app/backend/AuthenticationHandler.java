@@ -18,6 +18,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class AuthenticationHandler {
+    private static final Object logged_in_lock = new Object();
+    private static Boolean logged_in = false;
+
     // Method for getting the locally stored authentication token, throws exception if it does not exist
     public static String getLocalToken(Context context) throws AuthenticationException {
         // Attempt to get locally stored token
@@ -36,6 +39,9 @@ public class AuthenticationHandler {
 
     // Method for storing the authentication token locally
     private static void setLocalToken(Context context, String token){
+        synchronized (logged_in_lock) {
+            AuthenticationHandler.logged_in = true;
+        }
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Constants.PREFERENCE_TOKEN_KEY, token);
@@ -44,8 +50,14 @@ public class AuthenticationHandler {
 
     // Method to logout, will also clear BackendHandler cache
     public static void Logout(Context context) {
-        clearLocalToken(context);
-        BackendInterface.ClearCache();
+        // We need to ensure that only one thread can logout at a time
+        synchronized (logged_in_lock) {
+            if(logged_in) {
+                clearLocalToken(context);
+                BackendInterface.ClearCache();
+                AuthenticationHandler.logged_in = false;
+            }
+        }
     }
 
     // Method to clear any stored tokens
@@ -65,6 +77,9 @@ public class AuthenticationHandler {
             Log.e("moxie", "Failed to find token in preferences");
             return false;
         }
+        synchronized (logged_in_lock) {
+            AuthenticationHandler.logged_in = true;
+        }
         return true;
     }
 
@@ -80,6 +95,7 @@ public class AuthenticationHandler {
         try {
 
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             // TODO: change form data to key value pairs
@@ -115,6 +131,7 @@ public class AuthenticationHandler {
 
         try {
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(Constants.SERVER_CONNECT_TIMEOUT);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             String form_data = "username=" + username + "&password=" + password + "&firstname=" + firstname + "&surname=" + surname;

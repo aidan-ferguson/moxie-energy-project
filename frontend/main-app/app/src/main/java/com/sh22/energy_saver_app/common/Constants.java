@@ -10,6 +10,7 @@ public class Constants {
     public static final String PREFERENCE_TOKEN_KEY = "AUTHENTICATION_TOKEN";
     public static final String SERVER_BASE_URL = "http://10.0.2.2:8000/api";
     public static final String INTERNAL_ERROR = "Internal error occured";
+    public static final int SERVER_CONNECT_TIMEOUT = 3000; // Measured in milliseconds
 
     // Controls the "harshness" of the energy score
     public static final float ENERGY_SIGMOID_GRADIANT_STEEPNESS = 0.4f;
