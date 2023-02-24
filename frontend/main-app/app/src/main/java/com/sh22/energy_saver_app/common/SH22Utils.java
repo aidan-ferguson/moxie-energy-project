@@ -69,6 +69,7 @@ public class SH22Utils {
         while((line = reader.readLine())!= null){
             buffer.append(line);
         }
+        reader.close();
         return buffer.toString();
     }
 

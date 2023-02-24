@@ -9,6 +9,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 import json
 import openai
 from api import models
+import math
 
 
 # A view used to test an authenticated connection to the server
@@ -39,9 +40,25 @@ class UserInfoView(views.APIView):
         content = {'id': request.user.id,
                     'username': request.user.username,
                     'firstname': request.user.first_name,
-                    'surname': request.user.last_name}
-        # TODO: Change to json success/failure
+                    'surname': request.user.last_name,
+                    'data_provider': request.user.data_provider}
         return Response(json_success(content))
+    
+    def post(self, request):
+        # Check if user wants to update
+        if request.data.get("action", None) == "update":
+            # Allow only certain actions
+            update_parameters = {}
+            update_parameters["first_name"] = request.data.get("firstname", None)
+            update_parameters["last_name"] = request.data.get("last_name", None)
+            update_parameters["data_provider"] = request.data.get("data_provider", None)
+            
+            # Remove None elements
+            update_parameters = {elem: update_parameters[elem] for elem in update_parameters if update_parameters[elem] is not None}
+            models.User.objects.filter(id=request.user.id).update(**update_parameters)
+            return Response(status=status.HTTP_200_OK)
+            
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
 # View for returning the national averages of devices
@@ -106,7 +123,11 @@ class AppliancesView(views.APIView):
     def get(self, request):
         energy_data = get_user_energy_data(request.user)
         if energy_data["success"]:
-            energy_data["data"]["energy_score"] = calculate_energy_score(energy_data["data"])
+            score = calculate_energy_score(energy_data["data"])
+            if not (math.isnan(score) or math.isinf(score)):
+                energy_data["data"]["energy_score"] = score
+            else:
+                energy_data["data"]["energy_score"] = 0.0
             
         # get_user_energy_data already returns a json object so we don't need to use the utility functions
         return Response(energy_data)
