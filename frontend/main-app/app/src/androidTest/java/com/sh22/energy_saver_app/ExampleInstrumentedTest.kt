@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.sh22.frontend_networking_test", appContext.packageName)
+        assertEquals("com.sh22.energy_saver_app", appContext.packageName)
     }
 }

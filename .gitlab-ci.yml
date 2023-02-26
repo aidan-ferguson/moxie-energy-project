@@ -172,4 +172,15 @@ android:test:
     - ./gradlew test
     # Run UI testing
     - ./gradlew check
+    # Get coverage
+    - ./gradlew createDebugCoverageReport
+    - COVERAGE=$(cat app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
+    - echo coverage-$COVERAGE
+  coverage: '/coverage-([0-9.]+)%/'
+  artifacts:
+    when: on_success
+    expire_in: "30 days"
+    reports:
+      coverage_report:
+        path: $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
   <<: *frontend-rules
