@@ -178,10 +178,11 @@ android:build:
     - export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     - ./gradlew assemble -PBuildUnity=true
     - ./gradlew signingReport
+    - ./gradlew connectedCheck
   artifacts:
     when: on_success
     paths:
       - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
+      - $ANDROID_PROJECT_DIR/app/build/reports
   <<: *frontend-rules
-  
   

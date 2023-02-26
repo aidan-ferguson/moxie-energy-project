@@ -15,6 +15,10 @@ buildscript {
     }
 }
 
+//plugins {
+//    id 'org.barfuin.gradle.jacocolog' version '2.0.0'
+//}
+
 allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
