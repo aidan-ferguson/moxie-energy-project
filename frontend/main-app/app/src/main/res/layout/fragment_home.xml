@@ -10,31 +10,14 @@
 
     tools:context=".ui.fragments.HomeFragment">
 
-    <TextView
-        android:id="@+id/home_fragment_heading"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Welcome"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/blue_whale"
-
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
 
     <androidx.cardview.widget.CardView
-        android:visibility="visible"
         android:id="@+id/score_card"
         android:layout_width="350dp"
         android:layout_height="300dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/white"
+        android:visibility="visible"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="6dp"
         app:cardElevation="13dp"
@@ -45,6 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent">
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/device_name_button"
             android:layout_width="match_parent"
@@ -113,7 +97,7 @@
         android:id="@+id/center_card"
         android:layout_width="350dp"
         android:layout_height="350dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="32dp"
 
         android:background="@color/white"
         app:cardCornerRadius="6dp"
@@ -187,30 +171,15 @@
                 app:layout_constraintTop_toTopOf="@+id/button1" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button4"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="32dp"
-                android:background="@drawable/layout_bg3"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-
-            </androidx.appcompat.widget.AppCompatButton>
-
-            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button3"
-                android:layout_width="120dp"
+                android:layout_width="290dp"
                 android:layout_height="120dp"
 
-                android:layout_marginStart="32dp"
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/layout_bg3"
 
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -236,17 +205,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/button1"
                 app:layout_constraintEnd_toEndOf="@+id/button1"
                 app:layout_constraintStart_toStartOf="@+id/button1"></TextView>
-
-            <TextView
-                android:id="@+id/button4Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Somethin else"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="@+id/button4"
-                app:layout_constraintEnd_toEndOf="@+id/button4"
-                app:layout_constraintStart_toStartOf="@+id/button4"></TextView>
 
             <TextView
                 android:id="@+id/button3Text"
@@ -277,7 +235,7 @@
                 android:layout_height="96dp"
                 android:layout_marginBottom="32dp"
                 android:src="@drawable/bulb"
-                android:tint="@color/harvest_gold"
+                android:tint="@color/blue_jeans"
                 app:layout_constraintBottom_toBottomOf="@+id/button1"
                 app:layout_constraintEnd_toEndOf="@+id/button1"
                 app:layout_constraintStart_toStartOf="@+id/button1"
@@ -294,20 +252,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/button3"
                 app:layout_constraintStart_toStartOf="@+id/button3"
                 app:layout_constraintTop_toTopOf="@+id/button3"
-                app:tint="@color/harvest_gold"></ImageView>
-
-            <ImageView
-                android:id="@+id/icon4"
-
-                android:layout_width="68dp"
-                android:layout_height="96dp"
-                android:layout_marginBottom="32dp"
-                android:src="@android:drawable/sym_contact_card"
-                app:layout_constraintBottom_toBottomOf="@+id/button4"
-                app:layout_constraintEnd_toEndOf="@+id/button4"
-                app:layout_constraintStart_toStartOf="@+id/button4"
-                app:layout_constraintTop_toTopOf="@+id/button4"
-                app:tint="@color/harvest_gold"></ImageView>
+                app:tint="@color/blue_jeans"></ImageView>
 
             <ImageView
                 android:id="@+id/icon2"
@@ -319,7 +264,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/button2"
                 app:layout_constraintStart_toStartOf="@+id/button2"
                 app:layout_constraintTop_toTopOf="@+id/button2"
-                app:tint="@color/harvest_gold"></ImageView>
+                app:tint="@color/blue_jeans"></ImageView>
 
             <TextView
                 android:id="@+id/title2"
@@ -403,13 +348,12 @@ However, the lighting usage of the household is still of great concern. By repla
                 app:layout_constraintTop_toTopOf="@+id/button3" />
 
 
-
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
                 android:id="@+id/krew_recycler"
                 android:layout_width="347dp"
                 android:layout_height="491dp"
                 android:layout_marginBottom="56dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/button3"
                 app:layout_constraintEnd_toEndOf="@+id/button3"
                 app:layout_constraintHorizontal_bias="0.666"
@@ -437,7 +381,6 @@ However, the lighting usage of the household is still of great concern. By repla
         android:layout_height="45dp"
 
         android:background="@drawable/shadow"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

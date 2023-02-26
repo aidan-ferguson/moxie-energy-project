@@ -403,11 +403,6 @@ public void increaseHeight(View view){
         back3= view.findViewById(R.id.dd3);
 
 
-        button4= view.findViewById(R.id.button4);
-        icon4= view.findViewById(R.id.icon4);
-        label4= view.findViewById(R.id.button4Text);
-
-
 
 
 
@@ -465,15 +460,15 @@ public void increaseHeight(View view){
 
                 button2.setVisibility(View.GONE);
                 button3.setVisibility(View.GONE);
-                button4.setVisibility(View.GONE);
+
 
                 icon2.setVisibility(View.GONE);
                 icon3.setVisibility(View.GONE);
-                icon4.setVisibility(View.GONE);
+
 
                 label2.setVisibility(View.GONE);
                 label3.setVisibility(View.GONE);
-                label4.setVisibility(View.GONE);
+
                 label1.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.GONE);
 
@@ -589,15 +584,15 @@ public void increaseHeight(View view){
 
                 button2.setVisibility(View.VISIBLE);
                 button3.setVisibility(View.VISIBLE);
-                button4.setVisibility(View.VISIBLE);
+
 
                 icon2.setVisibility(View.VISIBLE);
                 icon3.setVisibility(View.VISIBLE);
-                icon4.setVisibility(View.VISIBLE);
+
 
                 label2.setVisibility(View.VISIBLE);
                 label3.setVisibility(View.VISIBLE);
-                label4.setVisibility(View.VISIBLE);
+
                 label1.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
 
@@ -666,15 +661,15 @@ public void increaseHeight(View view){
 
                 button1.setVisibility(View.GONE);
                                 button3.setVisibility(View.GONE);
-                                button4.setVisibility(View.GONE);
+
 
                                 icon1.setVisibility(View.GONE);
                                 icon3.setVisibility(View.GONE);
-                                icon4.setVisibility(View.GONE);
+
 
                                 label1.setVisibility(View.GONE);
                                 label3.setVisibility(View.GONE);
-                                label4.setVisibility(View.GONE);
+
 
                 label2.setVisibility(View.GONE);
                 icon2.setVisibility(View.GONE);
@@ -782,15 +777,15 @@ public void increaseHeight(View view){
 
                 button1.setVisibility(View.VISIBLE);
                 button3.setVisibility(View.VISIBLE);
-                button4.setVisibility(View.VISIBLE);
+
 
                 icon1.setVisibility(View.VISIBLE);
                 icon3.setVisibility(View.VISIBLE);
-                icon4.setVisibility(View.VISIBLE);
+
 
                 label1.setVisibility(View.VISIBLE);
                 label3.setVisibility(View.VISIBLE);
-                label4.setVisibility(View.VISIBLE);
+
                 label2.setVisibility(View.VISIBLE);
                 icon2.setVisibility(View.VISIBLE);
 
@@ -845,17 +840,17 @@ public void increaseHeight(View view){
 
                 button1.setVisibility(View.GONE);
                 button2.setVisibility(View.GONE);
-                button4.setVisibility(View.GONE);
+
 
                 icon1.setVisibility(View.GONE);
                 icon2.setVisibility(View.GONE);
-                icon4.setVisibility(View.GONE);
+
                 icon3.setVisibility(View.GONE);
 
 
                 label1.setVisibility(View.GONE);
                 label2.setVisibility(View.GONE);
-                label4.setVisibility(View.GONE);
+
                 label3.setVisibility(View.GONE);
                 back3.setVisibility(View.VISIBLE);
 
@@ -915,17 +910,17 @@ public void increaseHeight(View view){
 
                 button2.setVisibility(View.VISIBLE);
                 button1.setVisibility(View.VISIBLE);
-                button4.setVisibility(View.VISIBLE);
+
                 button3.setVisibility(View.VISIBLE);
 
                 icon2.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
-                icon4.setVisibility(View.VISIBLE);
+;
                 icon3.setVisibility(View.VISIBLE);
 
                 label2.setVisibility(View.VISIBLE);
                 label1.setVisibility(View.VISIBLE);
-                label4.setVisibility(View.VISIBLE);
+
                 label3.setVisibility(View.VISIBLE);
 
                 label1.setVisibility(View.VISIBLE);
@@ -936,61 +931,7 @@ public void increaseHeight(View view){
             }
         });
 
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                ViewGroup.LayoutParams layoutParams = button4.getLayoutParams();
-                Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (button4.getWidth()*2)+ parent.getWidth()-amount-(2*button4.getWidth());
-                int newHeight = (button4.getHeight()*2)+ parent.getHeight()-amount-(2*button4.getHeight());
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button4.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button4.getWidth(), newWidth);
-
-                heightAnimator.setDuration(200);
-                heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                widthAnimator.setDuration(200);
-                widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int value = (int) animation.getAnimatedValue();
-                        layoutParams.height = value;
-                        button4.setLayoutParams(layoutParams);
-                    }
-                });
-                widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int value = (int) animation.getAnimatedValue();
-                        layoutParams.width = value;
-                        button4.setLayoutParams(layoutParams);
-                    }
-                });
-
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playTogether(heightAnimator, widthAnimator);
-
-                // Start the animation
-                animatorSet.start();
-
-
-                button1.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
-
-                icon1.setVisibility(View.GONE);
-                icon3.setVisibility(View.GONE);
-                icon2.setVisibility(View.GONE);
-
-                label1.setVisibility(View.GONE);
-                label3.setVisibility(View.GONE);
-                label2.setVisibility(View.GONE);
-
-
-
-            }
-        });
         // Return the inflated view
         return view;
     }

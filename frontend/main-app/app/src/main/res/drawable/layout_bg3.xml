@@ -18,7 +18,7 @@
 
 
             <corners android:radius="6dp"/>
-            <stroke android:width="2dp" android:color="@color/blue_whale"/>
+            <stroke android:width="2dp" android:color="#2C62A526"/>
 
         </shape>
     </item>

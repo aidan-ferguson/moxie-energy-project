@@ -7,6 +7,7 @@
         android:id="@+id/settings"
         android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom"
+        android:background="@color/white"
         android:iconTint="@color/harvest_gold"/>
 
 
