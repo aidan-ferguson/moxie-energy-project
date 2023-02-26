@@ -160,7 +160,7 @@ android:build:
       - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
 
-# Run the tests on the frontend and generate coverage reports
+# Run the unit tests on the frontend and generate coverage reports
 android:test:
   stage: test
   needs: ["android:build"]
@@ -168,20 +168,36 @@ android:test:
   before_script:
     - *android-before
   script:
-    # Run unit tests 
-    - ./gradlew test
-    # Run UI testing
-    - ./gradlew check
-    # Get coverage
-    - ./gradlew createDebugCoverageReport
-    - COVERAGE=$(cat app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
-    - echo coverage-$COVERAGE
-  coverage: '/coverage-([0-9.]+)%/'
+    # Run unit tests and generate coverage information
+    - ./gradlew jacocoTestReport
+  coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     when: on_success
     expire_in: "30 days"
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
+        path: $ANDROID_PROJECT_DIR/app/build/reports/jacoco/jacocoTestReport/html
+    paths:
+      - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
+
+# For full stack testing with the django backed and the frontend 
+integration_testing:
+  stage: test
+  needs: ["android:test", "backend:test"]
+  image: sh22/android:latest
+  before_script:
+    - *android-before
+    - *backend-setup
+  script:
+    # Finish setting up backend
+    - cd $BACKEND_DIR
+    - python3 reset_db.py
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
+    - python3 manage.py runserver&
+    - cd $FRONTEND_DIR
+    # Run UI testing
+    - ./gradlew check
+    # TODO: coverage reporting
