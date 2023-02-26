@@ -168,5 +168,8 @@ android:test:
   before_script:
     - *android-before
   script:
-    - ./gradlew connectedCheck
+    # Run unit tests 
+    - ./gradlew test
+    # Run UI testing
+    - ./gradlew check
   <<: *frontend-rules
