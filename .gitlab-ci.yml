@@ -182,5 +182,6 @@ android:test:
     expire_in: "30 days"
     reports:
       coverage_report:
+        coverage_format: cobertura
         path: $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
   <<: *frontend-rules
