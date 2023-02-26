@@ -169,3 +169,4 @@ android:test:
     - *android-before
   script:
     - ./gradlew connectedCheck
+  <<: *frontend-rules
