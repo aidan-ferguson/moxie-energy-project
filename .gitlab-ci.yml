@@ -132,6 +132,12 @@ unity:test:
 
 # Frontend android pipeline
 # Gradle has a built in linter so we don't need a seperate lint stage
+.android:before: &android-before
+    - cd "$ANDROID_PROJECT_DIR"
+    # Set SDK installation path
+    - echo "sdk.dir=${ANDROID_HOME}" > local.properties
+    - chmod +x ./gradlew
+    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
 
 # Adapted from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Android.gitlab-ci.yml
 android:build:
@@ -139,34 +145,7 @@ android:build:
   needs: ["unity:build"]
   image: sh22/android:latest
   before_script:
-    # Install dependancies and setup
-    # - apt-get --quiet update -y
-    # - apt-get install -y wget tar unzip lib32stdc++6 lib32z1 python3
-    # - export ANDROID_HOME="${PWD}/android-home"
-    # - mkdir -p "$ANDROID_HOME"
-    # # Download and extract the sdkmanager
-    # - wget --output-document=$ANDROID_HOME/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
-    # - pushd $ANDROID_HOME
-    # - unzip -d cmdline-tools cmdline-tools.zip
-    # - popd
-    # - export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/cmdline-tools/bin/
-    # # Find NDK version from source.properties file
-    # - eval $(cat $UNITY_BUILD_PATH/source.properties | tr "." "_" | tr -d " ")
-    # - android_ndk_version=$(echo $Pkg_Revision | tr "_" ".")
-    # - echo "Using NDK version - $android_ndk_version"
-    # # Confirm sdkmanager installed and download dependancies
-    # - sdkmanager --version
-    # - yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses || true # Accept all licenses
-    # - sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-${ANDROID_COMPILE_SDK}"
-    # - sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
-    # - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
-    # - sdkmanager --sdk_root=${ANDROID_HOME} "ndk;${android_ndk_version}"
-    # - sdkmanager --sdk_root=${ANDROID_HOME} "cmake;3.22.1"
-    - cd "$ANDROID_PROJECT_DIR"
-    # Set SDK installation path
-    - echo "sdk.dir=${ANDROID_HOME}" > local.properties
-    - chmod +x ./gradlew
-    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
+    - *android-before
   script:
     - pushd $CI_PROJECT_DIR/frontend
     - python3 ./convert_unity_module.py
@@ -175,11 +154,18 @@ android:build:
     - export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     - ./gradlew assemble -PBuildUnity=true
     - ./gradlew signingReport
-    # - ./gradlew connectedCheck
   artifacts:
     when: on_success
     paths:
-      - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
-      - $ANDROID_PROJECT_DIR/app/build/reports
+      - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
-  
+
+# Run the tests on the frontend and generate coverage reports
+android:test:
+  stage: test
+  needs: ["android:build"]
+  image: sh22/android:latest
+  before_script:
+    - *android-before
+  script:
+    - ./gradlew connectedCheck
