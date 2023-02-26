@@ -161,7 +161,7 @@ public class SH22Utils {
         }
     }
 
-    // TODO: logout on backend
+
     public static void Logout(Context context) {
         // Erase tokens
         AuthenticationHandler.Logout(context);

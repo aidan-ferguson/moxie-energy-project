@@ -60,6 +60,7 @@ public class RegisterFragment extends Fragment {
             username = getArguments().getString(ARG_USERNAME);
             password = getArguments().getString(ARG_PASSWORD);
         }
+
     }
 
     @Override
