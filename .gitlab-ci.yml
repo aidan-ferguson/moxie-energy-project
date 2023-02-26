@@ -201,3 +201,5 @@ integration_testing:
     # Run UI testing
     - ./gradlew check
     # TODO: coverage reporting
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
