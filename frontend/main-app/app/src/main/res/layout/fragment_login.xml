@@ -133,4 +133,12 @@
         app:layout_constraintVertical_bias="0.548"
         app:tint="#DEB276" />
 
+    <TextView
+        android:id="@+id/login_error_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F11D1D"
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="279dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

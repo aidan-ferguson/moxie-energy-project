@@ -1,4 +1,4 @@
-from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data
+from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data, calculate_energy_score
 import datetime
 from api.serialisers import RegisterSerializer
 from rest_framework import permissions
@@ -9,6 +9,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 import json
 import openai
 from api import models
+import math
 
 
 # A view used to test an authenticated connection to the server
@@ -17,7 +18,7 @@ class TestView(views.APIView):
 
     def get(self, request):
         content = {'message': 'Successfully connected as ' + request.user.username}
-        return Response(content)
+        return Response(json_success(content))
     
 
 # User registration endpoint
@@ -36,12 +37,28 @@ class UserInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
-        content = {'user_data': {'id': request.user.id,
-                                 'username': request.user.username,
-                                 'firstname': request.user.first_name,
-                                 'surname': request.user.last_name}}
-        # TODO: Change to json success/failure
-        return Response(content)
+        content = {'id': request.user.id,
+                    'username': request.user.username,
+                    'firstname': request.user.first_name,
+                    'surname': request.user.last_name,
+                    'data_provider': request.user.data_provider}
+        return Response(json_success(content))
+    
+    def post(self, request):
+        # Check if user wants to update
+        if request.data.get("action", None) == "update":
+            # Allow only certain actions
+            update_parameters = {}
+            update_parameters["first_name"] = request.data.get("firstname", None)
+            update_parameters["last_name"] = request.data.get("last_name", None)
+            update_parameters["data_provider"] = request.data.get("data_provider", None)
+            
+            # Remove None elements
+            update_parameters = {elem: update_parameters[elem] for elem in update_parameters if update_parameters[elem] is not None}
+            models.User.objects.filter(id=request.user.id).update(**update_parameters)
+            return Response(status=status.HTTP_200_OK)
+            
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
 # View for returning the national averages of devices
@@ -50,8 +67,10 @@ class NationalAverageView(views.APIView):
     
     def get(self, request):
         with open(staticfiles_storage.path("datasets/dale/house_averages.dat"), "r") as file:
-            # TODO: Change to json success/failure
-            return Response(json.loads(file.read()))
+            try:
+                return Response(json_success(json.loads(file.read())))
+            except FileNotFoundError:
+                return Response(json_error("Could not load national averages"))
         
 
 # View to get the tip of the day
@@ -102,7 +121,16 @@ class AppliancesView(views.APIView):
     
     # Returns the difference in aggreate power usage for different devices compared to last month
     def get(self, request):
-        return Response(get_user_energy_data(request.user))
+        energy_data = get_user_energy_data(request.user)
+        if energy_data["success"]:
+            score = calculate_energy_score(energy_data["data"])
+            if not (math.isnan(score) or math.isinf(score)):
+                energy_data["data"]["energy_score"] = score
+            else:
+                energy_data["data"]["energy_score"] = 0.0
+            
+        # get_user_energy_data already returns a json object so we don't need to use the utility functions
+        return Response(energy_data)
 
 
 # Will delete the currently stored token of a user
@@ -129,7 +157,7 @@ class FriendView(views.APIView):
     
     def post(self, request):
         action = request.data.get("action", None)
-        other_user_id = request.data.get("user_id", None)
+        other_user_id = request.data.get("user_id", "")
         try:
             other_user_id = int(other_user_id)
         except ValueError:
@@ -164,5 +192,10 @@ class FriendView(views.APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("That friend request does not exist"))
             existing_request.update(has_accepted=True)
             return Response(json_success("Accepted friend request"))
+        
+        elif action == "deny_request":
+            models.Friendship.objects.filter(from_user=other_user, to_user=request.user).delete()
+            return Response(json_success("Deleted"))
+        
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))

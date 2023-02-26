@@ -88,7 +88,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
         // Set the progress position and colour of the progress bar
-        float appliance_score = SH22Utils.normaliseEnergyRating(appliance_data.get(position).getInitialUsage() / appliance_data.get(position).getUsageToday());
+        float appliance_score = SH22Utils.getEnergyScore(appliance_data, position);
         holder.progressBar.setProgress((int) (appliance_score * 100), true);
 //        holder.progressBar.setProgress(32);
 

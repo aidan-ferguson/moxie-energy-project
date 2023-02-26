@@ -13,12 +13,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sh22.energy_saver_app.backend.AuthenticationStatus;
+import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.ui.activites.LoginActivity;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,34 +67,36 @@ public class RegisterFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
         // Set values that may have been carried over from login fragment
-        ((EditText)view.findViewById(R.id.register_username)).setText(username);
-        ((EditText)view.findViewById(R.id.register_password)).setText(password);
+        ((EditText) view.findViewById(R.id.register_username)).setText(username);
+        ((EditText) view.findViewById(R.id.register_password)).setText(password);
 
         // Callback function for when register is clicked
         view.findViewById(R.id.register_button).setOnClickListener((View v) -> {
-            String username = ((EditText)view.findViewById(R.id.register_username)).getText().toString();
-            String password = ((EditText)view.findViewById(R.id.register_password)).getText().toString();
-            String firstname = ((EditText)view.findViewById(R.id.register_firstname)).getText().toString();
-            String surname = ((EditText)view.findViewById(R.id.register_surname)).getText().toString();
-            String password_confirm = ((EditText)view.findViewById(R.id.register_password_confirm)).getText().toString();
+
+
+            EditText username = (EditText) view.findViewById(R.id.register_username);
+            EditText password = (EditText) view.findViewById(R.id.register_password);
+            EditText firstname = (EditText) view.findViewById(R.id.register_firstname);
+            EditText surname = (EditText) view.findViewById(R.id.register_surname);
+            EditText password_confirm = (EditText) view.findViewById(R.id.register_password_confirm);
 
             // Attempt to register user
-            if(!password.equals(password_confirm)) {
-                ((EditText)view.findViewById(R.id.register_password_confirm)).setError("The passwords must match");
+            if (!password.getText().toString().equals(password_confirm.getText().toString())) {
+                password_confirm.setError("The passwords must match");
             } else {
                 // Network stuff we need a separate thread
                 new Thread(() -> {
-                    AuthenticationStatus status = AuthenticationHandler.registerUser(getContext(), username, password, firstname, surname);
+                    AuthenticationStatus status = AuthenticationHandler.registerUser(getContext(),
+                            username.getText().toString(),
+                            password.getText().toString(),
+                            firstname.getText().toString(),
+                            surname.getText().toString());
                     // Jump back on UI thread
                     new Handler(Looper.getMainLooper()).post(() -> {
                         if (status.success) {
                             // Registration and login success
-//                            LoginActivity activity = (LoginActivity)getActivity();
-//                            if(activity != null) {
-//                                ((LoginActivity) getActivity()).replaceFragment(RegisterInformationFragment.newInstance());
-//                            }
                             Activity activity = getActivity();
-                            if(activity != null) {
+                            if (activity != null) {
                                 Intent intent = new Intent(activity, MainActivity.class);
                                 startActivity(intent);
                                 activity.finish(); // Disallow user going back after logout has ended
@@ -96,7 +104,44 @@ public class RegisterFragment extends Fragment {
                                 Log.e("SH22", "NullPtrException activity in register");
                             }
                         } else {
-                            ((EditText)view.findViewById(R.id.register_password_confirm)).setError(status.data);
+                            try {
+                                JSONObject json_response = new JSONObject(status.data);
+                                if (json_response.has("non_field_errors")) {
+                                    JSONArray response_array = json_response.getJSONArray("non_field_errors");
+                                    if (response_array.length() > 0) {
+                                        ((TextView) view.findViewById(R.id.register_error_box)).setText(response_array.getString(0));
+                                    }
+                                }
+                                // Parse individual field errors and show them
+                                if (json_response.has("username")) {
+                                    JSONArray response_array = json_response.getJSONArray("username");
+                                    if (response_array.length() > 0) {
+                                        username.setError(response_array.getString(0));
+                                    }
+                                }
+                                if (json_response.has("password")) {
+                                    JSONArray response_array = json_response.getJSONArray("password");
+                                    if (response_array.length() > 0) {
+                                        password.setError(response_array.getString(0));
+                                    }
+                                }
+                                if (json_response.has("firstname")) {
+                                    JSONArray response_array = json_response.getJSONArray("firstname");
+                                    if (response_array.length() > 0) {
+                                        firstname.setError(response_array.getString(0));
+                                    }
+                                }
+                                if (json_response.has("surname")) {
+                                    JSONArray response_array = json_response.getJSONArray("surname");
+                                    if (response_array.length() > 0) {
+                                        surname.setError(response_array.getString(0));
+                                    }
+                                }
+
+                            } catch (JSONException e) {
+                                ((TextView) view.findViewById(R.id.register_error_box)).setText(Constants.INTERNAL_ERROR);
+                                e.printStackTrace();
+                            }
                         }
                     });
                 }).start();
@@ -105,8 +150,8 @@ public class RegisterFragment extends Fragment {
 
         view.findViewById(R.id.register_login_button).setOnClickListener((View v) -> {
             // Switch fragment
-            LoginActivity activity = (LoginActivity)getActivity();
-            if(activity != null) {
+            LoginActivity activity = (LoginActivity) getActivity();
+            if (activity != null) {
                 ((LoginActivity) getActivity()).replaceFragment(LoginFragment.newInstance());
             }
         });

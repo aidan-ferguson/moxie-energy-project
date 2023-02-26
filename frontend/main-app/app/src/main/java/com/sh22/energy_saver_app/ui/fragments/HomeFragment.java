@@ -34,9 +34,14 @@ import android.widget.TextView;
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.Constants;
+import com.sh22.energy_saver_app.common.FriendRelationship;
+import com.sh22.energy_saver_app.common.FriendRequest;
+import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
@@ -166,10 +171,7 @@ public void increaseHeight(View view){
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
-
-
 
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
         ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -192,8 +194,7 @@ public void increaseHeight(View view){
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        float score = SH22Utils.getEnergyScore(appliance_data, "aggregate");
-                        score=0.0f;
+                        float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
 
                         int progress = Math.round(score * 100) - 50;
 
@@ -282,8 +283,12 @@ public void increaseHeight(View view){
                         letterGrade.setTextColor(resultColor);
                     });
                 }
-            } catch (AuthenticationException | IOException e) {
-                e.printStackTrace();
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (IOException e) {
+                SH22Utils.ToastException(view.getContext(), Constants.INTERNAL_ERROR);
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -302,7 +307,9 @@ public void increaseHeight(View view){
                     }
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -319,7 +326,9 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
 
@@ -336,9 +345,24 @@ public void increaseHeight(View view){
                     });
                 }
             } catch (AuthenticationException e) {
-                e.printStackTrace();
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
             }
         }).start();
+
+        new Thread(() -> {
+            try {
+                Friends friends = BackendInterface.GetFriends(view.getContext());
+                // TODO: put friends somewhere
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
+            }
+        }).start();
+
+
         Button button1;
         Button button2;
         Button button3;

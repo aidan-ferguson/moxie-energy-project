@@ -216,4 +216,12 @@
         app:layout_constraintVertical_bias="0.729"
         app:tint="#DEB276" />
 
+    <TextView
+        android:id="@+id/register_error_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#D12424"
+        tools:layout_editor_absoluteX="25dp"
+        tools:layout_editor_absoluteY="120dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
