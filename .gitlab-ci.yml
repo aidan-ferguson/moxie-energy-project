@@ -56,7 +56,13 @@ backend:test:
   before_script:
     - *backend-setup
   script:
-    - python3 manage.py test
+    - python3 manage.py test api/tests
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage.xml
   <<: *backend-rules
   
 

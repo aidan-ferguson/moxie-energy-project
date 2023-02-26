@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_nose',
     'api',
 ]
 
@@ -139,3 +140,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# By default only record coverage on the api app
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=api',
+    '--cover-xml',
+]
