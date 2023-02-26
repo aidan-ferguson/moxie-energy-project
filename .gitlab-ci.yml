@@ -137,7 +137,6 @@ unity:test:
     # Set SDK installation path
     - echo "sdk.dir=${ANDROID_HOME}" > local.properties
     - chmod +x ./gradlew
-    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
 
 # Adapted from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Android.gitlab-ci.yml
 android:build:
@@ -147,6 +146,7 @@ android:build:
   before_script:
     - *android-before
   script:
+    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
     - pushd $CI_PROJECT_DIR/frontend
     - python3 ./convert_unity_module.py
     - popd
