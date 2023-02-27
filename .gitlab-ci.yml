@@ -56,10 +56,14 @@ backend:test:
     - python3 manage.py test api/tests
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
+    when: always
     reports:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage.xml
+      junit: backend/nosetests.xml
+    paths:
+      - backend/nosetests.xml
   <<: *backend-rules
   
 
@@ -182,7 +186,7 @@ integration_testing:
     # Only download the small datasets
     - python3 setup.py --exclude-dale house_1,house_2,house_5
     - python3 manage.py runserver&
-    - cd $FRONTEND_DIR
+    - cd $ANDROID_PROJECT_DIR
     # Run UI testing
     - ./gradlew check
     # TODO: coverage reporting

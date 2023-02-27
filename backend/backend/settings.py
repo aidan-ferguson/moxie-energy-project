@@ -150,4 +150,6 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=api',
     '--cover-xml',
+    '--with-xunit',
+    '--xunit-file=nosetests.xml',
 ]
