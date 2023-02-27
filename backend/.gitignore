@@ -172,3 +172,8 @@ Pipfile.lock
 
 # db migrations
 api/migrations
+
+# Coverage reports
+cover
+coverage-report
+.coverage
