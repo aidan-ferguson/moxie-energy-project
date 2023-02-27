@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'jacoco'
+    id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
 // A build system hacked together,
@@ -65,6 +67,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled true
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     buildFeatures{
@@ -90,6 +106,27 @@ android {
             }
         }
     }
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['test']) {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+
+    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes")
+    def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug")
+    classDirectories.from = files([javaTree, kotlinTree])
+    sourceDirectories.from = files('src/main/java')
+    executionData.from = fileTree(dir: project.buildDir, includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
 }
 
 dependencies {

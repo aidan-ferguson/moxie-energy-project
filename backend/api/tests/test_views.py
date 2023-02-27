@@ -2,7 +2,6 @@ from django.test import TestCase
 from django import urls
 import json
 
-
 class TestConnection(TestCase):
     def test_connection_unauthenticated_failure(self):
         response = self.client.get(urls.reverse('test-connection'))
