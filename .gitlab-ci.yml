@@ -173,21 +173,20 @@ android:test:
 
 # For full stack testing with the django backed and a simulated device on the frontend 
 integration_test:
-  stage: build
-  #stage: test
-  #needs: ["android:test", "backend:test"]
+  stage: test
+  needs: ["android:test", "backend:test"]
   image: sh22/android:latest
   before_script:
     - *android-before
     # - *backend-setup
   script:
-    # # Finish setting up backend
-    # - cd $BACKEND_DIR
-    # - python3 reset_db.py
-    # # Only download the small datasets
-    # - python3 setup.py --exclude-dale house_1,house_2,house_5
-    # - python3 manage.py runserver&
-    # - cd $ANDROID_PROJECT_DIR
+    # Finish setting up backend
+    - cd $BACKEND_DIR
+    - python3 reset_db.py
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
+    - python3 manage.py runserver&
+    - cd $ANDROID_PROJECT_DIR
     # Start the emulator from the docker container and run UI testing
     - emulator @moxie_emulator -no-window -no-boot-anim &
     - /bin/sleep 10 # Give the emulator time to boot
