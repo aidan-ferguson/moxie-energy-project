@@ -178,7 +178,7 @@ integration_test:
   image: sh22/android:latest
   before_script:
     - *android-before
-    # - *backend-setup
+    - *backend-setup
   script:
     # Finish setting up backend
     - cd $BACKEND_DIR
