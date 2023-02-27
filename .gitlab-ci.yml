@@ -174,7 +174,7 @@ android:test:
 # For full stack testing with the django backed and the frontend 
 integration_test:
   stage: test
-  needs: ["android:test", "backend:test"]
+  #needs: ["android:test", "backend:test"]
   image: sh22/android:latest
   before_script:
     - *android-before
@@ -188,7 +188,9 @@ integration_test:
     - python3 manage.py runserver&
     - cd $ANDROID_PROJECT_DIR
     # Run UI testing
-    - ./gradlew check
-    # TODO: coverage reporting
+    - ./gradlew createDebugCoverageReport
+    - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
+    - echo coverage-$COVERAGE
+  coverage: '/coverage-([0-9.]+)%/'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
