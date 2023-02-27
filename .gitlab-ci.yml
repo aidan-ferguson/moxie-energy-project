@@ -172,7 +172,7 @@ android:test:
   <<: *frontend-rules
 
 # For full stack testing with the django backed and the frontend 
-integration_testing:
+integration_test:
   stage: test
   needs: ["android:test", "backend:test"]
   image: sh22/android:latest
