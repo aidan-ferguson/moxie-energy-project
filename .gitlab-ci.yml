@@ -189,7 +189,8 @@ integration_test:
     # - python3 manage.py runserver&
     # - cd $ANDROID_PROJECT_DIR
     # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator -no-window
+    - emulator @moxie_emulator -no-window -no-boot-anim &
+    - /bin/sleep 10 # Give the emulator time to boot
     - ./gradlew createDebugCoverageReport
     - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
     - echo coverage-$COVERAGE
