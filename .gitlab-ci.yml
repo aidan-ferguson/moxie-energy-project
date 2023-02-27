@@ -173,11 +173,7 @@ android:test:
   coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
   artifacts:
     when: on_success
-    expire_in: "30 days"
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: $ANDROID_PROJECT_DIR/app/build/reports/jacoco/jacocoTestReport/html
+    expire_in: "7 days"
     paths:
       - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
