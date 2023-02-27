@@ -173,7 +173,7 @@ android:test:
 
 # For full stack testing with the django backed and the frontend 
 integration_test:
-  stage: test
+  stage: build
   #needs: ["android:test", "backend:test"]
   image: sh22/android:latest
   before_script:
