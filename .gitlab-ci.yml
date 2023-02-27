@@ -179,17 +179,17 @@ integration_test:
   image: sh22/android:latest
   before_script:
     - *android-before
-    - *backend-setup
+    # - *backend-setup
   script:
-    # Finish setting up backend
-    - cd $BACKEND_DIR
-    - python3 reset_db.py
-    # Only download the small datasets
-    - python3 setup.py --exclude-dale house_1,house_2,house_5
-    - python3 manage.py runserver&
-    - cd $ANDROID_PROJECT_DIR
+    # # Finish setting up backend
+    # - cd $BACKEND_DIR
+    # - python3 reset_db.py
+    # # Only download the small datasets
+    # - python3 setup.py --exclude-dale house_1,house_2,house_5
+    # - python3 manage.py runserver&
+    # - cd $ANDROID_PROJECT_DIR
     # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator
+    - emulator @moxie_emulator -no-window
     - ./gradlew createDebugCoverageReport
     - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
     - echo coverage-$COVERAGE
