@@ -171,9 +171,10 @@ android:test:
       - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
 
-# For full stack testing with the django backed and the frontend 
+# For full stack testing with the django backed and a simulated device on the frontend 
 integration_test:
   stage: build
+  #stage: test
   #needs: ["android:test", "backend:test"]
   image: sh22/android:latest
   before_script:
@@ -187,7 +188,8 @@ integration_test:
     - python3 setup.py --exclude-dale house_1,house_2,house_5
     - python3 manage.py runserver&
     - cd $ANDROID_PROJECT_DIR
-    # Run UI testing
+    # Start the emulator from the docker container and run UI testing
+    - emulator @moxie_emulator
     - ./gradlew createDebugCoverageReport
     - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
     - echo coverage-$COVERAGE
