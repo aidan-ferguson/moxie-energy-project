@@ -15,7 +15,7 @@ variables:
 .backend:setup: &backend-setup
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -y 
-  - apt-get install -y python3 python3-pip
+  - apt-get install -y python3 python3-pip python3-venv
   - cd $BACKEND_DIR
   - python3 -m venv venv
   - source venv/bin/activate
@@ -117,17 +117,6 @@ unity:build:
     paths:
       - $UNITY_BUILD_PATH
     expire_in: "2 hours"
-  <<: *frontend-rules
-
-unity:test:
-  stage: test
-  needs: ["unity:build"]
-  image: unityci/editor:2020.3.41f1-android-1
-  before_script:
-    - *unity-setup
-  script:
-    - cat /opt/unity/Editor/Data/PlaybackEngines/AndroidPlayer/NDK/source.properties
-    - echo "Need to make tests"
   <<: *frontend-rules
 
 # Frontend android pipeline
