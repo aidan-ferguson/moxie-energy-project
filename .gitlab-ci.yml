@@ -204,6 +204,6 @@ integration_test:
       - $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/
       - $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected
     reports:
-      junit: $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected/*/TEST-*.xml
+      junit: $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected/TEST-*.xml
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
