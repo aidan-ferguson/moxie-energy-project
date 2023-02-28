@@ -109,7 +109,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/krew_recycler"
+            android:layout_width="347dp"
+            android:layout_height="491dp"
+            android:layout_marginBottom="56dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="@+id/button3"
+            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintStart_toStartOf="@+id/button3"
+            app:layout_constraintTop_toTopOf="@+id/button3" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -126,6 +136,7 @@
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dd1"
@@ -181,6 +192,34 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/leaderboard"
+                android:layout_width="140dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="54dp"
+                android:background="@drawable/rounded_rectangle_button2"
+                android:text="Leaderboard"
+                android:textColor="@color/blue_whale"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                 />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/manage"
+                android:layout_width="140dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="54dp"
+                android:background="@drawable/rounded_rectangle_button2"
+                android:text="Manage Krew"
+                android:textColor="@color/blue_whale"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button2"
@@ -334,6 +373,29 @@ However, the lighting usage of the household is still of great concern. By repla
 
             </ScrollView>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/request_recycler_view"
+                android:layout_width="413dp"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                app:layout_constraintBottom_toBottomOf="@id/button3"
+                app:layout_constraintEnd_toEndOf="@id/button3"
+                app:layout_constraintStart_toStartOf="@id/button3"
+                app:layout_constraintTop_toTopOf="@id/button3"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/friends_recycler_view"
+                android:layout_width="413dp"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                app:layout_constraintBottom_toBottomOf="@id/button3"
+                app:layout_constraintEnd_toEndOf="@id/button3"
+                app:layout_constraintStart_toStartOf="@id/button3"
+                app:layout_constraintTop_toTopOf="@id/button3"
+                />
+
 
             <TextView
                 android:id="@+id/title3"
@@ -348,17 +410,7 @@ However, the lighting usage of the household is still of great concern. By repla
                 app:layout_constraintTop_toTopOf="@+id/button3" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/krew_recycler"
-                android:layout_width="347dp"
-                android:layout_height="491dp"
-                android:layout_marginBottom="56dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/button3"
-                app:layout_constraintEnd_toEndOf="@+id/button3"
-                app:layout_constraintHorizontal_bias="0.666"
-                app:layout_constraintStart_toStartOf="@+id/button3"
-                app:layout_constraintTop_toTopOf="@+id/button3" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dd3"

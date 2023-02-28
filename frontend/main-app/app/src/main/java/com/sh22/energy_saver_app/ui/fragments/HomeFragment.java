@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
@@ -35,18 +36,24 @@ import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.BackendException;
+import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
+import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.FriendRelationship;
 import com.sh22.energy_saver_app.common.FriendRequest;
 import com.sh22.energy_saver_app.common.Friends;
+import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,49 +62,49 @@ import java.io.IOException;
  */
 public class HomeFragment extends Fragment {
 
-public void increaseHeight(View view){
-    CardView card;
-    CardView card2;
+    public void increaseHeight(View view){
+        CardView card;
+        CardView card2;
 
-    card= view.findViewById(R.id.score_card);
-    card2 = view.findViewById(R.id.center_card);
-    ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
+        card= view.findViewById(R.id.score_card);
+        card2 = view.findViewById(R.id.center_card);
+        ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
 
-    int newWidth = card2.getWidth()+150;
-    int newHeight = card2.getHeight()*2-200;
-    ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
-    ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
+        int newWidth = card2.getWidth()+150;
+        int newHeight = card2.getHeight()*2-200;
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
+        ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
 
-    heightAnimator.setDuration(200);
-    heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-    widthAnimator.setDuration(200);
-    widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        heightAnimator.setDuration(200);
+        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        widthAnimator.setDuration(200);
+        widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-    heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            layoutParams.height = (Integer) animation.getAnimatedValue();
-            card2.setLayoutParams(layoutParams);
-        }
-    });
+        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                layoutParams.height = (Integer) animation.getAnimatedValue();
+                card2.setLayoutParams(layoutParams);
+            }
+        });
 
-    widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            layoutParams.width = (Integer) animation.getAnimatedValue();
-            card2.setLayoutParams(layoutParams);
-        }
-    });
-    card.setVisibility(View.GONE);
-    //Set constraints of card2 to the center of the screen
-
-
-    AnimatorSet animatorSet = new AnimatorSet();
-    animatorSet.playTogether(heightAnimator, widthAnimator);
-    animatorSet.start();
+        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                layoutParams.width = (Integer) animation.getAnimatedValue();
+                card2.setLayoutParams(layoutParams);
+            }
+        });
+        card.setVisibility(View.GONE);
+        //Set constraints of card2 to the center of the screen
 
 
-}
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(heightAnimator, widthAnimator);
+        animatorSet.start();
+
+
+    }
 
 
     public void decreaseHeight(View view){
@@ -295,6 +302,7 @@ public void increaseHeight(View view){
         // Get user info to display on homepage
         new Thread(() -> {
             try {
+
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
                 if(userInfo != null) {
                     FragmentActivity activity = getActivity();
@@ -353,14 +361,56 @@ public void increaseHeight(View view){
 
         new Thread(() -> {
             try {
+
+
                 Friends friends = BackendInterface.GetFriends(view.getContext());
-                // TODO: put friends somewhere
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Now attach the recycler view class to the view in the layout
+                        RecyclerView recyclerView = view.findViewById(R.id.request_recycler_view);
+                        FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter(view.getContext(), friends.requests);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                }
+
             } catch (AuthenticationException e) {
                 SH22Utils.Logout(view.getContext());
             } catch (BackendException e) {
                 SH22Utils.ToastException(view.getContext(), e.reason);
             }
-        }).start();
+        }
+
+
+        ).start();
+
+        new Thread(() -> {
+            try {
+
+
+                Friends friends = BackendInterface.GetFriends(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Now attach the recycler view class to the view in the layout
+                        RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
+                        ActiveFriendsRecyclerViewAdapter adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                }
+
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
+            }
+        }
+
+
+        ).start();
+
+
+
 
 
         Button button1;
@@ -416,14 +466,18 @@ public void increaseHeight(View view){
         EnergyReportText= view.findViewById(R.id.energy_report);
         back2= view.findViewById(R.id.dd2);
 
-       //Krew elements -small view
+        //Krew elements -small view
         button3= view.findViewById(R.id.button3);
         icon3= view.findViewById(R.id.icon3);
         label3= view.findViewById(R.id.button3Text);
 
         //Krew elements -big view
         Krew= view.findViewById(R.id.title3);
-        KrewView= view.findViewById(R.id.krew_recycler);
+        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
+        //get the request recycler view from the
+        Button leaderboardButton = view.findViewById(R.id.leaderboard);
+        Button requestsButton = view.findViewById(R.id.manage);
+        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
         back3= view.findViewById(R.id.dd3);
 
 
@@ -433,7 +487,7 @@ public void increaseHeight(View view){
 
         View parent = view.findViewById(R.id.center_card);
 
-    //method that increases the size of the card to be used in onclick functions
+        //method that increases the size of the card to be used in onclick functions
 
 
 
@@ -684,15 +738,15 @@ public void increaseHeight(View view){
 
 
                 button1.setVisibility(View.GONE);
-                                button3.setVisibility(View.GONE);
+                button3.setVisibility(View.GONE);
 
 
-                                icon1.setVisibility(View.GONE);
-                                icon3.setVisibility(View.GONE);
+                icon1.setVisibility(View.GONE);
+                icon3.setVisibility(View.GONE);
 
 
-                                label1.setVisibility(View.GONE);
-                                label3.setVisibility(View.GONE);
+                label1.setVisibility(View.GONE);
+                label3.setVisibility(View.GONE);
 
 
                 label2.setVisibility(View.GONE);
@@ -879,7 +933,9 @@ public void increaseHeight(View view){
                 back3.setVisibility(View.VISIBLE);
 
                 Krew.setVisibility(View.VISIBLE);
-                KrewView.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.VISIBLE);
+                requestsButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setVisibility(View.VISIBLE);
 
                 button3.setClickable(false);
 
@@ -939,7 +995,7 @@ public void increaseHeight(View view){
 
                 icon2.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
-;
+                ;
                 icon3.setVisibility(View.VISIBLE);
 
                 label2.setVisibility(View.VISIBLE);
@@ -950,16 +1006,41 @@ public void increaseHeight(View view){
                 label1.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
                 Krew.setVisibility(View.GONE);
-                KrewView.setVisibility(View.GONE);
+
+                requests.setVisibility(View.VISIBLE);
+                requestsButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.VISIBLE);
                 back3.setVisibility(View.GONE);
+
             }
         });
+
+        //onclick for when leaderboards is clicked
+        leaderboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaderboard.setVisibility(View.VISIBLE);
+                requests.setVisibility(View.GONE);
+
+
+            }
+        });
+
+        //onlick for when manage is clicked
+        requestsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requests.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.GONE);
+            }
+        });
+
 
 
         // Return the inflated view
         return view;
     }
-
 
 
 }
