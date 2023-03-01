@@ -14,12 +14,12 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="10dp"
         android:background="@color/white"
-        app:cardBackgroundColor="#124EC34A"
+        app:cardBackgroundColor="#0F4EC34A"
         app:cardCornerRadius="6dp"
-        app:cardElevation="3dp"
+
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
-        app:contentPadding="0dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

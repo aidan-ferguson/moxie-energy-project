@@ -2,7 +2,7 @@ import openai
 import os
 from api.data_providers.dale_data_provider import DALEDataProvider
 import numpy as np
-
+import math
 
 ENERGY_SIGMOID_GRADIANT_STEEPNESS = 0.4
 ENERGY_NORMALISATION_SIGMOID_STRECH = 0.2
@@ -83,4 +83,7 @@ def normalise_energy_rating(rating):
     return sigmoid((1/a) * (rating - (a * 5)));
 
 def calculate_energy_score(data):
-    return normalise_energy_rating((data["previous_week"][0]/data["today"][0]))
+    score = normalise_energy_rating((data["previous_week"][0]/data["today"][0]))
+    if (math.isnan(score) or math.isinf(score)):
+        score = 0.0
+    return score
