@@ -1,7 +1,7 @@
 package com.sh22.energy_saver_app.common;
 
 public class UserInfo {
-    public int user_id;
+    public static int user_id;
     public String username;
     public String firstname;
     public String surname;

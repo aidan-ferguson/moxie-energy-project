@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -481,6 +482,8 @@ public class HomeFragment extends Fragment {
         back3= view.findViewById(R.id.dd3);
 
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
+        EditText send_request = view.findViewById(R.id.friend_id);
+        TextView your_id = view.findViewById(R.id.your_id);
 
 
 
@@ -1021,6 +1024,8 @@ public class HomeFragment extends Fragment {
                 leaderboard.setVisibility(View.GONE);
                 requests.setVisibility(View.GONE);
                 leaderboardtitle.setVisibility(View.GONE);
+                send_request.setVisibility(View.GONE);
+                your_id.setVisibility(View.GONE);
 
             }
         });
@@ -1032,6 +1037,8 @@ public class HomeFragment extends Fragment {
                 leaderboard.setVisibility(View.VISIBLE);
                 requests.setVisibility(View.GONE);
                 leaderboardtitle.setText("Your Energy Leaderboard");
+                send_request.setVisibility(View.GONE);
+                your_id.setVisibility(View.GONE);
 
 
             }
@@ -1044,6 +1051,9 @@ public class HomeFragment extends Fragment {
                 requests.setVisibility(View.VISIBLE);
                 leaderboard.setVisibility(View.GONE);
                 leaderboardtitle.setText("Manage your Friends");
+                send_request.setVisibility(View.VISIBLE);
+                your_id.setVisibility(View.VISIBLE);
+
             }
         });
 

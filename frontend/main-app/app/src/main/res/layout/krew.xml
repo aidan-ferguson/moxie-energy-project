@@ -50,13 +50,16 @@
     <EditText
         android:layout_width="320dp"
         android:layout_height="48dp"
+        android:background="#1153AF4C"
         android:ems="10"
-        android:hint="Search"
+        android:hint="Enter your friends ID to send an invite"
         android:inputType="textPersonName"
         android:textColor="@color/blue_whale"
+        app:layout_constraintBottom_toBottomOf="@+id/appliance_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2"></EditText>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
