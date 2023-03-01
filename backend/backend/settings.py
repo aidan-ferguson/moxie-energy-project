@@ -31,6 +31,7 @@ else:
 
 # Allow connections from all IPs
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["http://ec2-18-168-148-213.eu-west-2.compute.amazonaws.com:8000"]
 
 
 # Application definition
