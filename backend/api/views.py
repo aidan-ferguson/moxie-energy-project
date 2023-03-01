@@ -41,7 +41,8 @@ class UserInfoView(views.APIView):
                     'username': request.user.username,
                     'firstname': request.user.first_name,
                     'surname': request.user.last_name,
-                    'data_provider': request.user.data_provider}
+                    'data_provider': request.user.data_provider,
+                    'energy_score': calculate_energy_score(get_user_energy_data(request.user)["data"])}
         return Response(json_success(content))
     
     def post(self, request):
@@ -123,11 +124,7 @@ class AppliancesView(views.APIView):
     def get(self, request):
         energy_data = get_user_energy_data(request.user)
         if energy_data["success"]:
-            score = calculate_energy_score(energy_data["data"])
-            if not (math.isnan(score) or math.isinf(score)):
-                energy_data["data"]["energy_score"] = score
-            else:
-                energy_data["data"]["energy_score"] = 0.0
+            energy_data["data"]["energy_score"] = calculate_energy_score(energy_data["data"])
             
         # get_user_energy_data already returns a json object so we don't need to use the utility functions
         return Response(energy_data)
@@ -150,7 +147,7 @@ class FriendView(views.APIView):
     def get(self, request):
         ret_val = {}
         
-        ret_val["friends"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_user_friends(request.user)]
+        ret_val["friends"] = [models.Friendship.friendship_to_json(friendship, request.user, is_request=False) for friendship in models.Friendship.get_user_friends(request.user)]
         ret_val["requests"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_friend_requests(request.user)]
         
         return Response(json_success(ret_val))
