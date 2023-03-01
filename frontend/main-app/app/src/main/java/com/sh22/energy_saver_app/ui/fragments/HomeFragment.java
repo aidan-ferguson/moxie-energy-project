@@ -484,7 +484,7 @@ public class HomeFragment extends Fragment {
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
-
+Button send = view.findViewById(R.id.enter);
 
 
 
@@ -1026,6 +1026,7 @@ public class HomeFragment extends Fragment {
                 leaderboardtitle.setVisibility(View.GONE);
                 send_request.setVisibility(View.GONE);
                 your_id.setVisibility(View.GONE);
+                send.setVisibility(View.GONE);
 
             }
         });
@@ -1039,6 +1040,7 @@ public class HomeFragment extends Fragment {
                 leaderboardtitle.setText("Your Energy Leaderboard");
                 send_request.setVisibility(View.GONE);
                 your_id.setVisibility(View.GONE);
+                send.setVisibility(View.GONE);
 
 
             }
@@ -1053,15 +1055,31 @@ public class HomeFragment extends Fragment {
                 leaderboardtitle.setText("Manage your Friends");
                 send_request.setVisibility(View.VISIBLE);
                 your_id.setVisibility(View.VISIBLE);
+                send.setVisibility(View.VISIBLE);
 
             }
         });
 
 
+//set onclick for send button
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(() -> {
+                    //get the input from the edit text
+                    Integer id = Integer.valueOf(send_request.getText().toString());
+                    try {
+                        BackendInterface.CreateFriendRequest(view.getContext(), id);
+                    } catch (AuthenticationException e) {
+                        e.printStackTrace();
+                    } catch (BackendException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+            // Return the inflated view
 
-        // Return the inflated view
-        return view;
-    }
+        });
+  return view;
 
-
-}
+}}
