@@ -1,5 +1,6 @@
 package com.sh22.energy_saver_app
 
+import com.sh22.energy_saver_app.common.SH22Utils
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +13,6 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        assertEquals(0.5f, SH22Utils.normaliseEnergyRating(1.0f))
     }
 }

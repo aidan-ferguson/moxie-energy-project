@@ -17,7 +17,7 @@ class TestView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        content = {'message': 'Successfully connected as ' + request.user.username}
+        content = {'message': 'Hello, ' + request.user.username}
         return Response(json_success(content))
     
 
