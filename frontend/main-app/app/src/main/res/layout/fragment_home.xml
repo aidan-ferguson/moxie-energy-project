@@ -422,6 +422,7 @@ However, the lighting usage of the household is still of great concern. By repla
                 android:layout_marginTop="20dp"
                 android:background="@drawable/layout_bg5"
                 android:ems="10"
+
                 android:hint=" Enter your friends ID to send an invite"
                 android:inputType="textPersonName"
                 android:padding="5dp"
@@ -429,9 +430,28 @@ However, the lighting usage of the household is still of great concern. By repla
                 android:textColor="@color/blue_whale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/request_recycler_view">
+                app:layout_constraintTop_toBottomOf="@+id/request_recycler_view"
+
+                >
+
+
 
             </EditText>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/enter"
+                android:layout_width="34dp"
+                android:layout_height="29dp"
+                android:layout_marginStart="108dp"
+                android:background="@drawable/ic_baseline_chevron_right_24"
+                android:rotation="360"
+                android:visibility="visible"
+
+                app:layout_constraintBottom_toBottomOf="@+id/friend_id"
+                app:layout_constraintEnd_toEndOf="@+id/friend_id"
+                app:layout_constraintStart_toStartOf="@+id/button2"
+                app:layout_constraintTop_toTopOf="@+id/friend_id" />
+
             <TextView
                 android:id="@+id/your_id"
                 android:layout_width="match_parent"
