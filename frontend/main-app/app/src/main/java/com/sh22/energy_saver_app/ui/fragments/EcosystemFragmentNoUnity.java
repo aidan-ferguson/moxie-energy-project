@@ -55,6 +55,9 @@ public class EcosystemFragment extends Fragment {
         ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<div><font color='#FFFFFF'>Your Ecosystem</font></div>"));
         ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_ecosystem);
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<div><font color='#FFFFFF'>Your Ecosystem</font></div>"));
+        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_ecosystem);
 
         this.frameLayoutForUnity = view.findViewById(R.id.frameLayoutForUnity);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
