@@ -2,12 +2,16 @@ package com.sh22.energy_saver_app.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +51,12 @@ public class LoginFragment extends Fragment {
         EditText password = view.findViewById(R.id.password);
         Button LoginButton = view.findViewById(R.id.login_button);
         Button RegisterButton = view.findViewById(R.id.login_register_button);
-
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#62A526"));
+        ((LoginActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((LoginActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Log in</font></div></center>"));
+        ((LoginActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((LoginActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_appliances);
         LoginButton.setOnClickListener((View v) -> {
             // Disable button while we authenticate
             view.findViewById(R.id.login_button).setEnabled(false);
@@ -115,4 +124,5 @@ public class LoginFragment extends Fragment {
 
         return view;
     }
+
 }

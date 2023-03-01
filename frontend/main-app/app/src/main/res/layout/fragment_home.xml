@@ -53,7 +53,7 @@
                 android:layout_height="53dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Your Energy Score"
+                android:text="Your Energy Score is"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
 
                 android:textColor="@color/blue_whale"
@@ -67,6 +67,7 @@
                 android:id="@+id/halfGauge"
                 android:layout_width="276dp"
                 android:layout_height="254dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.488"
@@ -76,10 +77,10 @@
 
             <TextView
                 android:id="@+id/home_fragment_letter_gradex"
-                android:layout_width="76dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="65dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="220dp"
                 android:text="A+"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#04244C"
@@ -97,7 +98,7 @@
         android:id="@+id/center_card"
         android:layout_width="350dp"
         android:layout_height="350dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="13dp"
 
         android:background="@color/white"
         app:cardCornerRadius="6dp"
@@ -123,7 +124,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             tools:ignore="MissingClass">
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button1"
