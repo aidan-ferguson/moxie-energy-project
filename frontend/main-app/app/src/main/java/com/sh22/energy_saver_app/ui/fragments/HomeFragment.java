@@ -1067,7 +1067,7 @@ Button send = view.findViewById(R.id.enter);
             public void onClick(View v) {
                 new Thread(() -> {
                     //get the input from the edit text
-                    Integer id = Integer.valueOf(your_id.getText().toString());
+                    Integer id = Integer.valueOf(send_request.getText().toString());
                     try {
                         BackendInterface.CreateFriendRequest(view.getContext(), id);
                     } catch (AuthenticationException e) {
