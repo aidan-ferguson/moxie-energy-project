@@ -480,6 +480,8 @@ public class HomeFragment extends Fragment {
         RecyclerView requests = view.findViewById(R.id.request_recycler_view);
         back3= view.findViewById(R.id.dd3);
 
+        TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
+
 
 
 
@@ -936,7 +938,9 @@ public class HomeFragment extends Fragment {
                 leaderboard.setVisibility(View.VISIBLE);
                 requestsButton.setVisibility(View.VISIBLE);
                 leaderboardButton.setVisibility(View.VISIBLE);
-
+                button3.setVisibility(View.GONE);
+                leaderboardtitle.setVisibility(View.VISIBLE);
+                leaderboardtitle.setText("Your Energy Leaderboard");
                 button3.setClickable(false);
 
 
@@ -1012,6 +1016,11 @@ public class HomeFragment extends Fragment {
                 leaderboardButton.setVisibility(View.VISIBLE);
                 leaderboard.setVisibility(View.VISIBLE);
                 back3.setVisibility(View.GONE);
+                requestsButton.setVisibility(View.GONE);
+                leaderboardButton.setVisibility(View.GONE);
+                leaderboard.setVisibility(View.GONE);
+                requests.setVisibility(View.GONE);
+                leaderboardtitle.setVisibility(View.GONE);
 
             }
         });
@@ -1022,6 +1031,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 leaderboard.setVisibility(View.VISIBLE);
                 requests.setVisibility(View.GONE);
+                leaderboardtitle.setText("Your Energy Leaderboard");
 
 
             }
@@ -1033,6 +1043,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 requests.setVisibility(View.VISIBLE);
                 leaderboard.setVisibility(View.GONE);
+                leaderboardtitle.setText("Manage your Friends");
             }
         });
 

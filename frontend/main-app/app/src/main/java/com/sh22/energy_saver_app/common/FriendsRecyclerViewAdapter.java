@@ -66,7 +66,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         // Capitalise the first letter
         String pretty_name = requests.get(position).userInfo.firstname;
 
-        holder.personName.setText(pretty_name);
+        holder.personName.setText(pretty_name+ " wants to be your friend");
 
 
 
