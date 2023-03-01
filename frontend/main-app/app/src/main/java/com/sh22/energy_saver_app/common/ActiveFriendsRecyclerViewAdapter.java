@@ -2,6 +2,7 @@ package com.sh22.energy_saver_app.common;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
 
         // Capitalise the first letter
         String pretty_name = friends.get(position).userInfo.firstname;
+
 
         holder.personName.setText(pretty_name);
 

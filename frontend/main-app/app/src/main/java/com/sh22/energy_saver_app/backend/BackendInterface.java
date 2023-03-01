@@ -250,7 +250,7 @@ public class BackendInterface {
                 JSONArray friends_array =  json_response.getJSONArray("friends");
                 for(int idx = 0; idx < friends_array.length(); idx++) {
                     JSONObject friend_json = (JSONObject)friends_array.get(idx);
-                    FriendRelationship friend = new FriendRelationship(friend_json.getInt("id"), friend_json.getString("firstname"), friend_json.getString("surname"), friend_json.getDouble("energy_score"));
+                    FriendRelationship friend = new FriendRelationship(friend_json.getInt("id"), friend_json.getString("firstname"), friend_json.getString("surname"), friend_json.getDouble("score"));
                     friends.add(friend);
                 }
 
