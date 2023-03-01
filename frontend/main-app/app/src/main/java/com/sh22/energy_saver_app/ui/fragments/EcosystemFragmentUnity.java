@@ -1,12 +1,16 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -17,6 +21,7 @@ import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.SH22Utils;
+import com.sh22.energy_saver_app.ui.activites.MainActivity;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
@@ -47,6 +52,12 @@ public class EcosystemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ecosystem, container, false);
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
+        ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<div><font color='#FFFFFF'>Your Ecosystem</font></div>"));
+        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_ecosystem);
 
          // Create unity player and view
          if(mUnityPlayer == null) {
