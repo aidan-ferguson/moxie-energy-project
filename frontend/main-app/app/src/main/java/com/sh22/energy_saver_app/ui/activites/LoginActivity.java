@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        getSupportActionBar().hide();
         // Start with loading fragment
         replaceFragment(LoginLoadingFragment.newInstance());
 
