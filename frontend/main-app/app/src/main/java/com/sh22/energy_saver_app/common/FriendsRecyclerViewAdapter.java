@@ -37,108 +37,115 @@ import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.ui.activites.MainActivity;
+import com.sh22.energy_saver_app.ui.fragments.HomeFragment;
 
 import java.util.ArrayList;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
-public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.MyViewHolder>  {
-    static Context context;
-    static ArrayList<FriendRequest> requests;
+public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.MyViewHolder> {
+    private Context mContext;
+    private ArrayList<FriendRequest> mRequests;
 
     public FriendsRecyclerViewAdapter(Context context, ArrayList<FriendRequest> requests) {
-        this.context = context;
-        this.requests = requests;
+        mContext = context;
+        mRequests = requests;
     }
 
     @NonNull
     @Override
-    public FriendsRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout and assign the view
-        LayoutInflater inflater = LayoutInflater.from(context);
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.request_row, parent, false);
-        return new FriendsRecyclerViewAdapter.MyViewHolder(view);
+
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendsRecyclerViewAdapter.MyViewHolder holder, int position) {
-
-        // Capitalise the first letter
-        String pretty_name = requests.get(position).userInfo.firstname;
-
-        holder.personName.setText(pretty_name+ " wants to be your friend");
-
-
-
-        // Set the progress position and colour of the progress bar
-
-//
-
-
-
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        String firstname = mRequests.get(position).userInfo.firstname;
+        String surname = mRequests.get(position).userInfo.surname;
+        holder.personName.setText(firstname+ " " + surname);
     }
 
     @Override
     public int getItemCount() {
-        return requests.size();
+        return mRequests.size();
     }
 
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        //name of requestee
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView personName;
         Button accept;
         Button decline;
 
-
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            final String[] message = {null};
-            personName=itemView.findViewById(R.id.recent_invitation);
-            accept=itemView.findViewById(R.id.accept);
-            decline=itemView.findViewById(R.id.decline);
 
-            accept.setOnClickListener(new View.OnClickListener() {
+            personName = itemView.findViewById(R.id.recent_invitation);
+            accept = itemView.findViewById(R.id.accept);
+            decline = itemView.findViewById(R.id.decline);
 
-                @Override
-                public void onClick(View v) {
-                    //accept the freidns request
-                    new Thread(() -> {
+            accept.setOnClickListener(v -> {
+                // Accept the friend's request
+                new Thread(() -> {
+                    mRequests.get(getAdapterPosition()).acceptRequest(mContext);
+                    ((FragmentActivity) mContext).runOnUiThread(() -> {
+
+                        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f);
+                        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        alphaAnimator.setDuration(500);
+                        alphaAnimator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {}
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+
+                                notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onAnimationCancel(Animator animator) {}
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {}
+                        });
+                        alphaAnimator.start();
 
 
-                        requests.get(getAdapterPosition()).acceptRequest(context);
 
-                    }
-
-
-                    ).start();
-                }
+                    });
+                }).start();
             });
 
-            decline.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    new Thread(() -> {
-
-
-                        requests.get(getAdapterPosition()).denyRequest(context);
-
-                    }
+            decline.setOnClickListener(v -> {
+                // Decline the friend's request
+                new Thread(() -> {
+                    mRequests.get(getAdapterPosition()).denyRequest(mContext);
+                    ((FragmentActivity) mContext).runOnUiThread(() -> {
 
 
-                    ).start();
-                }
+                        //decline
+
+
+                        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f);
+                        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                        alphaAnimator.setDuration(500);
+                        alphaAnimator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {}
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+
+                                notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onAnimationCancel(Animator animator) {}
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {}
+                        });
+                        alphaAnimator.start();
+                    });
+                }).start();
             });
-
-
-
         }
-
-
-        //set onclick fo
-    }}
-
-
+    }
+}

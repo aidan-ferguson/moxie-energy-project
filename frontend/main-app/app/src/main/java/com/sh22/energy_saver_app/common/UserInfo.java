@@ -1,11 +1,11 @@
 package com.sh22.energy_saver_app.common;
 
 public class UserInfo {
-    public static int user_id;
+    public  int user_id;
     public String username;
-    public String firstname;
-    public String surname;
-    public Double energy_score;
+    public  String firstname;
+    public  String surname;
+    public  Double energy_score;
 
     public UserInfo(int _user_id, String _username, String _firstname, String _surname, Double _energy_score) {
         user_id = _user_id;
@@ -18,4 +18,7 @@ public class UserInfo {
     public UserInfo() {
 
     }
+
+
+
 }

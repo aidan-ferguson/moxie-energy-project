@@ -1,6 +1,7 @@
 package com.sh22.energy_saver_app.common;
 
 
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
@@ -210,8 +211,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                     if (!isExpanded[0]) {
 
-                        isExpanded[0] = true;
 
+                        isExpanded[0] = true;
 
 
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
@@ -235,19 +236,23 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
                         // Set update listeners on the animators to update the layout parameters as the animations progress
                         heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
+
+
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 int value = (int) animation.getAnimatedValue();
                                 layoutParams.height = value;
                                 DeviceCard.setLayoutParams(layoutParams);
+
                             }
+
                         });
                         widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
+
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 int value = (int) animation.getAnimatedValue();
                                 layoutParams.width = value;
                                 DeviceCard.setLayoutParams(layoutParams);
+
                             }
                         });
 
@@ -258,9 +263,20 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
                         AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(heightAnimator, widthAnimator);
 
-                        // Start the animation
+                        animatorSet.playTogether(heightAnimator, widthAnimator);
+                        animatorSet.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                InvisibleButton.setClickable(true);
+                                isExpanded[0] = true;
+                            }
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                InvisibleButton.setClickable(false);
+                            }
+                        });
+
                         animatorSet.start();
                         card1.setVisibility(View.VISIBLE);
                         card2.setVisibility(View.VISIBLE);
@@ -299,6 +315,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         DeviceCard.setCardElevation(22);
                         dropdownButton.setVisibility(View.VISIBLE);
                         dropdownButton.setRotation(90);
+                        dropdownButton.setClickable(true);
 
 
 
@@ -334,6 +351,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         widthAnimator.setDuration(100);
                         widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
+
                         // Set update listeners on the animators to update the layout parameters as the animations progress
                         heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
@@ -342,6 +360,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                 layoutParams.height = value;
                                 DeviceCard.setLayoutParams(layoutParams);
                             }
+
                         });
                         widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
@@ -366,6 +385,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         card2.setVisibility(View.GONE);
                         dropdownButton.setVisibility(View.GONE);
                         tipsCard.setVisibility(View.GONE);
+
 
                     }
 
@@ -483,10 +503,11 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                               public void onAnimationStart(Animator animation) {
                                                                   BreakDownButton.setVisibility(View.VISIBLE);
 
+
                                                               }
                                                               @Override
                                                               public void onAnimationEnd(Animator animation) {
-                                                                  // Optional: add code to run when the animation ends
+
                                                               }
 
                                                               @Override
@@ -564,7 +585,23 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                           AnimatorSet animatorSet = new AnimatorSet();
                                                           animatorSet.playTogether(heightAnimator, fadeInAnimator, fadeInAnimator2);
 
-                                                          // Start the animation
+                                                          animatorSet.addListener(new AnimatorListenerAdapter() {
+                                                              @Override
+                                                              public void onAnimationEnd(Animator animation) {
+                                                                  BreakDownButton.setClickable(true);
+                                                                  InvisibleButton.setClickable(true);
+
+                                                              }
+                                                              @Override
+                                                              public void onAnimationStart(Animator animation) {
+                                                                  BreakDownButton.setClickable(false);
+                                                                  InvisibleButton.setClickable(false);
+                                                              }
+                                                          });
+
+
+
+
                                                           animatorSet.start();
                                                           dropdownButton.setRotation(270);
 
@@ -609,9 +646,23 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                           // Create an AnimatorSet to run the height and width animations together
                                                           AnimatorSet animatorSet = new AnimatorSet();
                                                           animatorSet.playTogether(heightAnimator);
+                                                          animatorSet.addListener(new AnimatorListenerAdapter() {
+                                                              @Override
+                                                              public void onAnimationEnd(Animator animation) {
+                                                                  BreakDownButton.setClickable(true);
+                                                                  InvisibleButton.setClickable(true);
+
+                                                              }
+                                                              @Override
+                                                              public void onAnimationStart(Animator animation) {
+                                                                  BreakDownButton.setClickable(false);
+                                                                  InvisibleButton.setClickable(false);
+                                                              }
+                                                          });
 
                                                           // Start the animation
                                                           animatorSet.start();
+
                                                           BreakDownButton.setVisibility(View.GONE);
                                                           TipsButton.setVisibility(View.GONE);
                                                           dropdownButton.setRotation(90);

@@ -16,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
 import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;

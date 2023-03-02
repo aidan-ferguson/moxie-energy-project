@@ -31,6 +31,7 @@
         android:id="@+id/appliance_recycler_view"
         android:layout_width="408dp"
         android:layout_height="452dp"
+        android:layout_marginBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/button2"
         app:layout_constraintHorizontal_bias="0.0"

@@ -52,7 +52,10 @@ import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -185,6 +188,7 @@ public class HomeFragment extends Fragment {
         ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
 
+
         // Network calls are ordered by what will be the quickest
 
         // Await appliance data coming in and update the page accordingly
@@ -203,7 +207,16 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
-
+                        TextView v = view.findViewById(R.id.your_id_number);
+                        try {
+                            int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
+                            // interger to string
+                            v.setText(Integer.toString(o));
+                        } catch (AuthenticationException e) {
+                            e.printStackTrace();
+                        } catch (BackendException e) {
+                            e.printStackTrace();
+                        }
                         int progress = Math.round(score * 100) - 50;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
@@ -395,7 +408,14 @@ public class HomeFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
-                        ActiveFriendsRecyclerViewAdapter adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                        ActiveFriendsRecyclerViewAdapter adapter = null;
+                        try {
+                            adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                        } catch (AuthenticationException e) {
+                            e.printStackTrace();
+                        } catch (BackendException e) {
+                            e.printStackTrace();
+                        }
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
                 }
@@ -428,6 +448,7 @@ public class HomeFragment extends Fragment {
         TextView label4;
         CardView card;
         CardView card2;
+          ;
 
         card= view.findViewById(R.id.score_card);
         card2 = view.findViewById(R.id.center_card);
@@ -436,6 +457,8 @@ public class HomeFragment extends Fragment {
         TextView TipOfTheDay;
         TextView Tip;
         Button back1;
+        TextView v;
+        v = view.findViewById(R.id.your_id_number);
 
         TextView EnergyReport;
         ScrollView scrollView;
@@ -484,7 +507,9 @@ public class HomeFragment extends Fragment {
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
-Button send = view.findViewById(R.id.enter);
+        TextView your_id_text = view.findViewById(R.id.your_id_number);
+        Button send = view.findViewById(R.id.enter);
+
 
 
 
@@ -941,9 +966,17 @@ Button send = view.findViewById(R.id.enter);
                 leaderboard.setVisibility(View.VISIBLE);
                 requestsButton.setVisibility(View.VISIBLE);
                 leaderboardButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
                 button3.setVisibility(View.GONE);
                 leaderboardtitle.setVisibility(View.VISIBLE);
                 leaderboardtitle.setText("Your Energy Leaderboard");
+                leaderboardButton.setTextColor(Color.parseColor("#ffffff"));
+                requestsButton.setTextColor(Color.parseColor("#62A526"));
+
+
+
+
                 button3.setClickable(false);
 
 
@@ -1035,12 +1068,28 @@ Button send = view.findViewById(R.id.enter);
         leaderboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+
+// Refresh the ActiveFriendsRecyclerViewAdapter
+
                 leaderboard.setVisibility(View.VISIBLE);
                 requests.setVisibility(View.GONE);
                 leaderboardtitle.setText("Your Energy Leaderboard");
                 send_request.setVisibility(View.GONE);
                 your_id.setVisibility(View.GONE);
                 send.setVisibility(View.GONE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
+                leaderboardButton.setTextColor(Color.parseColor("#ffffff"));
+                your_id_text.setVisibility(View.GONE);
+                //green (blue_jeans) = #2ECC71
+                requestsButton.setTextColor(Color.parseColor("#62A526"));
+
+
+
+
+
+
 
 
             }
@@ -1055,7 +1104,12 @@ Button send = view.findViewById(R.id.enter);
                 leaderboardtitle.setText("Manage your Friends");
                 send_request.setVisibility(View.VISIBLE);
                 your_id.setVisibility(View.VISIBLE);
+                your_id_text.setVisibility(View.VISIBLE);
                 send.setVisibility(View.VISIBLE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                leaderboardButton.setTextColor(Color.parseColor("#62A526"));
+                requestsButton.setTextColor(Color.parseColor("#ffffff"));
 
             }
         });
@@ -1080,6 +1134,9 @@ Button send = view.findViewById(R.id.enter);
             // Return the inflated view
 
         });
+
+
+
   return view;
 
 }}
