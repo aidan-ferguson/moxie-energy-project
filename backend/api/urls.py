@@ -12,5 +12,7 @@ urlpatterns = [
     path('user/information', views.UserInfoView.as_view(), name='user-information'),
     path('tips/totd', views.TOTDView.as_view(), name="daily-tip"),
     path('tips/energy-report', views.EnergyReportView.as_view(), name='energy-report'),
-    path('user/friends', views.FriendView.as_view(), name="friends")
+    path('user/friends', views.FriendView.as_view(), name="friends"),
+    path('usage/available-data-providers', views.DataProviderView.as_view(), name="list-data-providers"),
+    path('user/delete-account', views.DeleteAccountView.as_view(), name="delete-account")
 ]
