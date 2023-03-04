@@ -114,6 +114,25 @@ class EnergyReportView(views.APIView):
         except openai.OpenAIError as e:
             print(f"{str(e.__class__.__name__ )}: {e}")
             return Response(json_error("An internal error occured with generating tips"))
+        
+class ApplianceTips(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        device = request.GET.get("device", "aggregate")
+        cached = models.Tip.objects.filter(date=datetime.date.today(), user=request.user, device=device)
+        if cached.exists():
+            return Response(json_success(cached.first().text))
+        
+        try:
+            energy_data = get_user_energy_data(request.user)['data']
+            prompt = Prompts.get_device_tip_prompt(energy_data, device)
+            response = prompt_gpt3(prompt).strip()
+            models.Tip.objects.create(device=device, text=response, user=request.user)
+            return Response(json_success(response))
+        except (openai.OpenAIError, ValueError) as e:
+            print(f"{str(e.__class__.__name__ )}: {e}")
+            return Response(json_error("An internal error occured with genereating tips"))
 
 
 # View responsible for returning the usage of appliances
