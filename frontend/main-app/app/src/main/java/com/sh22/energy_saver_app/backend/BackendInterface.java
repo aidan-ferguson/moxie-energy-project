@@ -33,6 +33,7 @@ public class BackendInterface {
     private static CacheObject<UserInfo> cached_user_info = new CacheObject<>();
     private static CacheObject<String> cached_totd = new CacheObject<>();
     private static CacheObject<String> cached_report = new CacheObject<>();
+    private static HashMap<String, CacheObject<String>> cached_appliance_tips = new HashMap<>();
 
 
     // Clear the local cache, used when the user signs out
@@ -344,6 +345,38 @@ public class BackendInterface {
             JSONObject json_response = new JSONObject(response);
             if(json_response.getBoolean("success")){
                 return true;
+            } else {
+                throw new BackendException(json_response.getString("reason"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
+        }
+    }
+
+    public static String GetApplianceTip(Context context, String device_name) throws AuthenticationException, BackendException {
+        // Check for a cache hit first
+        if(cached_appliance_tips.containsKey(device_name)){
+            CacheObject<String> cached_object = cached_appliance_tips.get(device_name);
+            if(cached_object != null && cached_object.GetObject() != null) {
+                return cached_object.GetObject();
+            }
+        }
+
+        // No local cache, need to contact backend
+        String token = AuthenticationHandler.getLocalToken(context);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.getBackendView("/tips/appliance?device=" + device_name, requestProperties);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                return json_response.getString("data");
             } else {
                 throw new BackendException(json_response.getString("reason"));
             }

@@ -3,6 +3,7 @@ package com.sh22.energy_saver_app.common;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Looper;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.animation.Animator;
@@ -45,6 +46,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sh22.energy_saver_app.R;
 
+import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
 
@@ -52,6 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.os.Handler;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
@@ -135,7 +139,36 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         legend.setEnabled(true);
 
 
+        //When the tips button is clicked the tips button changes colour
+        holder.TipsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                int color = context.getResources().getColor(R.color.blue_whale);
+                holder.TipsButton.setBackgroundColor(color);
+                holder.TipsButton.setTextColor(Color.WHITE);
+                holder.BreakDownButton.setBackgroundColor(Color.WHITE);
+                holder.BreakDownButton.setTextColor(color);
+                holder.barChart.setVisibility(View.GONE);
+                holder.tipsCard.setVisibility(View.VISIBLE);
+                // Fill tips card with tip
+                new Thread(() -> {
+                    try {
+                        String tip = BackendInterface.GetApplianceTip(context, appliance_data.get(position).getApplianceName());
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            holder.tipsText.setText(tip);
+                        });
+                    } catch (AuthenticationException e) {
+                        SH22Utils.Logout(context);
+                        e.printStackTrace();
+                    } catch (BackendException e) {
+                        SH22Utils.ToastException(view.getContext(), e.reason);
+                        e.printStackTrace();
+                    }
+                }).start();
 
+            }
+        });
 
 
 
@@ -170,6 +203,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         ArrayList barEntriesArrayList;
         Button dropdownButton;
         Button button;
+        TextView tipsText;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -191,8 +225,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             cautionLevel = itemView.findViewById(R.id.home_icon2);
             barChart = itemView.findViewById(R.id.idBarChart);
             tipsCard = itemView.findViewById(R.id.tips);
-             button= itemView.findViewById(R.id.button1);
-
+            button= itemView.findViewById(R.id.button1);
+            tipsText = itemView.findViewById(R.id.tip1);
 
 
 
@@ -627,24 +661,6 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
 
-            );
-
-            //When the tips button is clicked the tips button changes colour
-            TipsButton.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View view) {
-                                                  Context context = view.getContext();
-                                                  int color = context.getResources().getColor(R.color.blue_whale);
-                                                  TipsButton.setBackgroundColor(color);
-                                                  TipsButton.setTextColor(Color.WHITE);
-                                                  BreakDownButton.setBackgroundColor(Color.WHITE);
-                                                  BreakDownButton.setTextColor(color);
-                                                  barChart.setVisibility(View.GONE);
-                                                  tipsCard.setVisibility(View.VISIBLE);
-
-                                              }
-
-                                          }
             );
 
             BreakDownButton.setOnClickListener(new View.OnClickListener() {
