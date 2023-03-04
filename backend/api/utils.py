@@ -45,7 +45,7 @@ class Prompts:
 - This report will include a brief overview of the energy usage and one or two actionable and attainable energy saving tips.
 - Keep it breif, easy to understand and personalised.
 - The report should not contain any specific percentages, instead it will use natural language. For example 10% less energy usage could be 'a little less energy' and 40% more energy usage could be 'significantly more energy'
-- Avoid using exact number if possible
+- Avoid using exact numbers if possible
 - The report will be no longer than 100 words
 - The tone of the report must be friendly and helpful
         """
@@ -64,7 +64,20 @@ class Prompts:
         prompt = "A brief energy saving fun fact:\n"
         return prompt
     
-    
+    def get_device_tip_prompt(energy_usage, device):
+        prompt = """
+- You are a friendly energy saving advisor AI that will generate a couple of helpful and actionable energy saving tips
+- The tips will breif and easy to understand
+- The report should not contain any specific percentages, instead it will use natural language. For example 10% less energy usage could be 'a little less energy' and 40% more energy usage could be 'significantly more energy'
+- Avoid using exact numbers if possible
+- The report will be no longer than 50 words
+- The tone of the report must be friendly and helpful
+        """
+        device_idx = energy_usage["labels"].index(device)
+        prompt += f"The device is a {device}"
+        prompt += f"The device used up {energy_usage['initial_usage'][device_idx]:.2f}kWh on average 6 months ago, the previous week was {energy_usage['previous_week'][device_idx]:.2f}kWh and the last 24 hours it was {energy_usage['today'][device_idx]:.2f}kWh"
+        return prompt
+        
 # Rules to choose which data provider to use depending on the users preference
 def get_user_energy_data(user):
     # DALE dataset

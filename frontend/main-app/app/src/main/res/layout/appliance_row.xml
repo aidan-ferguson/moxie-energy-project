@@ -247,7 +247,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:gravity="center_horizontal"
-                    android:text="This is how you can reduce your energy usage for this appliance"
+                    android:text="@string/tips_pending_text"
                     android:textColor="@color/blue_whale"
                     android:textSize="15sp" />
 
