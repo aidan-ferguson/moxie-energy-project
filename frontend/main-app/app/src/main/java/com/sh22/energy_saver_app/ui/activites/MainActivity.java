@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
 import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         // Set BackgroundDrawable
         actionBar.setBackgroundDrawable(colorDrawable);
         getterActionBar().setBackgroundDrawable(colorDrawable);
-        getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Your Ecosystem</font></div></center>"));
         actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Welcome</font>"));
 
         actionBar.setDisplayShowTitleEnabled(true);
@@ -90,16 +90,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_settings_menu,menu);
-        Log.d("aidanConnor", "here");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
         switch (item.getItemId()) {
             case R.id.logout:
-                Logout(this);
+                SH22Utils.Logout(this);
                 break;
             case R.id.changeDataProvider:
                 replaceFragment(new changeProviderFragment());
@@ -110,17 +108,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public static void Logout(Context context) {
-        // Erase tokens
-        AuthenticationHandler.Logout(context);
-
-        // Replace the activity
-        Activity main_activity = (MainActivity)context;
-        Intent intent = new Intent(context, LoginActivity.class);
-        context.startActivity(intent);
-        main_activity.finish(); // Disable user from going back
-    }
-
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -128,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    @NonNull
     public ActionBar getterActionBar() {
         return actionBar;
     }
