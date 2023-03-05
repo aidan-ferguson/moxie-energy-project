@@ -4,6 +4,7 @@ import json
 from rest_framework.authtoken.models import Token
 from django.test import Client, TestCase
 from api.models import User
+from rest_framework.test import 
 
 TEST_USERNAME = 'testuser@test.com'
 TEST_PASSWORD = "test_password"
@@ -29,9 +30,9 @@ class TestConnection(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)["data"]["message"], f"Hello, {test_user.username}")
 
-class RegisterTest(TestCase):    
+class RegisterTest(TestCase):
     def test_register_preexisting_user(self):
-        response = TEST_CLIENT.post(urls.reverse("register"), **{"username":TEST_USERNAME, "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "last_name":TEST_LASTNAME})
+        response = TEST_CLIENT.post(urls.reverse("register"), **{"username":TEST_USERNAME, "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "surname":TEST_LASTNAME})
         print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)["non_field_errors"], {})

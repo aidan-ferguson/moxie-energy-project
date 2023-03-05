@@ -26,7 +26,6 @@ class RegisterView(views.APIView):
     permission_classes = (permissions.AllowAny,)
     
     def post(self, request):
-        return Response(str(request.META))
         serializer = RegisterSerializer(data=self.request.data, context={'request': self.request})
         serializer.is_valid(raise_exception=True)
         return Response(None, status=status.HTTP_202_ACCEPTED)
