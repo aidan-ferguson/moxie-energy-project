@@ -22,12 +22,16 @@ if __name__ == "__main__":
     # First download & extract the DALE data
     print("Downloading DALE dataset")
     dale_folder = os.path.join(DATASET_FOLDER, "dale")
+    if not os.path.exists(dale_folder):
+        os.makedirs(dale_folder)
     dale_download_files(dale_folder, args.exclude_dale)
     dale_calculate_averages(dale_folder)
 
     # Then download & combine the national average postcode datasets
     print("Downloading national average dataset")
     postcode_folder = os.path.join(DATASET_FOLDER, "postcodes")
+    if not os.path.exists(postcode_folder):
+        os.makedirs(postcode_folder)
     postcode_download_file(postcode_folder)
     print("Combining files")
     postcode_combine_files(postcode_folder)

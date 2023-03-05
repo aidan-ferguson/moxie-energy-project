@@ -5,7 +5,10 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.fragments.LoginFragment">
+
+
 
     <TextView
         android:id="@+id/login_heading"
@@ -29,6 +32,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="119dp"
         android:background="@drawable/layout_bg"
+        android:backgroundTint="#ED7D31"
         android:textColor="@color/white"
         android:enabled="true"
         android:text="@string/action_sign_in"
@@ -78,7 +82,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="48dp"
         android:background="@drawable/layout_bg"
-        android:backgroundTint="#ED7D31"
+        android:backgroundTint="@color/blue_whale"
         android:textColor="@color/white"
         android:text="@string/register_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,5 +136,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.548"
         app:tint="#DEB276" />
+
+    <TextView
+        android:id="@+id/login_error_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F11D1D"
+        tools:layout_editor_absoluteX="156dp"
+        tools:layout_editor_absoluteY="279dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

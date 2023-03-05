@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="good_usage">#77DD76</color>
+    <color name="mid_usage">#fff066</color>
     <color name="bad_usage">#FF6961</color>
     <color name="yellow_metal">#7D633F</color>
-    <color name="harvest_gold">#DEB276</color>
-    <color name="blue_whale">#04244C</color>
+    <color name="harvest_gold">#B753AF4C</color>
+    <color name="blue_whale">#62A526</color>
     <color name="beaver">#92755C</color>
-    <color name="black">#FF000000</color>
+    <color name="blue_jeans">#064C04</color>
+    <color name="black">#264C04</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
     <color name="light_blue">#8998AB</color>
+    <color name="lighter_blue">#4B8998AB</color>
 </resources>

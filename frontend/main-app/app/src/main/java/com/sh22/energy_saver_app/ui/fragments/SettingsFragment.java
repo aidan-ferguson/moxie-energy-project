@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.ui.activites.LoginActivity;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationHandler;
@@ -69,16 +70,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         view.findViewById(R.id.settings_logout_button).setOnClickListener((View v)-> {
-            // TODO: logout on backend
-            AuthenticationHandler.Logout(view.getContext());
-            Activity activity = getActivity();
-            if(activity != null) {
-                Intent intent = new Intent(activity, LoginActivity.class);
-                startActivity(intent);
-                activity.finish(); // Disallow user going back after logout has ended
-            } else {
-                Log.e("SH22", "NullPtrException activity in logout");
-            }
+            SH22Utils.Logout(view.getContext());
         });
 
         return view;
