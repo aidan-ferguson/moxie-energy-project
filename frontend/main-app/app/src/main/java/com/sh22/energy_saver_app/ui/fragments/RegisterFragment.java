@@ -105,9 +105,11 @@ public class RegisterFragment extends Fragment {
                                 Log.e("SH22", "NullPtrException activity in register");
                             }
                         } else {
+                            ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.GONE);
                             try {
                                 JSONObject json_response = new JSONObject(status.data);
                                 if (json_response.has("non_field_errors")) {
+                                    ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.VISIBLE);
                                     JSONArray response_array = json_response.getJSONArray("non_field_errors");
                                     if (response_array.length() > 0) {
                                         ((TextView) view.findViewById(R.id.register_error_box)).setText(response_array.getString(0));
@@ -140,6 +142,7 @@ public class RegisterFragment extends Fragment {
                                 }
 
                             } catch (JSONException e) {
+                                ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.VISIBLE);
                                 ((TextView) view.findViewById(R.id.register_error_box)).setText(Constants.INTERNAL_ERROR);
                                 e.printStackTrace();
                             }

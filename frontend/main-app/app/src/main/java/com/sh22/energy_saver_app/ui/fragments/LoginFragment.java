@@ -68,11 +68,13 @@ public class LoginFragment extends Fragment {
                 // Jump back on UI thread
                 new Handler(Looper.getMainLooper()).post(() -> {
                     ((TextView) view.findViewById(R.id.login_error_box)).setText("");
+                    ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.GONE);
                     if (!login_status.success) {
                         // Parse the error
                         try {
                             JSONObject json_response = new JSONObject(login_status.data);
                             if (json_response.has("non_field_errors")) {
+                                ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.VISIBLE);
                                 JSONArray response_array = json_response.getJSONArray("non_field_errors");
                                 if (response_array.length() > 0) {
                                     ((TextView) view.findViewById(R.id.login_error_box)).setText(response_array.getString(0));
@@ -94,6 +96,7 @@ public class LoginFragment extends Fragment {
                             }
 
                         } catch (JSONException e) {
+                            ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.VISIBLE);
                             ((TextView) view.findViewById(R.id.login_error_box)).setText(Constants.INTERNAL_ERROR);
                             e.printStackTrace();
                         }
