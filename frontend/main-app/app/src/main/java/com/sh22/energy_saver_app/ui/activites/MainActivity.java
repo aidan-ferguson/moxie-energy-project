@@ -1,16 +1,11 @@
 package com.sh22.energy_saver_app.ui.activites;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -20,13 +15,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.sh22.energy_saver_app.R;
-import com.sh22.energy_saver_app.backend.AuthenticationHandler;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
 import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;
 import com.sh22.energy_saver_app.ui.fragments.HomeFragment;
-import com.sh22.energy_saver_app.ui.fragments.SettingsFragment;
 import com.sh22.energy_saver_app.ui.fragments.changeProviderFragment;
 
 
@@ -77,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.ecosystem:
                         replaceFragment(EcosystemFragment.newInstance());
-                        break;
-                    case R.id.settings:
-                        replaceFragment(new SettingsFragment());
                         break;
                 }
             }

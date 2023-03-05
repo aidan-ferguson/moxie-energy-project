@@ -164,16 +164,13 @@
                         app:layout_constraintTop_toTopOf="@+id/button1" />
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/tip_of_the_day"
                         android:layout_width="203dp"
                         android:layout_height="293dp"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
                         android:padding="12dp"
-
-
-                        android:text="Make sure your kettle isnt empty before you start boiling water okay, you dont want to waste your time and energy, do you?, when you are boiling water, make sure you dont leave it unattended, you dont want to burn your house down, do you?"
-
+                        android:text="@string/tips_pending_text"
                         android:textColor="@color/harvest_gold"
                         android:textSize="19sp"
                         android:textStyle="bold"
@@ -307,42 +304,24 @@
                     <ScrollView
                         android:id="@+id/report_scroll"
                         android:layout_width="300dp"
-                        android:layout_height="500dp"
-                        android:layout_marginTop="32dp"
-                        android:background="@drawable/layout_bg"
+                        android:layout_height="460dp"
+                        android:layout_marginTop="42dp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/button2"
                         app:layout_constraintEnd_toEndOf="@+id/button2"
                         app:layout_constraintStart_toStartOf="@+id/button2"
                         app:layout_constraintTop_toTopOf="@+id/button2">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
 
                             <TextView
                                 android:id="@+id/energy_report"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:padding="12dp"
-                                android:text="As an AI language model, I cannot dress anyone directly, but I can provide you with a detailed energy usage report for a household that uses too much electricity on lights while being efficient in their use of a kettle.
-
-The household in question is consuming an excessive amount of energy on lighting. They use a combination of incandescent bulbs and halogen lights, which are known to be highly energy inefficient. These lights are being used excessively and for prolonged periods, even during daylight hours when natural lighting is available.
-
-To put this into perspective, a 60-watt incandescent bulb, which is commonly used, left on for 6 hours a day, will consume 10.8 kWh of energy in a month. This might seem insignificant, but if the household has 10 such bulbs, their total energy consumption just on lighting would be 108 kWh per month.
-
-On the positive side, the household has been saving energy by being careful with their kettle usage. The average kettle uses around 2,000 watts of power, which translates to 2 kWh per hour. By using the kettle for short periods and boiling only the necessary amount of water, the household has managed to keep their kettle usage to a minimum, consuming only about 2 kWh per week.
-
-However, the lighting usage of the household is still of great concern. By replacing the incandescent bulbs and halogen lights with energy-efficient LED bulbs, the household can save up to 80% of their energy usage. A 10-watt LED bulb can produce the same amount of light as a 60-watt incandescent bulb, and the cost of running an LED bulb is only 10-"
-                                android:textColor="@color/white"
-
+                                android:text="@string/tips_pending_text"
                                 android:textSize="19sp"
                                 android:textStyle="bold"
-                                android:visibility="visible"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                android:visibility="visible"/>
 
 
                     </ScrollView>
