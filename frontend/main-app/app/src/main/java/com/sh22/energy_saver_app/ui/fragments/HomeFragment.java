@@ -190,9 +190,8 @@ public void increaseHeight(View view){
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
-
-                        int progress = Math.round(score * 100) - 50;
+                        float score = appliance_data.energy_score; //SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        int progress = (Math.round(score * 100) - 50)*2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
@@ -202,7 +201,7 @@ public void increaseHeight(View view){
 
                         if(score < 0.5)
                         {
-                            resultColor = ColorUtils.blendARGB(mid_colour, bad_colour, score);
+                            resultColor = ColorUtils.blendARGB(bad_colour, mid_colour, score);
                         }
                         else
                         {
@@ -236,11 +235,11 @@ public void increaseHeight(View view){
                         }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= 50)
+                        if(progress <= -50)
                         {
                             letterGrade.setText("F-");
                         }
-                        else if (progress <= 40)
+                        else if (progress <= -40)
                         {
                             letterGrade.setText("F+");
                         }
@@ -268,11 +267,11 @@ public void increaseHeight(View view){
                         {
                             letterGrade.setText("B+");
                         }
-                        else if (progress > 40)
+                        else if (progress <= 40)
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress > 50)
+                        else if (progress >= 50)
                         {
                             letterGrade.setText("A+");
                         }
