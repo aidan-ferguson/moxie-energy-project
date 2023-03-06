@@ -10,6 +10,7 @@ import json
 import openai
 from api import models
 import math
+from api.data_providers.dale_data_provider import DALEDataProvider
 
 
 # A view used to test an authenticated connection to the server
@@ -114,6 +115,25 @@ class EnergyReportView(views.APIView):
         except openai.OpenAIError as e:
             print(f"{str(e.__class__.__name__ )}: {e}")
             return Response(json_error("An internal error occured with generating tips"))
+        
+class ApplianceTips(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        device = request.GET.get("device", "aggregate")
+        cached = models.Tip.objects.filter(date=datetime.date.today(), user=request.user, device=device)
+        if cached.exists():
+            return Response(json_success(cached.first().text))
+        
+        try:
+            energy_data = get_user_energy_data(request.user)['data']
+            prompt = Prompts.get_device_tip_prompt(energy_data, device)
+            response = prompt_gpt3(prompt).strip()
+            models.Tip.objects.create(device=device, text=response, user=request.user)
+            return Response(json_success(response))
+        except (openai.OpenAIError, ValueError) as e:
+            print(f"{str(e.__class__.__name__ )}: {e}")
+            return Response(json_error("An internal error occured with genereating tips"))
 
 
 # View responsible for returning the usage of appliances
@@ -196,3 +216,20 @@ class FriendView(views.APIView):
         
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))
+
+
+class DataProviderView(views.APIView): 
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        # There is only DALE datasets, so just list them right now
+        data_providers = DALEDataProvider.list_datasets()
+        return Response(json_success(data_providers))
+    
+
+class DeleteAccountView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    
+    def post(self, request):
+        request.user.delete()
+        return Response(status=status.HTTP_200_OK)

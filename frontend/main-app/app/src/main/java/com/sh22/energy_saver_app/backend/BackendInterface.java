@@ -14,6 +14,7 @@ import com.sh22.energy_saver_app.common.UserInfo;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,15 +34,17 @@ public class BackendInterface {
     private static CacheObject<UserInfo> cached_user_info = new CacheObject<>();
     private static CacheObject<String> cached_totd = new CacheObject<>();
     private static CacheObject<String> cached_report = new CacheObject<>();
+    private static HashMap<String, CacheObject<String>> cached_appliance_tips = new HashMap<>();
 
 
     // Clear the local cache, used when the user signs out
     public static void ClearCache() {
-        cached_appliance = null;
-        cached_national_averages = null;
-        cached_user_info = null;
-        cached_totd = null;
-        cached_report = null;
+        cached_appliance.SetObject(null);
+        cached_national_averages.SetObject(null);
+        cached_user_info.SetObject(null);
+        cached_totd.SetObject(null);
+        cached_report.SetObject(null);
+        // TODO: cache appliance tips clearing
     }
     // TODO: logout on all authentication exceptions with error
     // handle all backend exceptions
@@ -157,6 +160,7 @@ public class BackendInterface {
                         json_data.getString("username"),
                         json_data.getString("firstname"),
                         json_data.getString("surname"),
+                        json_data.getString("data_provider"),
                         json_data.getDouble("energy_score"));
                 cached_user_info.SetObject(userInfo);
                 return userInfo;
@@ -354,6 +358,101 @@ public class BackendInterface {
         } catch (JSONException e) {
             e.printStackTrace();
             throw new BackendException("An error occurred when processing your data");
+        }
+    }
+
+    public static String GetApplianceTip(Context context, String device_name) throws AuthenticationException, BackendException {
+        // Check for a cache hit first
+        if(cached_appliance_tips.containsKey(device_name)){
+            CacheObject<String> cached_object = cached_appliance_tips.get(device_name);
+            if(cached_object != null && cached_object.GetObject() != null) {
+                return cached_object.GetObject();
+            }
+        }
+
+        // No local cache, need to contact backend
+        String token = AuthenticationHandler.getLocalToken(context);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.getBackendView("/tips/appliance?device=" + device_name, requestProperties);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                return json_response.getString("data");
+            } else {
+                throw new BackendException(json_response.getString("reason"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
+        }
+    }
+
+    // Delete the current user's account
+    public static void DeleteAccount(Context context) throws AuthenticationException, BackendException {
+        String token = AuthenticationHandler.getLocalToken(context);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+        try {
+            SH22Utils.postBackendView("/user/delete-account", requestProperties, "");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when trying to speak to the server");
+        }
+    }
+
+    // List all the available data providers
+    public static ArrayList<String> GetDataProviders(Context context) throws AuthenticationException, BackendException {
+        String token = AuthenticationHandler.getLocalToken(context);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            String response = SH22Utils.getBackendView("/usage/available-data-providers", requestProperties);
+            JSONObject json_response = new JSONObject(response);
+            if(json_response.getBoolean("success")){
+                JSONArray json_array = json_response.getJSONArray("data");
+                ArrayList<String> data_providers = new ArrayList<>();
+                for (int i = 0; i < json_array.length(); i++) {
+                    data_providers.add(json_array.getString(i));
+                }
+                return data_providers;
+            } else {
+                throw new BackendException(json_response.getString("reason"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when trying to speak to the server");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when processing your data");
+        }
+    }
+
+    // Update user information
+    public static void UpdateUserInfo(Context context, HashMap<String, String> new_info) throws AuthenticationException, BackendException {
+        String token = AuthenticationHandler.getLocalToken(context);
+
+        // TODO: cache
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
+        try {
+            // Successful authentication, store and return true
+            StringBuilder form_data = new StringBuilder("action=update");
+            for(String key : new_info.keySet()) {
+                form_data.append("&").append(key).append("=").append(new_info.get(key));
+            }
+            SH22Utils.postBackendView("/user/information", requestProperties, form_data.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BackendException("An error occurred when trying to speak to the server");
         }
     }
  }
