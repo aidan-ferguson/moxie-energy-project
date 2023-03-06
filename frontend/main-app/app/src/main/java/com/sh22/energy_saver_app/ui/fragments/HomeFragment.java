@@ -292,7 +292,7 @@ public class HomeFragment extends Fragment {
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress >= 50)
+                        else if (progress > 40)
                         {
                             letterGrade.setText("A+");
                         }

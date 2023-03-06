@@ -135,12 +135,19 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             holder.score.setText("A+");
         }
 
-
-        // Set the progress position and colour of the progress bar
-
-//
-
-
+        int resultColor = 0;
+        int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
+        int mid_colour = ContextCompat.getColor(context, R.color.mid_usage);
+        int good_colour = ContextCompat.getColor(context, R.color.good_usage);
+        if(score < 0.5)
+        {
+            resultColor = ColorUtils.blendARGB(bad_colour, mid_colour, score.floatValue());
+        }
+        else
+        {
+            resultColor = ColorUtils.blendARGB(mid_colour, good_colour, score.floatValue());
+        }
+        holder.score.setTextColor(resultColor);
     }
 
     @Override
