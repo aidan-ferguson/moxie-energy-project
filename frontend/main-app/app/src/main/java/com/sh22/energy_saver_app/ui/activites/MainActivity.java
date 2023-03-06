@@ -13,9 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.SH22Utils;
+import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
 import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;
@@ -25,7 +27,6 @@ import com.sh22.energy_saver_app.ui.fragments.changeProviderFragment;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    int currentFragment = R.id.home;
     ActionBar actionBar;
 
     @Override
@@ -51,27 +52,23 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.action_bar);
 
 
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(HomeFragment.newInstance());
 
 
         // Navigation bar stuff
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(item ->{
-            if(item.getItemId() != currentFragment) {
-                currentFragment = item.getItemId();
-                switch (item.getItemId()) {
-                    case R.id.home:
-                        replaceFragment(HomeFragment.newInstance());
-                        break;
-                    case R.id.appliances:
-                        replaceFragment(new AppliancesFragment());
-                        break;
-                    case R.id.ecosystem:
-                        replaceFragment(EcosystemFragment.newInstance());
-                        break;
-                }
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    replaceFragment(HomeFragment.newInstance());
+                    break;
+                case R.id.appliances:
+                    replaceFragment(new AppliancesFragment());
+                    break;
+                case R.id.ecosystem:
+                    replaceFragment(EcosystemFragment.newInstance());
+                    break;
             }
             return true;
         });
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_settings_menu,menu);
+        getMenuInflater().inflate(R.menu.top_settings_menu, menu);
         return true;
     }
 
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);

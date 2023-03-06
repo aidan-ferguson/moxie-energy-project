@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#1992AB89"
 
 
     tools:context=".ui.fragments.HomeFragment">
@@ -42,7 +42,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="15dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -71,7 +72,6 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:gravity="center"
-                            android:text="A+"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             android:textColor="#04244C"
                             android:textSize="30sp" />
@@ -104,12 +104,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    tools:ignore="MissingClass">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/krew_recycler"
+            android:layout_width="347dp"
+            android:layout_height="491dp"
+            android:layout_marginBottom="56dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="@+id/button3"
+            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintStart_toStartOf="@+id/button3"
+            app:layout_constraintTop_toTopOf="@+id/button3" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingClass">
 
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -124,15 +134,16 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/dd1"
-                        android:layout_width="43dp"
-                        android:layout_height="39dp"
-                        android:background="@drawable/ic_baseline_chevron_right_24"
-                        android:rotation="180"
-                        android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="@+id/button1"
-                        app:layout_constraintTop_toTopOf="@+id/button1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dd1"
+                android:layout_width="43dp"
+                android:layout_height="39dp"
+                android:background="@drawable/ic_baseline_chevron_right_24"
+                android:rotation="180"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/button1"
+                app:layout_constraintTop_toTopOf="@+id/button1" />
 
                     <TextView
                         android:id="@+id/title1"
@@ -164,17 +175,43 @@
                         app:layout_constraintStart_toStartOf="@+id/button1"
                         app:layout_constraintTop_toTopOf="@+id/button1" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button3"
-                        android:layout_width="290dp"
-                        android:layout_height="120dp"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button3"
+                android:layout_width="290dp"
+                android:layout_height="120dp"
 
-                        android:layout_marginBottom="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/layout_bg3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                        android:background="@drawable/layout_bg3"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/leaderboard"
+                android:layout_width="160dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/layout_bg6"
+                android:text="Leaderboard"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/manage"
+                android:layout_width="160dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/layout_bg6"
+                android:text="Manage Krew"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/button2"
@@ -223,17 +260,17 @@
                         app:layout_constraintStart_toStartOf="@+id/button2"></TextView>
 
 
-                    <ImageView
-                        android:id="@+id/icon1"
-                        android:layout_width="68dp"
-                        android:layout_height="96dp"
-                        android:layout_marginBottom="32dp"
-                        android:src="@drawable/bulb"
-                        android:tint="@color/blue_jeans"
-                        app:layout_constraintBottom_toBottomOf="@+id/button1"
-                        app:layout_constraintEnd_toEndOf="@+id/button1"
-                        app:layout_constraintStart_toStartOf="@+id/button1"
-                        app:layout_constraintTop_toTopOf="@+id/button1"></ImageView>
+            <ImageView
+                android:id="@+id/icon1"
+                android:layout_width="68dp"
+                android:layout_height="96dp"
+                android:layout_marginBottom="32dp"
+                android:src="@drawable/bulb"
+                app:tint="@color/blue_jeans"
+                app:layout_constraintBottom_toBottomOf="@+id/button1"
+                app:layout_constraintEnd_toEndOf="@+id/button1"
+                app:layout_constraintStart_toStartOf="@+id/button1"
+                app:layout_constraintTop_toTopOf="@+id/button1"></ImageView>
 
                     <ImageView
                         android:id="@+id/icon3"
@@ -310,42 +347,160 @@
 
                     </ScrollView>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/request_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:visibility="gone"
+                android:padding="10dp"
 
-                    <TextView
-                        android:id="@+id/title3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Your Krew"
-                        android:textColor="@color/blue_whale"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@+id/button3"
-                        app:layout_constraintStart_toStartOf="@+id/button3"
-                        app:layout_constraintTop_toTopOf="@+id/button3" />
+                android:background="#1992AB89"
+
+                android:layout_marginTop="60dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                /> 
+
+            <TextView
+                android:id="@+id/leaderboardtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="Your Energy Leaderboard"
+                android:textColor="@color/blue_whale"
+                android:textSize="22dp"
+                android:visibility="gone"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/krew_recycler"
-                        android:layout_width="347dp"
-                        android:layout_height="491dp"
-                        android:layout_marginBottom="56dp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/button3"
-                        app:layout_constraintEnd_toEndOf="@+id/button3"
-                        app:layout_constraintHorizontal_bias="0.666"
-                        app:layout_constraintStart_toStartOf="@+id/button3"
-                        app:layout_constraintTop_toTopOf="@+id/button3" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/friends_recycler_view"
+                android:layout_width="match_parent"
+                android:background="#1992AB89"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/button3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/button3"
+                />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/dd3"
-                        android:layout_width="34dp"
-                        android:layout_height="29dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/ic_baseline_chevron_right_24"
-                        android:rotation="180"
-                        android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="@+id/button3"
-                        app:layout_constraintTop_toTopOf="@+id/button3" />
+
+            <EditText
+                android:id="@+id/friend_id"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="100dp"
+
+                android:layout_marginEnd="10dp"
+
+                android:background="@drawable/layout_bg10"
+                android:ems="10"
+                android:hint=" Enter your friends ID here "
+                android:inputType="textPersonName"
+
+
+                android:padding="5dp"
+                android:textColor="@color/blue_whale"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/your_id">
+
+
+            </EditText>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotation="360"
+                android:text="send"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/friend_id"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <TextView
+                android:id="@+id/your_id"
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="240dp"
+
+                android:gravity="center"
+                android:text="Your ID:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/your_id_number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/your_id_number">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/your_id_number"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+
+                android:layout_marginTop="32dp"
+
+                android:gravity="center"
+                android:text="3432"
+                android:textColor="@color/blue_jeans"
+                android:textSize="35dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/request_recycler_view">
+
+            </TextView>
+
+
+
+            <TextView
+                android:id="@+id/title3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Your Krew"
+                android:textColor="@color/blue_whale"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/button3"
+                app:layout_constraintStart_toStartOf="@+id/button3"
+                app:layout_constraintTop_toTopOf="@+id/button3" >
+
+            </TextView>
+
+
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dd3"
+                android:layout_width="34dp"
+                android:layout_height="29dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ic_baseline_chevron_right_24"
+                android:rotation="180"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/center_card"
+                app:layout_constraintTop_toTopOf="@+id/center_card" >
+
+            </androidx.appcompat.widget.AppCompatButton>
+
+
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

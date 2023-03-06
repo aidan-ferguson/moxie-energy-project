@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,34 +17,48 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.BackendException;
+import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
+import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.Friends;
+import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,49 +67,49 @@ import java.io.IOException;
  */
 public class HomeFragment extends Fragment {
 
-public void increaseHeight(View view){
-    CardView card;
-    CardView card2;
+    public void increaseHeight(View view){
+        CardView card;
+        CardView card2;
 
-    card= view.findViewById(R.id.score_card);
-    card2 = view.findViewById(R.id.center_card);
-    ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
+        card= view.findViewById(R.id.score_card);
+        card2 = view.findViewById(R.id.center_card);
+        ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
 
-    int newWidth = card2.getWidth()+150;
-    int newHeight = card2.getHeight()*2-200;
-    ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
-    ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
+        int newWidth = card2.getWidth()+150;
+        int newHeight = card2.getHeight()*2-200;
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
+        ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
 
-    heightAnimator.setDuration(200);
-    heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-    widthAnimator.setDuration(200);
-    widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        heightAnimator.setDuration(200);
+        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        widthAnimator.setDuration(200);
+        widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-    heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            layoutParams.height = (Integer) animation.getAnimatedValue();
-            card2.setLayoutParams(layoutParams);
-        }
-    });
+        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                layoutParams.height = (Integer) animation.getAnimatedValue();
+                card2.setLayoutParams(layoutParams);
+            }
+        });
 
-    widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            layoutParams.width = (Integer) animation.getAnimatedValue();
-            card2.setLayoutParams(layoutParams);
-        }
-    });
-    card.setVisibility(View.GONE);
-    //Set constraints of card2 to the center of the screen
-
-
-    AnimatorSet animatorSet = new AnimatorSet();
-    animatorSet.playTogether(heightAnimator, widthAnimator);
-    animatorSet.start();
+        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                layoutParams.width = (Integer) animation.getAnimatedValue();
+                card2.setLayoutParams(layoutParams);
+            }
+        });
+        card.setVisibility(View.GONE);
+        //Set constraints of card2 to the center of the screen
 
 
-}
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(heightAnimator, widthAnimator);
+        animatorSet.start();
+
+
+    }
 
 
     public void decreaseHeight(View view){
@@ -173,11 +189,15 @@ public void increaseHeight(View view){
         ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
 
+
         // Network calls are ordered by what will be the quickest
 
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
+                int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
+                // interger to string
+
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 if(appliance_data == null) {
                     Log.e("SH22", "Error loading appliance data");
@@ -190,13 +210,14 @@ public void increaseHeight(View view){
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
-                        float score = appliance_data.energy_score; //SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
+                        TextView v = view.findViewById(R.id.your_id_number);
                         int progress = (Math.round(score * 100) - 50)*2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
                         int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
-
+                        v.setText(Integer.toString(o));
                         int resultColor = 0;
 
                         if(score < 0.5)
@@ -271,7 +292,7 @@ public void increaseHeight(View view){
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress >= 50)
+                        else if (progress > 40)
                         {
                             letterGrade.setText("A+");
                         }
@@ -290,6 +311,7 @@ public void increaseHeight(View view){
         // Get user info to display on homepage
         new Thread(() -> {
             try {
+
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
                 if(userInfo != null) {
                     FragmentActivity activity = getActivity();
@@ -346,14 +368,63 @@ public void increaseHeight(View view){
 
         new Thread(() -> {
             try {
+
+
                 Friends friends = BackendInterface.GetFriends(view.getContext());
-                // TODO: put friends somewhere
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Now attach the recycler view class to the view in the layout
+                        RecyclerView recyclerView = view.findViewById(R.id.request_recycler_view);
+                        FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter(view.getContext(), friends.requests);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                }
+
             } catch (AuthenticationException e) {
                 SH22Utils.Logout(view.getContext());
             } catch (BackendException e) {
                 SH22Utils.ToastException(view.getContext(), e.reason);
             }
-        }).start();
+        }
+
+
+        ).start();
+
+        new Thread(() -> {
+            try {
+
+
+                Friends friends = BackendInterface.GetFriends(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Now attach the recycler view class to the view in the layout
+                        RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
+                        ActiveFriendsRecyclerViewAdapter adapter = null;
+                        try {
+                            adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                        } catch (AuthenticationException e) {
+                            e.printStackTrace();
+                        } catch (BackendException e) {
+                            e.printStackTrace();
+                        }
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                }
+
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
+            }
+        }
+
+
+        ).start();
+
+
+
 
 
         Button button1;
@@ -370,6 +441,7 @@ public void increaseHeight(View view){
         TextView label4;
         CardView card;
         CardView card2;
+          ;
 
         card= view.findViewById(R.id.score_card);
         card2 = view.findViewById(R.id.center_card);
@@ -378,6 +450,8 @@ public void increaseHeight(View view){
         TextView TipOfTheDay;
         TextView Tip;
         Button back1;
+        TextView v;
+        v = view.findViewById(R.id.your_id_number);
 
         TextView EnergyReport;
         ScrollView scrollView;
@@ -409,15 +483,25 @@ public void increaseHeight(View view){
         EnergyReportText= view.findViewById(R.id.energy_report);
         back2= view.findViewById(R.id.dd2);
 
-       //Krew elements -small view
+        //Krew elements -small view
         button3= view.findViewById(R.id.button3);
         icon3= view.findViewById(R.id.icon3);
         label3= view.findViewById(R.id.button3Text);
 
         //Krew elements -big view
         Krew= view.findViewById(R.id.title3);
-        KrewView= view.findViewById(R.id.krew_recycler);
+        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
+        //get the request recycler view from the
+        Button leaderboardButton = view.findViewById(R.id.leaderboard);
+        Button requestsButton = view.findViewById(R.id.manage);
+        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
         back3= view.findViewById(R.id.dd3);
+
+        TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
+        EditText send_request = view.findViewById(R.id.friend_id);
+        TextView your_id = view.findViewById(R.id.your_id);
+        TextView your_id_text = view.findViewById(R.id.your_id_number);
+        Button send = view.findViewById(R.id.enter);
 
 
 
@@ -426,7 +510,7 @@ public void increaseHeight(View view){
 
         View parent = view.findViewById(R.id.center_card);
 
-    //method that increases the size of the card to be used in onclick functions
+        //method that increases the size of the card to be used in onclick functions
 
 
 
@@ -677,15 +761,15 @@ public void increaseHeight(View view){
 
 
                 button1.setVisibility(View.GONE);
-                                button3.setVisibility(View.GONE);
+                button3.setVisibility(View.GONE);
 
 
-                                icon1.setVisibility(View.GONE);
-                                icon3.setVisibility(View.GONE);
+                icon1.setVisibility(View.GONE);
+                icon3.setVisibility(View.GONE);
 
 
-                                label1.setVisibility(View.GONE);
-                                label3.setVisibility(View.GONE);
+                label1.setVisibility(View.GONE);
+                label3.setVisibility(View.GONE);
 
 
                 label2.setVisibility(View.GONE);
@@ -872,7 +956,19 @@ public void increaseHeight(View view){
                 back3.setVisibility(View.VISIBLE);
 
                 Krew.setVisibility(View.VISIBLE);
-                KrewView.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.VISIBLE);
+                requestsButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
+                button3.setVisibility(View.GONE);
+                leaderboardtitle.setVisibility(View.VISIBLE);
+                leaderboardtitle.setText("Your Energy Leaderboard");
+                leaderboardButton.setTextColor(Color.parseColor("#ffffff"));
+                requestsButton.setTextColor(Color.parseColor("#62A526"));
+
+
+
 
                 button3.setClickable(false);
 
@@ -932,7 +1028,7 @@ public void increaseHeight(View view){
 
                 icon2.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
-;
+                ;
                 icon3.setVisibility(View.VISIBLE);
 
                 label2.setVisibility(View.VISIBLE);
@@ -943,16 +1039,117 @@ public void increaseHeight(View view){
                 label1.setVisibility(View.VISIBLE);
                 icon1.setVisibility(View.VISIBLE);
                 Krew.setVisibility(View.GONE);
-                KrewView.setVisibility(View.GONE);
+
+                requests.setVisibility(View.VISIBLE);
+                requestsButton.setVisibility(View.VISIBLE);
+                leaderboardButton.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.VISIBLE);
                 back3.setVisibility(View.GONE);
+                requestsButton.setVisibility(View.GONE);
+                leaderboardButton.setVisibility(View.GONE);
+                leaderboard.setVisibility(View.GONE);
+                requests.setVisibility(View.GONE);
+                leaderboardtitle.setVisibility(View.GONE);
+                send_request.setVisibility(View.GONE);
+                your_id.setVisibility(View.GONE);
+                send.setVisibility(View.GONE);
+
+            }
+        });
+
+        //onclick for when leaderboards is clicked
+        leaderboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+
+// Refresh the ActiveFriendsRecyclerViewAdapter
+
+                leaderboard.setVisibility(View.VISIBLE);
+                requests.setVisibility(View.GONE);
+                leaderboardtitle.setText("Your Energy Leaderboard");
+                send_request.setVisibility(View.GONE);
+                your_id.setVisibility(View.GONE);
+                send.setVisibility(View.GONE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
+                leaderboardButton.setTextColor(Color.parseColor("#ffffff"));
+                your_id_text.setVisibility(View.GONE);
+                //green (blue_jeans) = #2ECC71
+                requestsButton.setTextColor(Color.parseColor("#62A526"));
+
+
+
+
+
+
+
+
+            }
+        });
+
+        //onlick for when manage is clicked
+        requestsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requests.setVisibility(View.VISIBLE);
+                leaderboard.setVisibility(View.GONE);
+                leaderboardtitle.setText("Manage your Friends");
+                send_request.setVisibility(View.VISIBLE);
+                your_id.setVisibility(View.VISIBLE);
+                your_id_text.setVisibility(View.VISIBLE);
+                send.setVisibility(View.VISIBLE);
+                leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
+                requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
+                leaderboardButton.setTextColor(Color.parseColor("#62A526"));
+                requestsButton.setTextColor(Color.parseColor("#ffffff"));
+
             }
         });
 
 
-        // Return the inflated view
-        return view;
-    }
+//set onclick for send button
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(() -> {
+                    //get the input from the edit text
+                    Integer id = Integer.valueOf(send_request.getText().toString());
+                    try {
+                        BackendInterface.CreateFriendRequest(view.getContext(), id);
+                    } catch (AuthenticationException e) {
+                        e.printStackTrace();
+                    } catch (BackendException e) {
+                        e.printStackTrace();
+                    }
+                    Activity activity = (Activity) view.getContext(); // get the activity associated with the current context
+                    activity.runOnUiThread(() -> {
+                        // Create a custom dialog
+                        final Dialog dialog = new Dialog(view.getContext());
+                        dialog.setContentView(R.layout.custom_dialog);
+                        dialog.setTitle("Friend Request Sent");
+
+                        // Set the text and button for the dialog
+                        TextView text = dialog.findViewById(R.id.dialog_text);
+                        text.setText("Your friend request has been sent.");
+                        Button button = dialog.findViewById(R.id.dialog_button);
+                        button.setOnClickListener(v1 -> {
+                            dialog.dismiss();
+                            send_request.setText("");
+                            send_request.setHint("Enter your friend's ID");
+                        });
+
+                        // Show the dialog
+                        dialog.show();
+                    });
+                }).start();
+            }
+            // Return the inflated view
+
+        });
 
 
 
-}
+  return view;
+
+}}
