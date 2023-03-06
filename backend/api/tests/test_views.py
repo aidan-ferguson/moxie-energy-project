@@ -36,24 +36,24 @@ class TestConnection(TestCase):
 # Unit tests for the RegisterView (note don't need to check for missing inputs as they are handled by DjangoRestFramework)
 class RegisterTest(TestCase):
     def test_register_preexisting_user(self):
-        data = {"username":TEST_USERNAME, "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "surname":TEST_LASTNAME}
+        data = {"username": TEST_USERNAME, "password": TEST_PASSWORD, "firstname": TEST_FIRSTNAME, "surname": TEST_LASTNAME}
         response = self.client.post(urls.reverse("register"), data, format="json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content)["non_field_errors"][0], "A user with that email already exists")
         
     def test_register_invalid_email(self):
-        data = {"username":"invalidemail", "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "surname":TEST_LASTNAME}
+        data = {"username": "invalidemail", "password": TEST_PASSWORD, "firstname": TEST_FIRSTNAME, "surname": TEST_LASTNAME}
         response = self.client.post(urls.reverse("register"), data, format="json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content)["non_field_errors"][0], "Please enter a valid email address")
         
     def test_register_success(self):
-        data = {"username": "test2@test.com", "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "surname":TEST_LASTNAME}
+        data = {"username": "test2@test.com", "password": TEST_PASSWORD, "firstname": TEST_FIRSTNAME, "surname": TEST_LASTNAME}
         response = self.client.post(urls.reverse("register"), data, format="json")
         self.assertEqual(response.status_code, 202)
 
  
-# For testing the user info view    
+# For testing the user info view
 class UserInfoTest(TestCase):
     def test_unauthenticated_failure(self):
         response = self.client.get(urls.reverse("user-information"))
@@ -72,7 +72,7 @@ class UserInfoTest(TestCase):
         self.assertTrue(json_response["data"]["energy_score"] >= 0 and json_response["data"]["energy_score"] <= 1)
         
     def test_update_info(self):
-        data = {"action":"update", "firstname":"NewFirstName", "last_name":"NewLastName", "data_provider":"DALE:house_3"}
+        data = {"action": "update", "firstname": "NewFirstName", "last_name": "NewLastName", "data_provider": "DALE:house_3"}
         response = TEST_CLIENT.post(urls.reverse("user-information"), data, format="json")
         self.assertEqual(response.status_code, 200)
         response = TEST_CLIENT.get(urls.reverse("user-information"))
@@ -83,12 +83,12 @@ class UserInfoTest(TestCase):
         self.assertEqual(json_response["data"]["surname"], "NewLastName")
         self.assertEqual(json_response["data"]["data_provider"], "DALE:house_3")
         # Change the data provider back to the original
-        data = {"action": "update", "data_provider":"DALE:house_4"}
+        data = {"action": "update", "data_provider": "DALE:house_4"}
         response = TEST_CLIENT.post(urls.reverse("user-information"), data, format="json")
         self.assertEqual(response.status_code, 200)
         
     def test_cant_update_username(self):
-        data = {"action":"update", "username":"NewUsername"}
+        data = {"action": "update", "username": "NewUsername"}
         response = TEST_CLIENT.post(urls.reverse("user-information"), data, format="json")
         self.assertEqual(response.status_code, 200)
         response = TEST_CLIENT.get(urls.reverse("user-information"))
@@ -413,5 +413,5 @@ class TestDeleteAccountView(TestCase):
         second_token = Token.objects.get_or_create(user=second_user)[0]
         second_client = APIClient(HTTP_AUTHORIZATION=f"Token {second_token}")
         response = second_client.post(urls.reverse("delete-account"))
-        self.assertEqual(response.status_code, 200) 
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(models.User.objects.filter(username="test5@test.com").exists())
