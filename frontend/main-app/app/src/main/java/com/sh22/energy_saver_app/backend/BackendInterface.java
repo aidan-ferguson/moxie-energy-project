@@ -44,9 +44,8 @@ public class BackendInterface {
         cached_user_info.SetObject(null);
         cached_totd.SetObject(null);
         cached_report.SetObject(null);
-        // TODO: cache appliance tips clearing
+
     }
-    // TODO: logout on all authentication exceptions with error
     // handle all backend exceptions
 
     // Function to get the past weeks energy usage and todays energy usage per device
@@ -237,7 +236,7 @@ public class BackendInterface {
     public static Friends GetFriends(Context context) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // TODO: cache
+
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", "Token " + token);
 
@@ -285,7 +284,6 @@ public class BackendInterface {
     public static boolean AcceptFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // TODO: cache
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", "Token " + token);
 
@@ -312,7 +310,6 @@ public class BackendInterface {
     public static boolean CreateFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // TODO: cache
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", "Token " + token);
 
@@ -339,7 +336,6 @@ public class BackendInterface {
     public static boolean DenyFriendRequest(Context context, int user_id) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // TODO: cache
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", "Token " + token);
 
@@ -439,7 +435,6 @@ public class BackendInterface {
     public static void UpdateUserInfo(Context context, HashMap<String, String> new_info) throws AuthenticationException, BackendException {
         String token = AuthenticationHandler.getLocalToken(context);
 
-        // TODO: cache
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("Authorization", "Token " + token);
 

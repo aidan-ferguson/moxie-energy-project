@@ -23,13 +23,5 @@
     <string name="existing_account">Already have an account?</string>
     <string name="change_data_provider">Change Your Data Provider: </string>
 
-        <!-- TODO: can remove?? -->
-        <string-array name="languages">
-            <item> </item>
-            <item>Logout</item>
-            <item>People I live with</item>
-
-        </string-array>
-
 
 </resources>
