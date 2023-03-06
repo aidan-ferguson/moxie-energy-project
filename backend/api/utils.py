@@ -51,7 +51,6 @@ class Prompts:
         """
         
         # Decide which appliances to include, always include the aggregate reading
-        # TODO: proper initial date
         prompt += f"\n\nThe household usage 6 months ago was {energy_usage['initial_usage'][0]:.2f}kWh, the previous week was {energy_usage['previous_week'][0]:.2f}kWh and the last 24 hours it was {energy_usage['today'][0]:.2f}kWh"
         
         # Add appliances which have massive differences in energy usage (i.e. they are interesting)
