@@ -53,6 +53,8 @@ backend:test:
   before_script:
     - *backend-setup
   script:
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
     - python3 manage.py test api/tests
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
