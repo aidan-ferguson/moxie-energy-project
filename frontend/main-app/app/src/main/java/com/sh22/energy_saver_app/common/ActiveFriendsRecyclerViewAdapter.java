@@ -39,12 +39,27 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         this.friends = friends;
 
         //add the data for the user that is logged in
-        UserInfo userInfo = BackendInterface.GetUserInfo(context);
-        FriendRelationship friendRelationship = new FriendRelationship(userInfo.user_id, userInfo.firstname, userInfo.surname, userInfo.energy_score);
-        friends.add(friendRelationship);
+        try {
+            new Thread(() -> {
+                try {
+                    UserInfo userInfo = BackendInterface.GetUserInfo(context);
+                    FriendRelationship friendRelationship = new FriendRelationship(userInfo.user_id, userInfo.firstname, userInfo.surname, userInfo.energy_score);
+                    friends.add(friendRelationship);
 
-        //sort the friends array by the score
-        friends.sort((o1, o2) -> o2.userInfo.energy_score.compareTo(o1.userInfo.energy_score));
+                    //sort the friends array by the score
+                    friends.sort((o1, o2) -> o2.userInfo.energy_score.compareTo(o1.userInfo.energy_score));
+                } catch (AuthenticationException e) {
+                    SH22Utils.Logout(context);
+                    e.printStackTrace();
+                } catch (BackendException e) {
+                    SH22Utils.ToastException(context, e.reason);
+                    e.printStackTrace();
+                }
+
+            }).join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // Add this method to update the friends list
