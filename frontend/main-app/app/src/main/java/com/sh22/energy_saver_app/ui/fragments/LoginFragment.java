@@ -2,12 +2,16 @@ package com.sh22.energy_saver_app.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +51,12 @@ public class LoginFragment extends Fragment {
         EditText password = view.findViewById(R.id.password);
         Button LoginButton = view.findViewById(R.id.login_button);
         Button RegisterButton = view.findViewById(R.id.login_register_button);
-
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#62A526"));
+        ((LoginActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((LoginActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Log in</font></div></center>"));
+        ((LoginActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((LoginActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_appliances);
         LoginButton.setOnClickListener((View v) -> {
             // Disable button while we authenticate
             view.findViewById(R.id.login_button).setEnabled(false);
@@ -59,11 +68,13 @@ public class LoginFragment extends Fragment {
                 // Jump back on UI thread
                 new Handler(Looper.getMainLooper()).post(() -> {
                     ((TextView) view.findViewById(R.id.login_error_box)).setText("");
+                    ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.GONE);
                     if (!login_status.success) {
                         // Parse the error
                         try {
                             JSONObject json_response = new JSONObject(login_status.data);
                             if (json_response.has("non_field_errors")) {
+                                ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.VISIBLE);
                                 JSONArray response_array = json_response.getJSONArray("non_field_errors");
                                 if (response_array.length() > 0) {
                                     ((TextView) view.findViewById(R.id.login_error_box)).setText(response_array.getString(0));
@@ -85,6 +96,7 @@ public class LoginFragment extends Fragment {
                             }
 
                         } catch (JSONException e) {
+                            ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.VISIBLE);
                             ((TextView) view.findViewById(R.id.login_error_box)).setText(Constants.INTERNAL_ERROR);
                             e.printStackTrace();
                         }
@@ -115,4 +127,5 @@ public class LoginFragment extends Fragment {
 
         return view;
     }
+
 }

@@ -105,3 +105,7 @@ class DALEDataProvider(DataProvider):
         }
                         
         return ret_val
+    
+    @staticmethod
+    def list_datasets():
+        return [str("DALE:" + house) for house in os.listdir(DALE_FOLDER) if os.path.isdir(os.path.join(DALE_FOLDER, house))]

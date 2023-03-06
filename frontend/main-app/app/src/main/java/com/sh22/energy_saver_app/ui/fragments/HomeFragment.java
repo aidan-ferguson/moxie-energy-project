@@ -13,7 +13,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.cardview.widget.CardView;
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
@@ -24,9 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -49,8 +47,6 @@ import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.Constants;
-import com.sh22.energy_saver_app.common.FriendRelationship;
-import com.sh22.energy_saver_app.common.FriendRequest;
 import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.SH22Utils;
@@ -222,7 +218,7 @@ public class HomeFragment extends Fragment {
                         } catch (BackendException e) {
                             e.printStackTrace();
                         }
-                        int progress = Math.round(score * 100) - 50;
+                        int progress = (Math.round(score * 100) - 50)*2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
@@ -232,7 +228,7 @@ public class HomeFragment extends Fragment {
 
                         if(score < 0.5)
                         {
-                            resultColor = ColorUtils.blendARGB(mid_colour, bad_colour, score);
+                            resultColor = ColorUtils.blendARGB(bad_colour, mid_colour, score);
                         }
                         else
                         {
@@ -266,11 +262,11 @@ public class HomeFragment extends Fragment {
                         }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= 50)
+                        if(progress <= -50)
                         {
                             letterGrade.setText("F-");
                         }
-                        else if (progress <= 40)
+                        else if (progress <= -40)
                         {
                             letterGrade.setText("F+");
                         }
@@ -298,11 +294,11 @@ public class HomeFragment extends Fragment {
                         {
                             letterGrade.setText("B+");
                         }
-                        else if (progress > 40)
+                        else if (progress <= 40)
                         {
                             letterGrade.setText("A-");
                         }
-                        else if (progress > 50)
+                        else if (progress >= 50)
                         {
                             letterGrade.setText("A+");
                         }
@@ -327,9 +323,7 @@ public class HomeFragment extends Fragment {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-
-                            ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-                            ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome, " + userInfo.firstname + "</font></div></center>"));
+                            ((TextView)activity.findViewById(R.id.action_bar_title)).setText("Welcome, " + userInfo.firstname);
                         });
                     }
                 }
@@ -348,8 +342,8 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Tip of the day
-                        //TextView textView = view.findViewById(R.id.text_view);
-                        //textView.setText(totd + "\n\n\n");
+                        TextView textView = view.findViewById(R.id.tip_of_the_day);
+                        textView.setText(totd);
                     });
                 }
             } catch (AuthenticationException e) {
@@ -366,9 +360,9 @@ public class HomeFragment extends Fragment {
                 if(activity != null) {
                     activity.runOnUiThread(() -> {
                         // Usage report
-                        //TextView textView2 = view.findViewById(R.id.text_view2);
-                        //textView2.setText(energy_report + "\n\n\n");
-                        //textView2.setGravity(Gravity.START);
+                        TextView report_text_view = view.findViewById(R.id.energy_report);
+                        report_text_view.setText(energy_report + "\n\n");
+                        report_text_view.setGravity(Gravity.START);
                     });
                 }
             } catch (AuthenticationException e) {
@@ -481,7 +475,7 @@ public class HomeFragment extends Fragment {
 
         //Tip of the day elements -big view
         TipOfTheDay= view.findViewById(R.id.title1);
-        Tip= view.findViewById(R.id.textView3);
+        Tip= view.findViewById(R.id.tip_of_the_day);
         back1= view.findViewById(R.id.dd1);
 
         //Energy report elements -small view

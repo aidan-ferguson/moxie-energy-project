@@ -11,103 +11,98 @@
     tools:context=".ui.fragments.HomeFragment">
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/score_card"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
-        android:layout_marginBottom="24dp"
-        android:background="@color/white"
-        android:visibility="visible"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="13dp"
-        app:cardPreventCornerOverlap="false"
-
-        app:contentPadding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/center_card"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/device_name_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/score_card"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="24dp"
+                android:background="@color/white"
+                android:visibility="visible"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+
+                app:cardElevation="13dp"
+                app:cardPreventCornerOverlap="false"
+                app:contentPadding="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="-30dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/home_fragment_heading2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center"
+                            android:text="Your Energy Score is"
+
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/blue_whale"
+                            android:textSize="19dp" />
+
+                        <TextView
+                            android:id="@+id/home_fragment_letter_gradex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center"
+                            android:text="A+"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="#04244C"
+                            android:textSize="30sp" />
+                    </LinearLayout>
+
+                    <com.ekn.gruzer.gaugelibrary.HalfGauge
+                        android:id="@+id/halfGauge"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp" />
+
+                </LinearLayout>
 
 
-            android:background="@drawable/layout_bg2"
-            app:cardCornerRadius="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            </androidx.cardview.widget.CardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="MissingClass">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/center_card"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_gravity="center_horizontal"
 
-            <TextView
-                android:id="@+id/home_fragment_heading2"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Your Energy Score"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:layout_marginBottom="13dp"
+                android:background="@color/white"
+                app:cardCornerRadius="6dp"
 
-                android:textColor="@color/blue_whale"
-                android:textSize="19dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/halfGauge" />
-
-            <com.ekn.gruzer.gaugelibrary.HalfGauge
-                android:id="@+id/halfGauge"
-                android:layout_width="276dp"
-                android:layout_height="254dp"
+                app:cardElevation="13dp"
+                app:cardPreventCornerOverlap="false"
+                app:contentPadding="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.488"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.1" />
-
-            <TextView
-                android:id="@+id/home_fragment_letter_gradex"
-                android:layout_width="76dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="A+"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#04244C"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/center_card"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginBottom="32dp"
-
-        android:background="@color/white"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="13dp"
-
-        app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/krew_recycler"
@@ -123,19 +118,21 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             tools:ignore="MissingClass">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button1"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/layout_bg3"
-                android:enabled="true"
 
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/button1"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/layout_bg3"
+                        android:enabled="true"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
             <androidx.appcompat.widget.AppCompatButton
@@ -148,46 +145,40 @@
                 app:layout_constraintStart_toStartOf="@+id/button1"
                 app:layout_constraintTop_toTopOf="@+id/button1" />
 
-            <TextView
-                android:id="@+id/title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Tip of the Day"
-                android:textColor="@color/blue_whale"
-                android:textSize="22dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/button1"
-                app:layout_constraintStart_toStartOf="@+id/button1"
-                app:layout_constraintTop_toTopOf="@+id/button1" />
+                    <TextView
+                        android:id="@+id/title1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Tip of the Day"
+                        android:textColor="@color/blue_whale"
+                        android:textSize="22dp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/button1"
+                        app:layout_constraintStart_toStartOf="@+id/button1"
+                        app:layout_constraintTop_toTopOf="@+id/button1" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="203dp"
-                android:layout_height="293dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:padding="12dp"
-
-
-                android:text="Make sure your kettle isnt empty before you start boiling water okay, you dont want to waste your time and energy, do you?, when you are boiling water, make sure you dont leave it unattended, you dont want to burn your house down, do you?"
-
-                android:textColor="@color/harvest_gold"
-                android:textSize="19sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/button1"
-                app:layout_constraintEnd_toEndOf="@+id/button1"
-                app:layout_constraintStart_toStartOf="@+id/button1"
-                app:layout_constraintTop_toTopOf="@+id/button1" />
+                    <TextView
+                        android:id="@+id/tip_of_the_day"
+                        android:layout_width="203dp"
+                        android:layout_height="293dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:text="@string/tips_pending_text"
+                        android:textColor="@color/harvest_gold"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/button1"
+                        app:layout_constraintEnd_toEndOf="@+id/button1"
+                        app:layout_constraintStart_toStartOf="@+id/button1"
+                        app:layout_constraintTop_toTopOf="@+id/button1" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button3"
-                android:layout_width="277dp"
-                android:layout_height="124dp"
-
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
+                android:layout_width="290dp"
+                android:layout_height="120dp"
 
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/layout_bg3"
@@ -222,51 +213,51 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button2"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="32dp"
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/button2"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="32dp"
 
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/layout_bg3"
-                android:gravity="bottom"
+                        android:layout_marginEnd="32dp"
+                        android:background="@drawable/layout_bg3"
+                        android:gravity="bottom"
 
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/button1Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Tip of the Day"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="@+id/button1"
-                app:layout_constraintEnd_toEndOf="@+id/button1"
-                app:layout_constraintStart_toStartOf="@+id/button1"></TextView>
+                    <TextView
+                        android:id="@+id/button1Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="Tip of the Day"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="@+id/button1"
+                        app:layout_constraintEnd_toEndOf="@+id/button1"
+                        app:layout_constraintStart_toStartOf="@+id/button1"></TextView>
 
-            <TextView
-                android:id="@+id/button3Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="KiloWatt Krew"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="@+id/button3"
-                app:layout_constraintEnd_toEndOf="@+id/button3"
-                app:layout_constraintStart_toStartOf="@+id/button3"></TextView>
+                    <TextView
+                        android:id="@+id/button3Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="KiloWatt Krew"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="@+id/button3"
+                        app:layout_constraintEnd_toEndOf="@+id/button3"
+                        app:layout_constraintStart_toStartOf="@+id/button3"></TextView>
 
-            <TextView
-                android:id="@+id/button2Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Advisor"
-                android:textColor="#000000"
-                app:layout_constraintBottom_toBottomOf="@+id/button2"
-                app:layout_constraintEnd_toEndOf="@+id/button2"
-                app:layout_constraintStart_toStartOf="@+id/button2"></TextView>
+                    <TextView
+                        android:id="@+id/button2Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="Advisor"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="@+id/button2"
+                        app:layout_constraintEnd_toEndOf="@+id/button2"
+                        app:layout_constraintStart_toStartOf="@+id/button2"></TextView>
 
 
             <ImageView
@@ -281,98 +272,80 @@
                 app:layout_constraintStart_toStartOf="@+id/button1"
                 app:layout_constraintTop_toTopOf="@+id/button1"></ImageView>
 
-            <ImageView
-                android:id="@+id/icon3"
+                    <ImageView
+                        android:id="@+id/icon3"
 
-                android:layout_width="68dp"
-                android:layout_height="96dp"
-                android:layout_marginBottom="32dp"
-                android:src="@drawable/ic_baseline_person_24"
-                app:layout_constraintBottom_toBottomOf="@+id/button3"
-                app:layout_constraintEnd_toEndOf="@+id/button3"
-                app:layout_constraintStart_toStartOf="@+id/button3"
-                app:layout_constraintTop_toTopOf="@+id/button3"
-                app:tint="@color/blue_jeans"></ImageView>
+                        android:layout_width="68dp"
+                        android:layout_height="96dp"
+                        android:layout_marginBottom="32dp"
+                        android:src="@drawable/ic_baseline_person_24"
+                        app:layout_constraintBottom_toBottomOf="@+id/button3"
+                        app:layout_constraintEnd_toEndOf="@+id/button3"
+                        app:layout_constraintStart_toStartOf="@+id/button3"
+                        app:layout_constraintTop_toTopOf="@+id/button3"
+                        app:tint="@color/blue_jeans"></ImageView>
 
-            <ImageView
-                android:id="@+id/icon2"
-                android:layout_width="68dp"
-                android:layout_height="96dp"
-                android:layout_marginBottom="32dp"
-                android:src="@drawable/app_logo"
-                app:layout_constraintBottom_toBottomOf="@+id/button2"
-                app:layout_constraintEnd_toEndOf="@+id/button2"
-                app:layout_constraintStart_toStartOf="@+id/button2"
-                app:layout_constraintTop_toTopOf="@+id/button2"
-                app:tint="@color/blue_jeans"></ImageView>
-
-            <TextView
-                android:id="@+id/title2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Energy Report"
-                android:textColor="@color/blue_whale"
-                android:visibility="gone"
-
-                app:layout_constraintEnd_toEndOf="@+id/button2"
-                app:layout_constraintStart_toStartOf="@+id/button2"
-                app:layout_constraintTop_toTopOf="@+id/button2" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/dd2"
-                android:layout_width="34dp"
-                android:layout_height="29dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/ic_baseline_chevron_right_24"
-                android:rotation="180"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/button2"
-                app:layout_constraintTop_toTopOf="@+id/button2" />
-
-
-            <ScrollView
-                android:id="@+id/report_scroll"
-                android:layout_width="300dp"
-                android:layout_height="500dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/layout_bg"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/button2"
-                app:layout_constraintEnd_toEndOf="@+id/button2"
-                app:layout_constraintStart_toStartOf="@+id/button2"
-                app:layout_constraintTop_toTopOf="@+id/button2">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/icon2"
+                        android:layout_width="68dp"
+                        android:layout_height="96dp"
+                        android:layout_marginBottom="32dp"
+                        android:src="@drawable/app_logo"
+                        app:layout_constraintBottom_toBottomOf="@+id/button2"
+                        app:layout_constraintEnd_toEndOf="@+id/button2"
+                        app:layout_constraintStart_toStartOf="@+id/button2"
+                        app:layout_constraintTop_toTopOf="@+id/button2"
+                        app:tint="@color/blue_jeans"></ImageView>
 
                     <TextView
-                        android:id="@+id/energy_report"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="12dp"
-                        android:text="As an AI language model, I cannot dress anyone directly, but I can provide you with a detailed energy usage report for a household that uses too much electricity on lights while being efficient in their use of a kettle.
+                        android:id="@+id/title2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Energy Report"
+                        android:textColor="@color/blue_whale"
+                        android:visibility="gone"
 
-The household in question is consuming an excessive amount of energy on lighting. They use a combination of incandescent bulbs and halogen lights, which are known to be highly energy inefficient. These lights are being used excessively and for prolonged periods, even during daylight hours when natural lighting is available.
+                        app:layout_constraintEnd_toEndOf="@+id/button2"
+                        app:layout_constraintStart_toStartOf="@+id/button2"
+                        app:layout_constraintTop_toTopOf="@+id/button2" />
 
-To put this into perspective, a 60-watt incandescent bulb, which is commonly used, left on for 6 hours a day, will consume 10.8 kWh of energy in a month. This might seem insignificant, but if the household has 10 such bulbs, their total energy consumption just on lighting would be 108 kWh per month.
-
-On the positive side, the household has been saving energy by being careful with their kettle usage. The average kettle uses around 2,000 watts of power, which translates to 2 kWh per hour. By using the kettle for short periods and boiling only the necessary amount of water, the household has managed to keep their kettle usage to a minimum, consuming only about 2 kWh per week.
-
-However, the lighting usage of the household is still of great concern. By replacing the incandescent bulbs and halogen lights with energy-efficient LED bulbs, the household can save up to 80% of their energy usage. A 10-watt LED bulb can produce the same amount of light as a 60-watt incandescent bulb, and the cost of running an LED bulb is only 10-"
-                        android:textColor="@color/black"
-
-                        android:textSize="19sp"
-
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/dd2"
+                        android:layout_width="34dp"
+                        android:layout_height="29dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/ic_baseline_chevron_right_24"
+                        android:rotation="180"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/button2"
+                        app:layout_constraintTop_toTopOf="@+id/button2" />
 
 
-            </ScrollView>
+                    <ScrollView
+                        android:id="@+id/report_scroll"
+                        android:layout_width="300dp"
+                        android:layout_height="460dp"
+                        android:layout_marginTop="42dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/button2"
+                        app:layout_constraintEnd_toEndOf="@+id/button2"
+                        app:layout_constraintStart_toStartOf="@+id/button2"
+                        app:layout_constraintTop_toTopOf="@+id/button2">
+
+
+                            <TextView
+                                android:id="@+id/energy_report"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="12dp"
+                                android:text="@string/tips_pending_text"
+                                android:textSize="19sp"
+                                android:textStyle="bold"
+                                android:visibility="visible"/>
+
+
+                    </ScrollView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/request_recycler_view"
@@ -388,7 +361,7 @@ However, the lighting usage of the household is still of great concern. By repla
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                />
+                /> 
 
             <TextView
                 android:id="@+id/leaderboardtitle"
@@ -529,9 +502,11 @@ However, the lighting usage of the household is still of great concern. By repla
 
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
+        </LinearLayout>
+    </ScrollView>
 
 
     <View

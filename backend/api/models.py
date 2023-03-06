@@ -14,6 +14,10 @@ class User(AbstractUser):
         # We want a token for every created user
         Token.objects.get_or_create(user=self)
             
+    def delete(self, *args, **kwargs):
+        Token.objects.filter(user=self).delete()
+        super(User, self).delete(*args, **kwargs)
+        
     def __str__(self):
         return self.username
 
