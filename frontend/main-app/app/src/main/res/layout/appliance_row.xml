@@ -67,7 +67,7 @@
                 android:layout_width="170dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="54dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_rectangle_button2"
                 android:text="Tips"
                 android:textColor="@color/blue_whale"
@@ -82,7 +82,7 @@
                 android:layout_width="170dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="54dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_rectangle_button2"
                 android:text="Breakdown"
                 android:textColor="@color/blue_whale"
@@ -104,97 +104,6 @@
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/device_name_button" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/stat1"
-                android:layout_width="170dp"
-                android:layout_height="151dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/white"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="3dp"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                app:contentPadding="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/device_name">
-
-                <ImageView
-                    android:id="@+id/home_icon"
-                    android:layout_width="59dp"
-                    android:layout_height="53dp"
-                    android:layout_gravity="center_horizontal|top"
-
-
-                    app:srcCompat="@drawable/button_border" />
-
-                <TextView
-                    android:id="@+id/statt1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="88dp"
-                    android:layout_gravity="bottom"
-
-
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Your usage for this device is X% lower than than the average home"
-                    android:textColor="@color/blue_whale"
-                    android:textSize="16sp" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/stat2"
-                android:layout_width="170dp"
-                android:layout_height="151dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/layout_bg2"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="3dp"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                app:contentPadding="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/device_name">
-
-                <ImageView
-                    android:id="@+id/home_icon2"
-                    android:layout_width="59dp"
-                    android:layout_height="53dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:visibility="gone"
-
-
-
-                    app:srcCompat="@drawable/tick">
-
-
-
-                </ImageView>
-
-
-                <TextView
-                    android:id="@+id/statt2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="88dp"
-                    android:layout_gravity="bottom"
-
-
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="This device is not having a major impact on your overall usage"
-                    android:textColor="@color/blue_whale"
-                    android:textSize="15dp" />
-            </androidx.cardview.widget.CardView>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/idBarChart"
@@ -222,7 +131,6 @@
                 android:layout_width="354dp"
                 android:layout_height="355dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="32dp"
                 android:background="@color/white"
@@ -235,8 +143,7 @@
                 app:contentPadding="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/button2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stat1">
+                app:layout_constraintStart_toStartOf="parent">
 
 
                 <TextView

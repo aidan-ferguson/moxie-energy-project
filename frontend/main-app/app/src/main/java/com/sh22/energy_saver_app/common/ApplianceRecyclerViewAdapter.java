@@ -56,11 +56,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import android.os.Handler;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
-public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<ApplianceRecyclerViewAdapter.MyViewHolder>  {
+public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<ApplianceRecyclerViewAdapter.MyViewHolder> {
     static Context context;
     ArrayList<ApplianceCardData> appliance_data;
 
@@ -85,11 +86,10 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         String pretty_name = appliance_data.get(position).getApplianceName();
         pretty_name = pretty_name.substring(0, 1).toUpperCase() + pretty_name.substring(1);
         // Multiple devices are concatenated together right now, so just take the first one
-        if(pretty_name.contains("_")) {
+        if (pretty_name.contains("_")) {
             pretty_name = pretty_name.substring(0, pretty_name.indexOf("_"));
         }
         holder.DeviceTitle.setText(pretty_name);
-
 
 
         // Set the progress position and colour of the progress bar
@@ -103,7 +103,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
         ArrayList<BarEntry> barEntriesArrayList = new ArrayList<>();
-        barEntriesArrayList.add(new BarEntry(1f,appliance_data.get(position).getInitialUsage()));
+        barEntriesArrayList.add(new BarEntry(1f, appliance_data.get(position).getInitialUsage()));
         barEntriesArrayList.add(new BarEntry(2f, appliance_data.get(position).getUsageToday()));
         barEntriesArrayList.add(new BarEntry(3f, appliance_data.get(position).getNationalAverage()));
         BarDataSet barDataSet = new BarDataSet(barEntriesArrayList, "Bar Data Set");
@@ -172,9 +172,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         });
 
 
-
     }
-
 
 
     @Override
@@ -226,21 +224,18 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             cautionLevel = itemView.findViewById(R.id.home_icon2);
             barChart = itemView.findViewById(R.id.idBarChart);
             tipsCard = itemView.findViewById(R.id.tips);
-            button= itemView.findViewById(R.id.button1);
+            button = itemView.findViewById(R.id.button1);
             tipsText = itemView.findViewById(R.id.tip1);
-
 
 
             final boolean[] isExpanded = {false};
             final boolean[] isCompareExpanded = {false};
-            int cardHeightChange = SH22Utils.dpToPixels(itemView.getContext(), 200);
-            int cardWithGraphChange = SH22Utils.dpToPixels(itemView.getContext(), 450);
+            int cardHeightChange = SH22Utils.dpToPixels(itemView.getContext(), 430);
 
             // Set an OnClickListener for the button
             InvisibleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
 
 
                     if (!isExpanded[0]) {
@@ -249,108 +244,112 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         isExpanded[0] = true;
 
 
-                        ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-
-
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
                         int finalHeight = initialHeight + cardHeightChange;
-                        int initialWidth = DeviceCard.getWidth();
-                        int finalWidth = initialWidth + 30;
+                        ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(BreakDownButton, "alpha", 0, 1);
+                        fadeInAnimator.setDuration(1000); // 1 second
+                        fadeInAnimator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                BreakDownButton.setVisibility(View.VISIBLE);
+
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                // Optional: add code to run when the animation is canceled
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                                // Optional: add code to run when the animation repeats
+                            }
+                        });
+
+
+                        ValueAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipsButton, "alpha", 0, 1);
+                        fadeInAnimator2.setDuration(1000); // 1 second
+                        fadeInAnimator2.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                TipsButton.setVisibility(View.VISIBLE);
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                // Optional: add code to run when the animation ends
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                // Optional: add code to run when the animation is canceled
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+                                // Optional: add code to run when the animation repeats
+                            }
+                        });
+
 
                         // Create ValueAnimator objects to animate the height and width
                         ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
-                        ValueAnimator widthAnimator = ValueAnimator.ofInt(initialWidth, finalWidth);
 
+                        barChart.setVisibility(View.VISIBLE);
+                        barChart.animateXY(500, 500);
+
+                        isCompareExpanded[0] = true;
+                        ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
+
+                        BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
+
+                        Context context = view.getContext();
+                        int color = context.getResources().getColor(R.color.white);
+                        BreakDownButton.setTextColor(color);
                         // Set the duration and interpolator for the animations
                         heightAnimator.setDuration(200);
                         heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                        widthAnimator.setDuration(200);
-                        widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
                         // Set update listeners on the animators to update the layout parameters as the animations progress
                         heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-
+                            @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 int value = (int) animation.getAnimatedValue();
                                 layoutParams.height = value;
                                 DeviceCard.setLayoutParams(layoutParams);
-
-                            }
-
-                        });
-                        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int value = (int) animation.getAnimatedValue();
-                                layoutParams.width = value;
-                                DeviceCard.setLayoutParams(layoutParams);
-
                             }
                         });
+
 
                         // Create an AnimatorSet to run the height and width animations together
-
-
-
-
-
                         AnimatorSet animatorSet = new AnimatorSet();
+                        animatorSet.playTogether(heightAnimator, fadeInAnimator, fadeInAnimator2);
 
-                        animatorSet.playTogether(heightAnimator, widthAnimator);
                         animatorSet.addListener(new AnimatorListenerAdapter() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
+                                BreakDownButton.setClickable(true);
                                 InvisibleButton.setClickable(true);
-                                isExpanded[0] = true;
+
                             }
+
                             @Override
                             public void onAnimationStart(Animator animation) {
+                                BreakDownButton.setClickable(false);
                                 InvisibleButton.setClickable(false);
                             }
                         });
 
+
                         animatorSet.start();
-                        card1.setVisibility(View.VISIBLE);
-                        card2.setVisibility(View.VISIBLE);
-
-
-
-                        cautionLevel.setScaleX(0.1f);
-                        cautionLevel.setScaleY(0.1f);
-
-// Create an ObjectAnimator to animate the scale of the image
-                        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(cautionLevel, "scaleX", 0.1f, 1f);
-                        scaleXAnimator.setDuration(300);
-                        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(cautionLevel, "scaleY", 0.1f, 1f);
-                        scaleYAnimator.setDuration(300);
-
-// Set the initial state of the icon
-                        cautionLevel.setRotation(0f);
-                        cautionLevel.setAlpha(0f);
-
-// Create an ObjectAnimator to animate the rotation of the icon
-                        ObjectAnimator rotationAnimator = ObjectAnimator.ofFloat(cautionLevel, "rotation", 0f, 360f);
-                        rotationAnimator.setDuration(300);
-                        rotationAnimator.setInterpolator(new LinearInterpolator());
-
-// Create an ObjectAnimator to animate the alpha of the icon
-                        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(cautionLevel, "alpha", 0f, 1f);
-                        alphaAnimator.setDuration(500);
-
-// Create an AnimatorSet to play the rotation and alpha animators together
-                        AnimatorSet animatorSet2 = new AnimatorSet();
-                        animatorSet2.playTogether(rotationAnimator, alphaAnimator, scaleXAnimator, scaleYAnimator);
-
-// Set the icon to visible and start the animator set
-                        cautionLevel.setVisibility(View.VISIBLE);
-                        animatorSet2.start();
-                        DeviceCard.setCardElevation(22);
-                        dropdownButton.setVisibility(View.VISIBLE);
-                        dropdownButton.setRotation(90);
-                        dropdownButton.setClickable(true);
-
 
 
                     } else {
@@ -359,32 +358,27 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         isExpanded[0] = false;
 
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
+                        barChart.setVisibility(View.GONE);
+                        tipsCard.setVisibility(View.GONE);
+                        BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
 
+                        Context context = view.getContext();
+                        int color = context.getResources().getColor(R.color.blue_whale);
+                        BreakDownButton.setTextColor(color);
+
+
+                        // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
-                        int finalHeight = initialHeight-cardHeightChange;
-                        int initialWidth = DeviceCard.getWidth();
-                        int finalWidth = initialWidth-30;
+                        int finalHeight = initialHeight - cardHeightChange;
 
-                        if (isCompareExpanded[0] == true){
-                            initialHeight = DeviceCard.getHeight();
-                            finalHeight = initialHeight-(cardHeightChange+cardWithGraphChange);
-                            initialWidth = DeviceCard.getWidth();
-                            finalWidth = initialWidth-30;
-                            isCompareExpanded[0]=false;
-
-
-                        }
 
                         // Create ValueAnimator objects to animate the height and width
                         ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
-                        ValueAnimator widthAnimator = ValueAnimator.ofInt(initialWidth, finalWidth);
+
 
                         // Set the duration and interpolator for the animations
-                        heightAnimator.setDuration(100);
+                        heightAnimator.setDuration(200);
                         heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                        widthAnimator.setDuration(100);
-                        widthAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
 
                         // Set update listeners on the animators to update the layout parameters as the animations progress
                         heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -394,325 +388,37 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                 layoutParams.height = value;
                                 DeviceCard.setLayoutParams(layoutParams);
                             }
+                        });
 
-                        });
-                        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int value = (int) animation.getAnimatedValue();
-                                layoutParams.width = value;
-                                DeviceCard.setLayoutParams(layoutParams);
-                            }
-                        });
 
                         // Create an AnimatorSet to run the height and width animations together
                         AnimatorSet animatorSet = new AnimatorSet();
-                        animatorSet.playTogether(heightAnimator, widthAnimator);
+                        animatorSet.playTogether(heightAnimator);
+                        animatorSet.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                BreakDownButton.setClickable(true);
+                                InvisibleButton.setClickable(true);
+
+                            }
+
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                BreakDownButton.setClickable(false);
+                                InvisibleButton.setClickable(false);
+                            }
+                        });
 
                         // Start the animation
                         animatorSet.start();
+
                         BreakDownButton.setVisibility(View.GONE);
-                        barChart.setVisibility(View.GONE);
                         TipsButton.setVisibility(View.GONE);
-                        DeviceCard.setCardElevation(9);
-                        card1.setVisibility(View.GONE);
-                        card2.setVisibility(View.GONE);
-                        dropdownButton.setVisibility(View.GONE);
-                        tipsCard.setVisibility(View.GONE);
-
 
                     }
-
-                    ///OkHttpClient client = new OkHttpClient();
-
-                    //Create a JSON object to send in the request body
-                    /*JSONObject requestJson = new JSONObject();
-                    try {
-                        requestJson.put("model", "text-davinci-003");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        requestJson.put("prompt", " Give 1 tip for how to save money and energy when using a " + DeviceTitle.getText().toString().toLowerCase() );
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        requestJson.put("max_tokens", 1024);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Create a RequestBody object with the JSON object as the content
-                    RequestBody requestBody = RequestBody.create(requestJson.toString(), MediaType.parse("application/json; charset=utf-8"));
-
-                    Request request = new Request.Builder()
-                            .url("https://api.openai.com/v1/completions")
-                            .post(requestBody)
-                            .addHeader("Authorization", "Bearer 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")
-                            .addHeader("Content-Type", "application/json")
-                            .build();
-
-                    // Make the request and get the response
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            InvisibleButton.setText("FAILED");
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            // Do something with the response
-                            //get the text from the response
-
-
-                            /*String responseString = response.body().string();
-
-                            JSONObject responseJson = null;
-                            try {
-                                responseJson = new JSONObject(responseString);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                            JSONArray choices = null;
-                            try {
-                                choices = responseJson.getJSONArray("choices");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                            JSONObject firstChoice = null;
-                            try {
-                                firstChoice = choices.getJSONObject(0);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                            String text = null;
-                            try {
-                                text = firstChoice.getString("text");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                            // Set the text for a TextView
-
-                            Log.d("myTag", responseString);
-                            Log.d("myTag", text);
-                            message[0] = text;
-                            //show the pop up
-
-
-                        }
-
-
-                    });
-                    //show pop up if api returns a response
-                   */
                 }
             });
-            //When the user clicks on the compare button it will increase the height further in order to show more information
 
-            dropdownButton.setOnClickListener(new View.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(View view) {
-
-                                                      if (!isCompareExpanded[0]) {
-
-
-
-                                                          // Set the start and end values for the height and width animations
-                                                          int initialHeight = DeviceCard.getHeight();
-                                                          int finalHeight = initialHeight + cardWithGraphChange;
-                                                          ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(BreakDownButton, "alpha", 0, 1);
-                                                          fadeInAnimator.setDuration(1000); // 1 second
-                                                          fadeInAnimator.addListener(new Animator.AnimatorListener(){
-                                                              @Override
-                                                              public void onAnimationStart(Animator animation) {
-                                                                  BreakDownButton.setVisibility(View.VISIBLE);
-
-
-                                                              }
-                                                              @Override
-                                                              public void onAnimationEnd(Animator animation) {
-
-                                                              }
-
-                                                              @Override
-                                                              public void onAnimationCancel(Animator animation) {
-                                                                  // Optional: add code to run when the animation is canceled
-                                                              }
-
-                                                              @Override
-                                                              public void onAnimationRepeat(Animator animation) {
-                                                                  // Optional: add code to run when the animation repeats
-                                                              }
-                                                          });
-
-
-
-
-
-
-                                                          ValueAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipsButton, "alpha", 0, 1);
-                                                          fadeInAnimator2.setDuration(1000); // 1 second
-                                                          fadeInAnimator2.addListener(new Animator.AnimatorListener(){
-                                                              @Override
-                                                              public void onAnimationStart(Animator animation) {
-                                                                  TipsButton.setVisibility(View.VISIBLE);
-
-                                                              }
-                                                              @Override
-                                                              public void onAnimationEnd(Animator animation) {
-                                                                  // Optional: add code to run when the animation ends
-                                                              }
-
-                                                              @Override
-                                                              public void onAnimationCancel(Animator animation) {
-                                                                  // Optional: add code to run when the animation is canceled
-                                                              }
-
-                                                              @Override
-                                                              public void onAnimationRepeat(Animator animation) {
-                                                                  // Optional: add code to run when the animation repeats
-                                                              }
-                                                          });
-
-
-                                                          // Create ValueAnimator objects to animate the height and width
-                                                          ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
-
-                                                          barChart.setVisibility(View.VISIBLE);
-                                                          barChart.animateXY(500, 500);
-
-                                                          isCompareExpanded[0] = true;
-                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-
-                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button);
-
-                                                          Context context = view.getContext();
-                                                          int color = context.getResources().getColor(R.color.white);
-                                                          BreakDownButton.setTextColor(color);
-                                                          // Set the duration and interpolator for the animations
-                                                          heightAnimator.setDuration(200);
-                                                          heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                                                          // Set update listeners on the animators to update the layout parameters as the animations progress
-                                                          heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                                              @Override
-                                                              public void onAnimationUpdate(ValueAnimator animation) {
-                                                                  int value = (int) animation.getAnimatedValue();
-                                                                  layoutParams.height = value;
-                                                                  DeviceCard.setLayoutParams(layoutParams);
-                                                              }
-                                                          });
-
-
-
-                                                          // Create an AnimatorSet to run the height and width animations together
-                                                          AnimatorSet animatorSet = new AnimatorSet();
-                                                          animatorSet.playTogether(heightAnimator, fadeInAnimator, fadeInAnimator2);
-
-                                                          animatorSet.addListener(new AnimatorListenerAdapter() {
-                                                              @Override
-                                                              public void onAnimationEnd(Animator animation) {
-                                                                  BreakDownButton.setClickable(true);
-                                                                  InvisibleButton.setClickable(true);
-
-                                                              }
-                                                              @Override
-                                                              public void onAnimationStart(Animator animation) {
-                                                                  BreakDownButton.setClickable(false);
-                                                                  InvisibleButton.setClickable(false);
-                                                              }
-                                                          });
-
-
-
-
-                                                          animatorSet.start();
-                                                          dropdownButton.setRotation(270);
-
-                                                      }
-                                                      else{
-                                                          isCompareExpanded[0] = false;
-
-                                                          ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
-                                                          barChart.setVisibility(View.GONE);
-                                                          tipsCard.setVisibility(View.GONE);
-                                                          BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
-
-                                                          Context context = view.getContext();
-                                                          int color = context.getResources().getColor(R.color.blue_whale);
-                                                          BreakDownButton.setTextColor(color);
-
-
-                                                          // Set the start and end values for the height and width animations
-                                                          int initialHeight = DeviceCard.getHeight();
-                                                          int finalHeight = initialHeight - cardWithGraphChange;
-
-
-                                                          // Create ValueAnimator objects to animate the height and width
-                                                          ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, finalHeight);
-
-
-                                                          // Set the duration and interpolator for the animations
-                                                          heightAnimator.setDuration(200);
-                                                          heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                                                          // Set update listeners on the animators to update the layout parameters as the animations progress
-                                                          heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                                              @Override
-                                                              public void onAnimationUpdate(ValueAnimator animation) {
-                                                                  int value = (int) animation.getAnimatedValue();
-                                                                  layoutParams.height = value;
-                                                                  DeviceCard.setLayoutParams(layoutParams);
-                                                              }
-                                                          });
-
-
-                                                          // Create an AnimatorSet to run the height and width animations together
-                                                          AnimatorSet animatorSet = new AnimatorSet();
-                                                          animatorSet.playTogether(heightAnimator);
-                                                          animatorSet.addListener(new AnimatorListenerAdapter() {
-                                                              @Override
-                                                              public void onAnimationEnd(Animator animation) {
-                                                                  BreakDownButton.setClickable(true);
-                                                                  InvisibleButton.setClickable(true);
-
-                                                              }
-                                                              @Override
-                                                              public void onAnimationStart(Animator animation) {
-                                                                  BreakDownButton.setClickable(false);
-                                                                  InvisibleButton.setClickable(false);
-                                                              }
-                                                          });
-
-                                                          // Start the animation
-                                                          animatorSet.start();
-
-                                                          BreakDownButton.setVisibility(View.GONE);
-                                                          TipsButton.setVisibility(View.GONE);
-                                                          dropdownButton.setRotation(90);
-
-
-
-                                                      }
-                                                  }
-
-                                              }
-
-
-
-
-
-            );
 
             BreakDownButton.setOnClickListener(new View.OnClickListener() {
                                                    @Override
@@ -733,8 +439,9 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             );
 
 
-
-        }}}
+        }
+    }
+}
 
 
 
