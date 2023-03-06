@@ -5,7 +5,6 @@ from datetime import datetime
 TEST_DATA_CSV = "datasets/test_data2.csv"
 
 
-# TODO: make sure conform to new format
 class CSVDataProvider(DataProvider):
 
     @staticmethod
