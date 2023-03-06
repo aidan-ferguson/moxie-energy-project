@@ -30,36 +30,32 @@ import java.util.Collections;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
-public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<ActiveFriendsRecyclerViewAdapter.MyViewHolder>  {
-    static Context context;
-    static ArrayList<FriendRelationship> friends;
+public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<ActiveFriendsRecyclerViewAdapter.MyViewHolder> {
+    private Context context;
+    private ArrayList<FriendRelationship> friends;
 
     public ActiveFriendsRecyclerViewAdapter(Context context, ArrayList<FriendRelationship> friends) throws AuthenticationException, BackendException {
         this.context = context;
         this.friends = friends;
 
         //add the data for the user that is logged in
-        try {
-            new Thread(() -> {
-                try {
-                    UserInfo userInfo = BackendInterface.GetUserInfo(context);
-                    FriendRelationship friendRelationship = new FriendRelationship(userInfo.user_id, userInfo.firstname, userInfo.surname, userInfo.energy_score);
-                    friends.add(friendRelationship);
+        new Thread(() -> {
+            try {
+                UserInfo userInfo = BackendInterface.GetUserInfo(context);
+                FriendRelationship friendRelationship = new FriendRelationship(userInfo.user_id, userInfo.firstname, userInfo.surname, userInfo.energy_score);
+                friends.add(friendRelationship);
 
-                    //sort the friends array by the score
-                    friends.sort((o1, o2) -> o2.userInfo.energy_score.compareTo(o1.userInfo.energy_score));
-                } catch (AuthenticationException e) {
-                    SH22Utils.Logout(context);
-                    e.printStackTrace();
-                } catch (BackendException e) {
-                    SH22Utils.ToastException(context, e.reason);
-                    e.printStackTrace();
-                }
+                //sort the friends array by the score
+                friends.sort((o1, o2) -> o2.userInfo.energy_score.compareTo(o1.userInfo.energy_score));
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(context);
+                e.printStackTrace();
+            } catch (BackendException e) {
+                SH22Utils.ToastException(context, e.reason);
+                e.printStackTrace();
+            }
 
-            }).join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     // Add this method to update the friends list
@@ -94,14 +90,13 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
 
         //only get the first 3 digits of the score
         Double score = friends.get(position).userInfo.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
-        int progress = (int) ((Math.round(score * 100) - 50)*2);
+        int progress = (int) ((Math.round(score * 100) - 50) * 2);
 
         holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
 
 
         try {
-            if (friends.get(position).userInfo.user_id == BackendInterface.GetUserInfo(context).user_id)
-            {
+            if (friends.get(position).userInfo.user_id == BackendInterface.GetUserInfo(context).user_id) {
                 holder.cardView.setCardBackgroundColor(Color.parseColor("#4877DD76"));
                 holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
                 holder.rank.setTextColor(ContextCompat.getColor(context, R.color.black));
@@ -118,55 +113,32 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             e.printStackTrace();
         }
 
-        if(progress <= -50)
-        {
+        if (progress <= -50) {
             holder.score.setText("F-");
-        }
-        else if (progress <= -40)
-        {
+        } else if (progress <= -40) {
             holder.score.setText("F+");
-        }
-        else if(progress <= -30)
-        {
+        } else if (progress <= -30) {
             holder.score.setText("D-");
-        }
-        else if(progress <= -20)
-        {
+        } else if (progress <= -20) {
             holder.score.setText("D+");
-        }
-        else if (progress <= -10)
-        {
+        } else if (progress <= -10) {
             holder.score.setText("C-");
-        }
-        else if (progress <= 10)
-        {
+        } else if (progress <= 10) {
             holder.score.setText("C+");
-        }
-        else if (progress <= 20)
-        {
+        } else if (progress <= 20) {
             holder.score.setText("B-");
-        }
-        else if (progress <= 30)
-        {
+        } else if (progress <= 30) {
             holder.score.setText("B+");
-        }
-        else if (progress <= 40)
-        {
+        } else if (progress <= 40) {
             holder.score.setText("A-");
-        }
-        else if (progress >= 50)
-        {
+        } else if (progress >= 50) {
             holder.score.setText("A+");
         }
-
-
-
 
 
         // Set the progress position and colour of the progress bar
 
 //
-
 
 
     }
@@ -188,28 +160,21 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         TextView your_id;
 
 
-
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             final String[] message = {null};
-            personName=itemView.findViewById(R.id.name);
-            score=itemView.findViewById(R.id.score);
-            rank=itemView.findViewById(R.id.rank);
+            personName = itemView.findViewById(R.id.name);
+            score = itemView.findViewById(R.id.score);
+            rank = itemView.findViewById(R.id.rank);
             cardView = itemView.findViewById(R.id.card_view);
             //get your_id_number
-
-
-
-
 
 
         }
 
 
-
-
         //set onclick fo
-    }}
+    }
+}
 
 
