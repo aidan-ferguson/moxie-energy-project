@@ -78,8 +78,8 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         holder.personName.setText(pretty_name);
 
         //only get the first 3 digits of the score
-        Double score = friends.get(position).userInfo.energy_score;
-        int progress = (int) (Math.round(score * 100) - 50);
+        Double score = friends.get(position).userInfo.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
+        int progress = (int) ((Math.round(score * 100) - 50)*2);
 
         holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
 
@@ -103,40 +103,46 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             e.printStackTrace();
         }
 
-        if(progress <= 50) {
+        if(progress <= -50)
+        {
             holder.score.setText("F-");
         }
-        else if (progress <= 40) {
+        else if (progress <= -40)
+        {
             holder.score.setText("F+");
         }
-        else if(progress <= -30) {
+        else if(progress <= -30)
+        {
             holder.score.setText("D-");
         }
-        else if(progress <= -20) {
+        else if(progress <= -20)
+        {
             holder.score.setText("D+");
         }
-        else if (progress <= -10) {
+        else if (progress <= -10)
+        {
             holder.score.setText("C-");
         }
-        else if (progress <= 10) {
+        else if (progress <= 10)
+        {
             holder.score.setText("C+");
         }
-        else if (progress <= 20) {
+        else if (progress <= 20)
+        {
             holder.score.setText("B-");
         }
-        else if (progress <= 30) {
+        else if (progress <= 30)
+        {
             holder.score.setText("B+");
         }
-
-        else if (progress > 40)
+        else if (progress <= 40)
         {
             holder.score.setText("A-");
         }
-        else if (progress > 50)
+        else if (progress >= 50)
         {
             holder.score.setText("A+");
         }
-
 
 
 
