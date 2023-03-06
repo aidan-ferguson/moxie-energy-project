@@ -70,5 +70,5 @@ class Friendship(models.Model):
         user_to_seralise = friendship.to_user if user == friendship.from_user else friendship.from_user
         ret_val = {'id':user_to_seralise.id, 'firstname':user_to_seralise.first_name, 'surname':user_to_seralise.last_name}
         if not is_request:
-            ret_val['score'] = calculate_energy_score(get_user_energy_data(user)["data"])
+            ret_val['score'] = calculate_energy_score(get_user_energy_data(user_to_seralise)["data"])
         return ret_val
