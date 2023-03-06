@@ -195,6 +195,9 @@ public class HomeFragment extends Fragment {
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
+                int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
+                // interger to string
+
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
                 if(appliance_data == null) {
                     Log.e("SH22", "Error loading appliance data");
@@ -209,21 +212,12 @@ public class HomeFragment extends Fragment {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
                         TextView v = view.findViewById(R.id.your_id_number);
-                        try {
-                            int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
-                            // interger to string
-                            v.setText(Integer.toString(o));
-                        } catch (AuthenticationException e) {
-                            e.printStackTrace();
-                        } catch (BackendException e) {
-                            e.printStackTrace();
-                        }
                         int progress = (Math.round(score * 100) - 50)*2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
                         int good_colour = ContextCompat.getColor(activity, R.color.good_usage);
-
+                        v.setText(Integer.toString(o));
                         int resultColor = 0;
 
                         if(score < 0.5)
@@ -397,6 +391,37 @@ public class HomeFragment extends Fragment {
 
         ).start();
 
+        new Thread(() -> {
+            try {
+
+
+                Friends friends = BackendInterface.GetFriends(view.getContext());
+                FragmentActivity activity = getActivity();
+                if(activity != null) {
+                    activity.runOnUiThread(() -> {
+                        // Now attach the recycler view class to the view in the layout
+                        RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
+                        ActiveFriendsRecyclerViewAdapter adapter = null;
+                        try {
+                            adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                        } catch (AuthenticationException e) {
+                            e.printStackTrace();
+                        } catch (BackendException e) {
+                            e.printStackTrace();
+                        }
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                }
+
+            } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
+                SH22Utils.ToastException(view.getContext(), e.reason);
+            }
+        }
+
+
+        ).start();
 
 
 
