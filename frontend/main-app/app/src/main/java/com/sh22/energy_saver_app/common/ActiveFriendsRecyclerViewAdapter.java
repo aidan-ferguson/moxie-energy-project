@@ -131,7 +131,7 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             holder.score.setText("B+");
         } else if (progress <= 40) {
             holder.score.setText("A-");
-        } else if (progress >= 50) {
+        } else if (progress > 40) {
             holder.score.setText("A+");
         }
 
