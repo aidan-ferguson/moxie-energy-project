@@ -397,37 +397,6 @@ public class HomeFragment extends Fragment {
 
         ).start();
 
-        new Thread(() -> {
-            try {
-
-
-                Friends friends = BackendInterface.GetFriends(view.getContext());
-                FragmentActivity activity = getActivity();
-                if(activity != null) {
-                    activity.runOnUiThread(() -> {
-                        // Now attach the recycler view class to the view in the layout
-                        RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
-                        ActiveFriendsRecyclerViewAdapter adapter = null;
-                        try {
-                            adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
-                        } catch (AuthenticationException e) {
-                            e.printStackTrace();
-                        } catch (BackendException e) {
-                            e.printStackTrace();
-                        }
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
-                }
-
-            } catch (AuthenticationException e) {
-                SH22Utils.Logout(view.getContext());
-            } catch (BackendException e) {
-                SH22Utils.ToastException(view.getContext(), e.reason);
-            }
-        }
-
-
-        ).start();
 
 
 
