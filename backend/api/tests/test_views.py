@@ -14,15 +14,16 @@ test_user = models.User.objects.get_or_create(username=TEST_USERNAME, password=T
 token = Token.objects.get_or_create(user=test_user)[0]
 TEST_CLIENT = APIClient(HTTP_AUTHORIZATION=f"Token {token}")
 
+
 # Unit tests for the TestConnection view
 class TestConnection(TestCase):
     def test_connection_unauthenticated_failure(self):
         response = self.client.get(urls.reverse("test-connection"))
         self.assertEqual(response.status_code, 401)
         self.assertEqual(json.loads(response.content)["detail"], "Authentication credentials were not provided.")
-        
+
     def test_connection_invalid_token(self):
-        response = self.client.get(urls.reverse("test-connection"), HTTP_AUTHORIZATION=f"Token invalid")
+        response = self.client.get(urls.reverse("test-connection"), HTTP_AUTHORIZATION="Token invalid")
         self.assertEqual(response.status_code, 401)
         self.assertEqual(json.loads(response.content)["detail"], "Invalid token.")
         
@@ -30,6 +31,7 @@ class TestConnection(TestCase):
         response = TEST_CLIENT.get(urls.reverse("test-connection"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)["data"]["message"], f"Hello, {test_user.username}")
+
 
 # Unit tests for the RegisterView (note don't need to check for missing inputs as they are handled by DjangoRestFramework)
 class RegisterTest(TestCase):
@@ -49,7 +51,8 @@ class RegisterTest(TestCase):
         data = {"username": "test2@test.com", "password":TEST_PASSWORD, "firstname":TEST_FIRSTNAME, "surname":TEST_LASTNAME}
         response = self.client.post(urls.reverse("register"), data, format="json")
         self.assertEqual(response.status_code, 202)
-    
+
+ 
 # For testing the user info view    
 class UserInfoTest(TestCase):
     def test_unauthenticated_failure(self):
@@ -98,6 +101,7 @@ class UserInfoTest(TestCase):
         response = TEST_CLIENT.post(urls.reverse("user-information"), {}, format="json")
         self.assertEqual(response.status_code, 400)
 
+
 # For testing the national avergae view
 class NationalAverageTest(TestCase):
     def test_unauthenticated_failure(self):
@@ -145,7 +149,7 @@ class TOTDTest(TestCase):
         self.assertEqual(first_tip, second_tip)
         
     def test_no_openai_key_failure(self):
-        api_key  = os.environ.get("OPENAI_API_KEY")
+        api_key = os.environ.get("OPENAI_API_KEY")
         del os.environ["OPENAI_API_KEY"]
         response = TEST_CLIENT.get(urls.reverse("tip-of-the-day"))
         self.assertEqual(response.status_code, 500)
@@ -153,6 +157,7 @@ class TOTDTest(TestCase):
         self.assertEqual(json_response["success"], False)
         self.assertEqual(json_response["reason"], "An internal error occured with generating tips")
         os.environ["OPENAI_API_KEY"] = api_key
+
         
 class EnergyReportTest(TestCase):
     def test_unauthenticated_failure(self):
@@ -176,7 +181,7 @@ class EnergyReportTest(TestCase):
         self.assertEqual(tip, cached_tip.first().text)
         
     def test_no_openai_key_failure(self):
-        api_key  = os.environ.get("OPENAI_API_KEY")
+        api_key = os.environ.get("OPENAI_API_KEY")
         del os.environ["OPENAI_API_KEY"]
         response = TEST_CLIENT.get(urls.reverse("tip-of-the-day"))
         self.assertEqual(response.status_code, 500)
@@ -184,6 +189,7 @@ class EnergyReportTest(TestCase):
         self.assertEqual(json_response["success"], False)
         self.assertEqual(json_response["reason"], "An internal error occured with generating tips")
         os.environ["OPENAI_API_KEY"] = api_key
+
 
 # Test the appliance tips view
 class ApplianceTipsTest(TestCase):
@@ -220,7 +226,7 @@ class ApplianceTipsTest(TestCase):
         self.assertNotEqual(first_tip, second_tip)
         
     def test_no_openai_key_failure(self):
-        api_key  = os.environ.get("OPENAI_API_KEY")
+        api_key = os.environ.get("OPENAI_API_KEY")
         del os.environ["OPENAI_API_KEY"]
         response = TEST_CLIENT.get(urls.reverse("tip-of-the-day"))
         self.assertEqual(response.status_code, 500)
@@ -228,6 +234,7 @@ class ApplianceTipsTest(TestCase):
         self.assertEqual(json_response["success"], False)
         self.assertEqual(json_response["reason"], "An internal error occured with generating tips")
         os.environ["OPENAI_API_KEY"] = api_key
+
 
 # For testing the appliance view
 class ApplianceViewest(TestCase):
@@ -256,6 +263,7 @@ class ApplianceViewest(TestCase):
             len(json_response["data"]["labels"]) == len(json_response["data"]["today"])
         ))
 
+
 # Test that logging out deletes the token
 class LogoutTest(TestCase):
     def test_unauthenticated_failure(self):
@@ -270,6 +278,7 @@ class LogoutTest(TestCase):
         second_client.get(urls.reverse("logout"))
         tokens = Token.objects.filter(user=second_user)
         self.assertEqual(len(tokens), 1)
+
         
 class TestFriends(TestCase):
     second_user = models.User.objects.get_or_create(username="test4@test.com", password="test", email="test4@test.com", first_name="Test", last_name="McTest",  data_provider="DALE:house_4")[0]
@@ -375,6 +384,7 @@ class TestFriends(TestCase):
         response = self.second_client.post(urls.reverse("friends"), data, format="json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content)["reason"], "That friend request does not exist")
+
         
 class TestDataProviderView(TestCase):
     def test_unauthenticated_failure(self):
@@ -390,6 +400,7 @@ class TestDataProviderView(TestCase):
         self.assertTrue(isinstance(json_response["data"], list))
         for data_provider in json_response["data"]:
             self.assertTrue(data_provider.startswith("DALE"))
+
     
 class TestDeleteAccountView(TestCase):
     def test_unauthenticated_failure(self):
