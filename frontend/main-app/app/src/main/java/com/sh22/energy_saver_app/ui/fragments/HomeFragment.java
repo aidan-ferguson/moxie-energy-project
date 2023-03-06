@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,8 +33,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
@@ -1129,6 +1134,26 @@ public class HomeFragment extends Fragment {
                     } catch (BackendException e) {
                         e.printStackTrace();
                     }
+                    Activity activity = (Activity) view.getContext(); // get the activity associated with the current context
+                    activity.runOnUiThread(() -> {
+                        // Create a custom dialog
+                        final Dialog dialog = new Dialog(view.getContext());
+                        dialog.setContentView(R.layout.custom_dialog);
+                        dialog.setTitle("Friend Request Sent");
+
+                        // Set the text and button for the dialog
+                        TextView text = dialog.findViewById(R.id.dialog_text);
+                        text.setText("Your friend request has been sent.");
+                        Button button = dialog.findViewById(R.id.dialog_button);
+                        button.setOnClickListener(v1 -> {
+                            dialog.dismiss();
+                            send_request.setText("");
+                            send_request.setHint("Enter your friend's ID");
+                        });
+
+                        // Show the dialog
+                        dialog.show();
+                    });
                 }).start();
             }
             // Return the inflated view

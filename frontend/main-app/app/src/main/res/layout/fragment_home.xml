@@ -361,10 +361,10 @@ To put this into perspective, a 60-watt incandescent bulb, which is commonly use
 On the positive side, the household has been saving energy by being careful with their kettle usage. The average kettle uses around 2,000 watts of power, which translates to 2 kWh per hour. By using the kettle for short periods and boiling only the necessary amount of water, the household has managed to keep their kettle usage to a minimum, consuming only about 2 kWh per week.
 
 However, the lighting usage of the household is still of great concern. By replacing the incandescent bulbs and halogen lights with energy-efficient LED bulbs, the household can save up to 80% of their energy usage. A 10-watt LED bulb can produce the same amount of light as a 60-watt incandescent bulb, and the cost of running an LED bulb is only 10-"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
 
                         android:textSize="19sp"
-                        android:textStyle="bold"
+
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
