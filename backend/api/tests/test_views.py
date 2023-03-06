@@ -69,7 +69,7 @@ class UserInfoTest(TestCase):
         self.assertTrue(json_response["data"]["energy_score"] >= 0 and json_response["data"]["energy_score"] <= 1)
         
     def test_update_info(self):
-        data = {"action":"update", "firstname":"NewFirstName", "last_name":"NewLastName", "data_provider":"DALE:house_2"}
+        data = {"action":"update", "firstname":"NewFirstName", "last_name":"NewLastName", "data_provider":"DALE:house_3"}
         response = TEST_CLIENT.post(urls.reverse("user-information"), data, format="json")
         self.assertEqual(response.status_code, 200)
         response = TEST_CLIENT.get(urls.reverse("user-information"))
@@ -78,7 +78,7 @@ class UserInfoTest(TestCase):
         self.assertEqual(json_response["success"], True)
         self.assertEqual(json_response["data"]["firstname"], "NewFirstName")
         self.assertEqual(json_response["data"]["surname"], "NewLastName")
-        self.assertEqual(json_response["data"]["data_provider"], "DALE:house_2")
+        self.assertEqual(json_response["data"]["data_provider"], "DALE:house_3")
         # Change the data provider back to the original
         data = {"action": "update", "data_provider":"DALE:house_4"}
         response = TEST_CLIENT.post(urls.reverse("user-information"), data, format="json")
