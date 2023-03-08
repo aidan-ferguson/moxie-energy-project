@@ -35,11 +35,13 @@ class LoginActivityTest {
 
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
 
-        onView(withId(R.id.password)).perform(click()).perform(typeText("password"))
+        onView(withId(R.id.password)).perform(click()).perform(typeText("password"), closeSoftKeyboard())
 
-        onView(withId(R.id.imageView2)).perform(click())
+        Thread.sleep(1500)
 
         onView(withId(R.id.login_button)).perform(click())
+
+        Thread.sleep(1500)
 
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
     }

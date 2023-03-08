@@ -8,8 +8,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sh22.energy_saver_app.ui.activites.LoginActivity
 import com.sh22.energy_saver_app.ui.activites.MainActivity
 import com.sh22.energy_saver_app.ui.fragments.HomeFragment
+import com.sh22.energy_saver_app.ui.fragments.LoginFragment
 import com.sh22.energy_saver_app.ui.fragments.SettingsFragment
 
 import org.junit.Test
@@ -29,7 +31,9 @@ class MainActivityTest {
     fun NavBarTest() {
         // launches main activity and checks whether nav bar is in view
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        val fragmentScenario = launchFragmentInContainer<HomeFragment>()
+//        val fragmentScenario = launchFragmentInContainer<HomeFragment>()
+
+
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
 
         //check nav bar can switch between fragments
@@ -54,10 +58,11 @@ class MainActivityTest {
     @Test
     fun LogOutButtonTest(){
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        val scenario = launchFragmentInContainer<SettingsFragment>()
         onView(withId(R.id.settings_logout_button)).perform(click())
 
         onView(withId(R.id.login_heading)).check(matches(isDisplayed()))
-
     }
+
+    @Test
+    fun
 }
