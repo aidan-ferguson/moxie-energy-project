@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,11 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.BackendInterface;
+import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
 import org.json.JSONException;
@@ -52,9 +55,11 @@ public class AppliancesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appliances, container, false);
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#04244C"));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
         ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Appliances</font></div></center>"));
+        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Appliances</font></div></center>"));
+        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar_appliances);
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
@@ -99,6 +104,8 @@ public class AppliancesFragment extends Fragment {
                 }
 
             } catch (AuthenticationException e) {
+                SH22Utils.Logout(view.getContext());
+            } catch (BackendException e) {
                 e.printStackTrace();
             }
         }).start();

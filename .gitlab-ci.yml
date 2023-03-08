@@ -9,16 +9,13 @@ variables:
   UNITY_PROJECT_DIR: $FRONTEND_DIR/moxie-unity
   UNITY_BUILD_PATH: $FRONTEND_DIR/unity-module
   ANDROID_PROJECT_DIR: $FRONTEND_DIR/main-app
-  ANDROID_COMPILE_SDK: "33"
-  ANDROID_BUILD_TOOLS: "30.0.3"
-  ANDROID_SDK_TOOLS: "9123335"
 
 # Backend CI pipeline
 # Install all the dependancies required to build/test the backend
 .backend:setup: &backend-setup
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -y 
-  - apt-get install -y python3 python3-pip
+  - apt-get install -y python3 python3-pip python3-venv
   - cd $BACKEND_DIR
   - python3 -m venv venv
   - source venv/bin/activate
@@ -56,7 +53,19 @@ backend:test:
   before_script:
     - *backend-setup
   script:
-    - python3 manage.py test
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
+    - python3 manage.py test api/tests
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage.xml
+      junit: backend/nosetests.xml
+    paths:
+      - backend/nosetests.xml
   <<: *backend-rules
   
 
@@ -116,55 +125,23 @@ unity:build:
     expire_in: "2 hours"
   <<: *frontend-rules
 
-unity:test:
-  stage: test
-  needs: ["unity:build"]
-  image: unityci/editor:2020.3.41f1-android-1
-  before_script:
-    - *unity-setup
-  script:
-    - cat /opt/unity/Editor/Data/PlaybackEngines/AndroidPlayer/NDK/source.properties
-    - echo "Need to make tests"
-  <<: *frontend-rules
-
 # Frontend android pipeline
 # Gradle has a built in linter so we don't need a seperate lint stage
+.android:before: &android-before
+    - cd "$ANDROID_PROJECT_DIR"
+    # Set SDK installation path
+    - echo "sdk.dir=${ANDROID_HOME}" > local.properties
+    - chmod +x ./gradlew
 
 # Adapted from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Android.gitlab-ci.yml
 android:build:
   stage: build
   needs: ["unity:build"]
-  image: openjdk:8-jdk
+  image: sh22/android:latest
   before_script:
-    # Install dependancies and setup
-    - apt-get --quiet update -y
-    - apt-get install -y wget tar unzip lib32stdc++6 lib32z1 python3
-    - export ANDROID_HOME="${PWD}/android-home"
-    - mkdir -p "$ANDROID_HOME"
-    # Download and extract the sdkmanager
-    - wget --output-document=$ANDROID_HOME/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
-    - pushd $ANDROID_HOME
-    - unzip -d cmdline-tools cmdline-tools.zip
-    - popd
-    - export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/cmdline-tools/bin/
-    # Find NDK version from source.properties file
-    - eval $(cat $UNITY_BUILD_PATH/source.properties | tr "." "_" | tr -d " ")
-    - android_ndk_version=$(echo $Pkg_Revision | tr "_" ".")
-    - echo "Using NDK version - $android_ndk_version"
-    # Confirm sdkmanager installed and download dependancies
-    - sdkmanager --version
-    - yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses || true # Accept all licenses
-    - sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-${ANDROID_COMPILE_SDK}"
-    - sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
-    - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
-    - sdkmanager --sdk_root=${ANDROID_HOME} "ndk;${android_ndk_version}"
-    - sdkmanager --sdk_root=${ANDROID_HOME} "cmake;3.22.1"
-    - cd "$ANDROID_PROJECT_DIR"
-    # Set SDK installation path
-    - echo "sdk.dir=${ANDROID_HOME}" > local.properties
-    - chmod +x ./gradlew
-    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
+    - *android-before
   script:
+    - chmod +x $UNITY_BUILD_PATH/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/il2cpp
     - pushd $CI_PROJECT_DIR/frontend
     - python3 ./convert_unity_module.py
     - popd
@@ -173,9 +150,62 @@ android:build:
     - ./gradlew assemble -PBuildUnity=true
     - ./gradlew signingReport
   artifacts:
+    expire_in: "2 days"
     when: on_success
     paths:
-      - $ANDROID_PROJECT_DIR/app/build/outputs/apk/debug
+      - $ANDROID_PROJECT_DIR/app/build
   <<: *frontend-rules
-  
-  
+
+# Run the unit tests on the frontend and generate coverage reports
+android:test:
+  stage: test
+  needs: ["android:build"]
+  image: sh22/android:latest
+  before_script:
+    - *android-before
+  script:
+    # Run unit tests and generate coverage information
+    - ./gradlew jacocoTestReport
+  coverage: '/    - Instruction Coverage: ([0-9.]+)%/'
+  artifacts:
+    when: always
+    expire_in: "2 days"
+    paths:
+      - $ANDROID_PROJECT_DIR/app/build/test-results
+    reports:
+      junit: $ANDROID_PROJECT_DIR/app/build/test-results/*/TEST-*.xml
+  <<: *frontend-rules
+
+# For full stack testing with the django backed and a simulated device on the frontend 
+integration_test:
+  stage: test
+  needs: ["android:build", "backend:test"]
+  image: sh22/android:latest
+  before_script:
+    - *android-before
+    - *backend-setup
+  script:
+    # Finish setting up backend
+    - cd $BACKEND_DIR
+    - python3 reset_db.py
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
+    - python3 manage.py runserver&
+    - cd $ANDROID_PROJECT_DIR
+    # Start the emulator from the docker container and run UI testing
+    - emulator @moxie_emulator -no-window -no-boot-anim &
+    - /bin/sleep 10 # Give the emulator time to boot
+    - ./gradlew createDebugCoverageReport
+    - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
+    - echo coverage-$COVERAGE
+  coverage: '/coverage-([0-9.]+)%/'
+  artifacts:
+    when: always
+    expire_in: "7 days"
+    paths:
+      - $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/
+      - $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected
+    reports:
+      junit: $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected/TEST-*.xml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

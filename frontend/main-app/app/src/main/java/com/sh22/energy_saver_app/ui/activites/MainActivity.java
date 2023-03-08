@@ -4,30 +4,29 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.common.SH22Utils;
+import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
 import com.sh22.energy_saver_app.ui.fragments.AppliancesFragment;
 import com.sh22.energy_saver_app.ui.fragments.EcosystemFragment;
 import com.sh22.energy_saver_app.ui.fragments.HomeFragment;
-import com.sh22.energy_saver_app.ui.fragments.SettingsFragment;
+import com.sh22.energy_saver_app.ui.fragments.changeProviderFragment;
 
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    int currentFragment = R.id.home;
     ActionBar actionBar;
 
     @Override
@@ -45,7 +44,13 @@ public class MainActivity extends AppCompatActivity {
                 = new ColorDrawable(Color.parseColor("#04244C"));
         // Set BackgroundDrawable
         actionBar.setBackgroundDrawable(colorDrawable);
-        actionBar.setTitle(Html.fromHtml("<font color='#DEB276'>Welcome</font>"));
+        getterActionBar().setBackgroundDrawable(colorDrawable);
+        actionBar.setTitle(Html.fromHtml("<font color='#FFFFFF'>Welcome</font>"));
+
+        actionBar.setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -53,23 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Navigation bar stuff
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(item ->{
-            if(item.getItemId() != currentFragment) {
-                currentFragment = item.getItemId();
-                switch (item.getItemId()) {
-                    case R.id.home:
-                        replaceFragment(HomeFragment.newInstance());
-                        break;
-                    case R.id.appliances:
-                        replaceFragment(new AppliancesFragment());
-                        break;
-                    case R.id.ecosystem:
-                        replaceFragment(EcosystemFragment.newInstance());
-                        break;
-                    case R.id.settings:
-                        replaceFragment(new SettingsFragment());
-                        break;
-                }
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    replaceFragment(HomeFragment.newInstance());
+                    break;
+                case R.id.appliances:
+                    replaceFragment(new AppliancesFragment());
+                    break;
+                case R.id.ecosystem:
+                    replaceFragment(EcosystemFragment.newInstance());
+                    break;
             }
             return true;
         });
@@ -77,30 +76,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_settings_menu,menu);
-        Log.d("aidanConnor", "here");
+        getMenuInflater().inflate(R.menu.top_settings_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
         switch (item.getItemId()) {
-            case R.id.settings:
-                return true;
-
+            case R.id.logout:
+                SH22Utils.Logout(this);
+                break;
+            case R.id.changeDataProvider:
+                replaceFragment(new changeProviderFragment());
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
 
+    @NonNull
     public ActionBar getterActionBar() {
         return actionBar;
     }

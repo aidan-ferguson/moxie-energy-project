@@ -1,4 +1,4 @@
-from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data
+from api.utils import json_error, json_success, prompt_gpt3, Prompts, get_user_energy_data, calculate_energy_score
 import datetime
 from api.serialisers import RegisterSerializer
 from rest_framework import permissions
@@ -9,6 +9,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 import json
 import openai
 from api import models
+from api.data_providers.dale_data_provider import DALEDataProvider
 
 
 # A view used to test an authenticated connection to the server
@@ -16,8 +17,8 @@ class TestView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        content = {'message': 'Successfully connected as ' + request.user.username}
-        return Response(content)
+        content = {'message': 'Hello, ' + request.user.username}
+        return Response(json_success(content))
     
 
 # User registration endpoint
@@ -36,22 +37,41 @@ class UserInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
-        content = {'user_data': {'id': request.user.id,
-                                 'username': request.user.username,
-                                 'firstname': request.user.first_name,
-                                 'surname': request.user.last_name}}
-        # TODO: Change to json success/failure
-        return Response(content)
+        content = {'id': request.user.id,
+                   'username': request.user.username,
+                   'firstname': request.user.first_name,
+                   'surname': request.user.last_name,
+                   'data_provider': request.user.data_provider,
+                   'energy_score': calculate_energy_score(get_user_energy_data(request.user)["data"])}
+        return Response(json_success(content))
+    
+    def post(self, request):
+        # Check if user wants to update
+        if request.data.get("action", None) == "update":
+            # Allow only certain actions
+            update_parameters = {}
+            update_parameters["first_name"] = request.data.get("firstname", None)
+            update_parameters["last_name"] = request.data.get("last_name", None)
+            update_parameters["data_provider"] = request.data.get("data_provider", None)
+            
+            # Remove None elements
+            update_parameters = {elem: update_parameters[elem] for elem in update_parameters if update_parameters[elem] is not None}
+            models.User.objects.filter(id=request.user.id).update(**update_parameters)
+            return Response(status=status.HTTP_200_OK)
+            
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
 # View for returning the national averages of devices
 class NationalAverageView(views.APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
         with open(staticfiles_storage.path("datasets/dale/house_averages.dat"), "r") as file:
-            # TODO: Change to json success/failure
-            return Response(json.loads(file.read()))
+            try:
+                return Response(json_success(json.loads(file.read())))
+            except FileNotFoundError:
+                return Response(json_error("Could not load national averages"))
         
 
 # View to get the tip of the day
@@ -73,9 +93,9 @@ class TOTDView(views.APIView):
             return Response(json_success(response))
         except openai.OpenAIError as e:
             print(f"{str(e.__class__.__name__ )}: {e}")
-            return Response(json_error("An internal error occured with generating tips"))
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data=json_error("An internal error occured with generating tips"))
 
-#TODO: all json_errors explicitly 
+
 # View for generating energy reports
 class EnergyReportView(views.APIView):
     permission_classes = (permissions.IsAuthenticated, )
@@ -95,6 +115,26 @@ class EnergyReportView(views.APIView):
             print(f"{str(e.__class__.__name__ )}: {e}")
             return Response(json_error("An internal error occured with generating tips"))
 
+       
+class ApplianceTips(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        device = request.GET.get("device", "aggregate")
+        cached = models.Tip.objects.filter(date=datetime.date.today(), user=request.user, device=device)
+        if cached.exists():
+            return Response(json_success(cached.first().text))
+        
+        try:
+            energy_data = get_user_energy_data(request.user)['data']
+            prompt = Prompts.get_device_tip_prompt(energy_data, device)
+            response = prompt_gpt3(prompt).strip()
+            models.Tip.objects.create(device=device, text=response, user=request.user)
+            return Response(json_success(response))
+        except (openai.OpenAIError, ValueError) as e:
+            print(f"{str(e.__class__.__name__ )}: {e}")
+            return Response(json_error("An internal error occured with genereating tips"))
+
 
 # View responsible for returning the usage of appliances
 class AppliancesView(views.APIView):
@@ -102,7 +142,12 @@ class AppliancesView(views.APIView):
     
     # Returns the difference in aggreate power usage for different devices compared to last month
     def get(self, request):
-        return Response(get_user_energy_data(request.user))
+        energy_data = get_user_energy_data(request.user)
+        if energy_data["success"]:
+            energy_data["data"]["energy_score"] = calculate_energy_score(energy_data["data"])
+            
+        # get_user_energy_data already returns a json object so we don't need to use the utility functions
+        return Response(energy_data)
 
 
 # Will delete the currently stored token of a user
@@ -122,14 +167,14 @@ class FriendView(views.APIView):
     def get(self, request):
         ret_val = {}
         
-        ret_val["friends"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_user_friends(request.user)]
+        ret_val["friends"] = [models.Friendship.friendship_to_json(friendship, request.user, is_request=False) for friendship in models.Friendship.get_user_friends(request.user)]
         ret_val["requests"] = [models.Friendship.friendship_to_json(friendship, request.user) for friendship in models.Friendship.get_friend_requests(request.user)]
         
         return Response(json_success(ret_val))
     
     def post(self, request):
         action = request.data.get("action", None)
-        other_user_id = request.data.get("user_id", None)
+        other_user_id = request.data.get("user_id", "")
         try:
             other_user_id = int(other_user_id)
         except ValueError:
@@ -164,5 +209,27 @@ class FriendView(views.APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("That friend request does not exist"))
             existing_request.update(has_accepted=True)
             return Response(json_success("Accepted friend request"))
+        
+        elif action == "deny_request":
+            models.Friendship.objects.filter(from_user=other_user, to_user=request.user).delete()
+            return Response(json_success("Deleted"))
+        
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))
+
+
+class DataProviderView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get(self, request):
+        # There is only DALE datasets, so just list them right now
+        data_providers = DALEDataProvider.list_datasets()
+        return Response(json_success(data_providers))
+    
+
+class DeleteAccountView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    
+    def post(self, request):
+        request.user.delete()
+        return Response(status=status.HTTP_200_OK)

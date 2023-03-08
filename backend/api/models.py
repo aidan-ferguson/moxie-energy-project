@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from rest_framework.authtoken.models import Token
 from django.db import models
+from api.utils import get_user_energy_data, calculate_energy_score
 
 
 # Extensible user account with custom parameters
@@ -13,6 +14,10 @@ class User(AbstractUser):
         # We want a token for every created user
         Token.objects.get_or_create(user=self)
             
+    def delete(self, *args, **kwargs):
+        Token.objects.filter(user=self).delete()
+        super(User, self).delete(*args, **kwargs)
+        
     def __str__(self):
         return self.username
 
@@ -46,7 +51,7 @@ class Friendship(models.Model):
     def __str__(self):
         return f"{self.from_user.email} -> {self.to_user.email} : accepted = {self.has_accepted}"
     
-    # Get a list of all accepted friends of the current user 
+    # Get a list of all accepted friends of the current user
     @staticmethod
     def get_user_friends(user):
         friends = list(Friendship.objects.filter(from_user=user, has_accepted=True))
@@ -61,6 +66,9 @@ class Friendship(models.Model):
 
     # Get the details of the user on the other end of the frienship than the current user
     @staticmethod
-    def friendship_to_json(friendship, user):
+    def friendship_to_json(friendship, user, is_request=True):
         user_to_seralise = friendship.to_user if user == friendship.from_user else friendship.from_user
-        return {'id':user_to_seralise.id, 'firstname':user_to_seralise.first_name, 'surname':user_to_seralise.last_name}
+        ret_val = {'id': user_to_seralise.id, 'firstname': user_to_seralise.first_name, 'surname': user_to_seralise.last_name}
+        if not is_request:
+            ret_val['score'] = calculate_energy_score(get_user_energy_data(user_to_seralise)["data"])
+        return ret_val

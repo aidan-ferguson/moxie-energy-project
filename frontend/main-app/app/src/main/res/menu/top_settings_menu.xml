@@ -7,7 +7,20 @@
         android:id="@+id/settings"
         android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom"
-        android:iconTint="@color/harvest_gold"/>
+        android:background="@color/white"
+        android:iconTint="@color/harvest_gold">
 
+        <menu>
+            <item android:title="Log Out"
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_baseline_settings_24"
+                tools:ignore="HardcodedText"/>
+            <item android:title="Your account"
+                android:id="@+id/changeDataProvider"
+                android:icon="@drawable/ic_baseline_settings_24"
+                tools:ignore="HardcodedText"/>
+        </menu>
+
+    </item>
 
 </menu>
