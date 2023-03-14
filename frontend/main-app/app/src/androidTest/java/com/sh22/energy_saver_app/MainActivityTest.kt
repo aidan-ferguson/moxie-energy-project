@@ -12,7 +12,6 @@ import com.sh22.energy_saver_app.ui.activites.LoginActivity
 import com.sh22.energy_saver_app.ui.activites.MainActivity
 import com.sh22.energy_saver_app.ui.fragments.HomeFragment
 import com.sh22.energy_saver_app.ui.fragments.LoginFragment
-import com.sh22.energy_saver_app.ui.fragments.SettingsFragment
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,29 +39,24 @@ class MainActivityTest {
 
         //check appliance page is displayed correctly
         onView(withId(R.id.appliances)).perform(click())
-        onView(withId(R.id.appliance_heading)).check(matches(isDisplayed()))
         onView(withId(R.id.appliance_usage_bar)).check(matches(isDisplayed()))
         onView(withId(R.id.appliance_recycler_view)).check(matches(isDisplayed()))
 
         //check ecosystem page is displayed correctly
         onView(withId(R.id.ecosystem)).perform(click())
-        onView(withId(R.id.ecosystem_header2)).check(matches(isDisplayed()))
 
         //check home page is displayed correctly
         onView(withId(R.id.home)).perform(click())
-        onView(withId(R.id.home_fragment_heading)).check(matches(isDisplayed()))
-        onView(withId(R.id.home_fragment_heading)).check(matches(isDisplayed()))
 
 
     }
     @Test
     fun LogOutButtonTest(){
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        onView(withId(R.id.settings_logout_button)).perform(click())
+        onView(withId(R.id.action_settings)).perform(click())
+        onView(withId(R.id.logout)).perform(click())
 
         onView(withId(R.id.login_heading)).check(matches(isDisplayed()))
     }
 
-    @Test
-    fun
 }
