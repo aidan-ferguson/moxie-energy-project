@@ -60,10 +60,7 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
 
 
     // Add this method to update the friends list
-    public void updateFriendsList(ArrayList<FriendRelationship> newFriends) {
-        this.friends = newFriends;
-        notifyDataSetChanged();
-    }
+
 
 
     @NonNull
