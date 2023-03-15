@@ -58,15 +58,11 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         }).start();
     }
 
+
+
     // Add this method to update the friends list
-    public void addFriend(FriendRelationship friend) {
-        // Add the new friend to the list of friends
-        friends.add(friend);
-
-        // Sort the friends array by the score
-        Collections.sort(friends, (o1, o2) -> o2.userInfo.energy_score.compareTo(o1.userInfo.energy_score));
-
-        // Notify the adapter that the data has changed
+    public void updateFriendsList(ArrayList<FriendRelationship> newFriends) {
+        this.friends = newFriends;
         notifyDataSetChanged();
     }
 
@@ -156,7 +152,7 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         //name of requestee
         TextView personName;
@@ -180,7 +176,6 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         }
 
 
-        //set onclick fo
     }
 }
 

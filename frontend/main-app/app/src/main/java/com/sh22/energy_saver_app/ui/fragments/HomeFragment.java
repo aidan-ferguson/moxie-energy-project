@@ -1,5 +1,7 @@
 package com.sh22.energy_saver_app.ui.fragments;
 
+
+import android.accessibilityservice.TouchInteractionController;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -42,6 +44,7 @@ import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 import com.sh22.energy_saver_app.common.Constants;
+import com.sh22.energy_saver_app.common.FriendRelationship;
 import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.SH22Utils;
@@ -57,6 +60,9 @@ import java.io.IOException;
  */
 public class HomeFragment extends Fragment {
 
+    private ActiveFriendsRecyclerViewAdapter activeFriendsAdapter;
+
+    //Increases the height of the card to expand on click in order to show tips,report and krew
     public void increaseHeight(View view){
         CardView card;
         CardView card2;
@@ -91,9 +97,6 @@ public class HomeFragment extends Fragment {
             }
         });
         card.setVisibility(View.GONE);
-        //Set constraints of card2 to the center of the screen
-
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(heightAnimator, widthAnimator);
         animatorSet.start();
@@ -101,7 +104,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-
+    //Decreases the height of the card to collapse on click in order to hide tips,report and krew
     public void decreaseHeight(View view) {
         CardView card;
         CardView card2;
@@ -136,9 +139,6 @@ public class HomeFragment extends Fragment {
             }
         });
         card.setVisibility(View.VISIBLE);
-        //Set constraints of card2 to the center of the screen
-
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(heightAnimator, widthAnimator);
         animatorSet.start();
@@ -146,9 +146,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public HomeFragment() {
-
-    }
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -358,36 +355,30 @@ public class HomeFragment extends Fragment {
 
         new Thread(() -> {
             try {
-
-
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 FragmentActivity activity = getActivity();
                 if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
-                        ActiveFriendsRecyclerViewAdapter adapter = null;
                         try {
-                            adapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                            activeFriendsAdapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
                         } catch (AuthenticationException e) {
                             e.printStackTrace();
                         } catch (BackendException e) {
                             e.printStackTrace();
                         }
-                        recyclerView.setAdapter(adapter);
+                        recyclerView.setAdapter(activeFriendsAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                     });
                 }
-
             } catch (AuthenticationException e) {
                 SH22Utils.Logout(view.getContext());
             } catch (BackendException e) {
                 SH22Utils.ToastException(view.getContext(), e.reason);
             }
-        }
+        }).start();
 
-
-        ).start();
 
 
         CardView card = view.findViewById(R.id.score_card);
@@ -401,7 +392,7 @@ public class HomeFragment extends Fragment {
         //Tip of the day elements -expanded view
         TextView TipOfTheDay = view.findViewById(R.id.title1);
         TextView Tip = view.findViewById(R.id.tip_of_the_day);
-        Button back1 = view.findViewById(R.id.dd1);
+        Button back1 = view.findViewById(R.id.dd1); //back button to home page
 
 
         //Energy report elements -small view
@@ -432,7 +423,7 @@ public class HomeFragment extends Fragment {
 
         //Requests elements
         RecyclerView requests = view.findViewById(R.id.request_recycler_view);
-        Button back3 = view.findViewById(R.id.dd3);
+        Button back3 = view.findViewById(R.id.dd3); //back button to home page
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
         TextView your_id_text = view.findViewById(R.id.your_id_number);
@@ -442,18 +433,20 @@ public class HomeFragment extends Fragment {
         View parent = view.findViewById(R.id.center_card);
 
 
+        //When clicked the tip of the day elements become visble and all others are hidden
         TipOfDayButton.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View v) {
 
+
+                //There are multiple animations that play together
                 ViewGroup.LayoutParams layoutParams = TipOfDayButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
                 int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth()) + 150;
                 int newHeight = card.getHeight() * 2 - 100;
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(TipOfDayButton.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(TipOfDayButton.getWidth(), newWidth);
-
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                 widthAnimator.setDuration(200);
@@ -482,24 +475,18 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
                 increaseHeight(view);
 
-
+                //Hide all other elements
                 EnergyReportButton.setVisibility(View.GONE);
                 KrewButton.setVisibility(View.GONE);
-
-
                 EnergyReportImage.setVisibility(View.GONE);
                 KrewImage.setVisibility(View.GONE);
-
-
                 EnergyReportLabel.setVisibility(View.GONE);
                 KrewLabel.setVisibility(View.GONE);
-
-                TipOfDayLabel.setVisibility(View.VISIBLE);
                 TipOfDayImage.setVisibility(View.GONE);
-
-
                 TipOfDayLabel.setVisibility(View.GONE);
                 TipOfDayImage.setVisibility(View.GONE);
+
+
                 ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(Tip, "alpha", 0, 1);
                 fadeInAnimator.setDuration(1000); // 1 second
                 ObjectAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipOfTheDay, "alpha", 0, 1);
@@ -510,6 +497,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         Tip.setVisibility(View.VISIBLE);
+
 
 
                     }
@@ -534,6 +522,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationStart(Animator animation) {
 
                         TipOfTheDay.setVisibility(View.VISIBLE);
+                        back1.setVisibility(View.VISIBLE);
 
                     }
 
@@ -555,7 +544,7 @@ public class HomeFragment extends Fragment {
 
                 AnimatorSet animatorSet2 = new AnimatorSet();
                 animatorSet.playTogether(fadeInAnimator, fadeInAnimator2);
-                back1.setVisibility(View.VISIBLE);
+
                 // Start the animation
                 animatorSet.start();
 
@@ -972,10 +961,39 @@ public class HomeFragment extends Fragment {
         leaderboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity mainActivity = (MainActivity) getActivity();
 
-// Refresh the ActiveFriendsRecyclerViewAdapter
 
+                //reloads the leaderboard
+                new Thread(() -> {
+                    try {
+                        Friends friends = BackendInterface.GetFriends(view.getContext());
+                        FragmentActivity activity = getActivity();
+                        if (activity != null) {
+                            activity.runOnUiThread(() -> {
+                                // Now attach the recycler view class to the view in the layout
+                                RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
+                                try {
+                                    activeFriendsAdapter = new ActiveFriendsRecyclerViewAdapter(view.getContext(), friends.friends);
+                                } catch (AuthenticationException e) {
+                                    e.printStackTrace();
+                                } catch (BackendException e) {
+                                    e.printStackTrace();
+                                }
+                                recyclerView.setAdapter(activeFriendsAdapter);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                            });
+                        }
+                    } catch (AuthenticationException e) {
+                        SH22Utils.Logout(view.getContext());
+                    } catch (BackendException e) {
+                        SH22Utils.ToastException(view.getContext(), e.reason);
+                    }
+                }).start();
+
+
+
+
+                //refresh the oncreate for active friends recyler view
                 leaderboard.setVisibility(View.VISIBLE);
                 requests.setVisibility(View.GONE);
                 leaderboardtitle.setText("Your Energy Leaderboard");

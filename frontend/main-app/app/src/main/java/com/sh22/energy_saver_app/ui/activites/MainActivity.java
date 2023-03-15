@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sh22.energy_saver_app.R;
+import com.sh22.energy_saver_app.backend.AuthenticationException;
+import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
 import com.sh22.energy_saver_app.databinding.ActivityMainBinding;
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
@@ -106,4 +108,6 @@ public class MainActivity extends AppCompatActivity {
     public ActionBar getterActionBar() {
         return actionBar;
     }
+
+
 }
