@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,21 +30,17 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
-import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
@@ -53,12 +48,7 @@ import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -463,17 +453,17 @@ public class HomeFragment extends Fragment {
         Button back3;
 
         //Tip of the day elements -small view
-        button1= view.findViewById(R.id.button1);
+        button1= view.findViewById(R.id.tip_square);
         icon1= view.findViewById(R.id.icon1);
         label1= view.findViewById(R.id.button1Text);
 
         //Tip of the day elements -big view
-        TipOfTheDay= view.findViewById(R.id.title1);
+        TipOfTheDay= view.findViewById(R.id.tipsTitle);
         Tip= view.findViewById(R.id.tip_of_the_day);
-        back1= view.findViewById(R.id.dd1);
+        back1= view.findViewById(R.id.dropdown_light);
 
         //Energy report elements -small view
-        button2= view.findViewById(R.id.button2);
+        button2= view.findViewById(R.id.breakdown);
         icon2= view.findViewById(R.id.icon2);
         label2= view.findViewById(R.id.button2Text);
 
@@ -481,15 +471,15 @@ public class HomeFragment extends Fragment {
         EnergyReport= view.findViewById(R.id.title2);
         scrollView= view.findViewById(R.id.report_scroll);
         EnergyReportText= view.findViewById(R.id.energy_report);
-        back2= view.findViewById(R.id.dd2);
+        back2= view.findViewById(R.id.dropdownAdvisor);
 
         //Krew elements -small view
-        button3= view.findViewById(R.id.button3);
+        button3= view.findViewById(R.id.kilowattButton);
         icon3= view.findViewById(R.id.icon3);
         label3= view.findViewById(R.id.button3Text);
 
         //Krew elements -big view
-        Krew= view.findViewById(R.id.title3);
+        Krew= view.findViewById(R.id.krew);
         RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
         //get the request recycler view from the
         Button leaderboardButton = view.findViewById(R.id.leaderboard);

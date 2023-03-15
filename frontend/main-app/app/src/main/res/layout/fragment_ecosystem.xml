@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="100dp"
-                app:cardBackgroundColor="@color/blue_whale"
+                app:cardBackgroundColor="@color/lighter_green"
                 app:cardCornerRadius="20dp"
                 app:contentPadding="5dp">
 

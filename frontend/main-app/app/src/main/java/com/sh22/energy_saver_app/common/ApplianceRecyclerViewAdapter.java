@@ -3,19 +3,13 @@ package com.sh22.energy_saver_app.common;
 
 import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Looper;
-import android.util.Log;
-import android.view.animation.LinearInterpolator;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,35 +21,26 @@ import android.widget.TextView;
 
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Size;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sh22.energy_saver_app.R;
 
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-import com.sh22.energy_saver_app.common.ApplianceCardData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.os.Handler;
 
@@ -145,7 +130,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                int color = context.getResources().getColor(R.color.blue_whale);
+                int color = context.getResources().getColor(R.color.lighter_green);
                 holder.TipsButton.setBackgroundColor(color);
                 holder.TipsButton.setTextColor(Color.WHITE);
                 holder.BreakDownButton.setBackgroundColor(Color.WHITE);
@@ -213,10 +198,10 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             DeviceTitle = itemView.findViewById(R.id.device_name);
             progressBar = itemView.findViewById(R.id.appliance_usage_bar);
             InvisibleButton = itemView.findViewById(R.id.device_name_button);
-            dropdownButton = itemView.findViewById(R.id.dd);
+            dropdownButton = itemView.findViewById(R.id.baseline_chevron);
 
-            TipsButton = itemView.findViewById(R.id.button);
-            BreakDownButton = itemView.findViewById(R.id.button2);
+            TipsButton = itemView.findViewById(R.id.tips_rectangle);
+            BreakDownButton = itemView.findViewById(R.id.breakdown);
             InfoText = itemView.findViewById(R.id.info);
 
             card1 = itemView.findViewById(R.id.stat1);
@@ -224,7 +209,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             cautionLevel = itemView.findViewById(R.id.home_icon2);
             barChart = itemView.findViewById(R.id.idBarChart);
             tipsCard = itemView.findViewById(R.id.tips);
-            button = itemView.findViewById(R.id.button1);
+            button = itemView.findViewById(R.id.tip_square);
             tipsText = itemView.findViewById(R.id.tip1);
 
 
@@ -363,7 +348,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                         BreakDownButton.setBackgroundResource(R.drawable.rounded_rectangle_button2);
 
                         Context context = view.getContext();
-                        int color = context.getResources().getColor(R.color.blue_whale);
+                        int color = context.getResources().getColor(R.color.lighter_green);
                         BreakDownButton.setTextColor(color);
 
 
@@ -424,7 +409,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                                    @Override
                                                    public void onClick(View view) {
                                                        Context context = view.getContext();
-                                                       int color = context.getResources().getColor(R.color.blue_whale);
+                                                       int color = context.getResources().getColor(R.color.lighter_green);
                                                        BreakDownButton.setBackgroundColor(color);
                                                        BreakDownButton.setTextColor(Color.WHITE);
                                                        TipsButton.setBackgroundColor(Color.WHITE);
