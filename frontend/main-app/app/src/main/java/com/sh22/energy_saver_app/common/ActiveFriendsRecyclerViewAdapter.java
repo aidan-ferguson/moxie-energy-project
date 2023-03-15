@@ -4,7 +4,6 @@ package com.sh22.energy_saver_app.common;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,23 +15,23 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ekn.gruzer.gaugelibrary.HalfGauge;
-import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
+/**
+ * RecyclerViewAdapter for the friends page
+ * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<ActiveFriendsRecyclerViewAdapter.MyViewHolder> {
-    private Context context;
-    private ArrayList<FriendRelationship> friends;
+    private final Context context;
+    private final ArrayList<FriendRelationship> friends;
 
     public ActiveFriendsRecyclerViewAdapter(Context context, ArrayList<FriendRelationship> friends) throws AuthenticationException, BackendException {
         this.context = context;
@@ -85,18 +84,18 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         holder.personName.setText(pretty_name);
 
         //only get the first 3 digits of the score
-        Double score = friends.get(position).userInfo.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
+        Double score = friends.get(position).userInfo.energy_score;
         int progress = (int) ((Math.round(score * 100) - 50) * 2);
 
-        holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
+        holder.personName.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
 
-
+        // Set the UI elements for the row
         try {
             if (friends.get(position).userInfo.user_id == BackendInterface.GetUserInfo(context).user_id) {
                 holder.cardView.setCardBackgroundColor(Color.parseColor("#4877DD76"));
-                holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
-                holder.rank.setTextColor(ContextCompat.getColor(context, R.color.black));
-                holder.score.setTextColor(ContextCompat.getColor(context, R.color.black));
+                holder.personName.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                holder.rank.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                holder.score.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
                 //set to bold style text
                 holder.score.setTypeface(null, Typeface.BOLD);
                 holder.personName.setTypeface(null, Typeface.BOLD);
@@ -109,27 +108,7 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             e.printStackTrace();
         }
 
-        if (progress <= -50) {
-            holder.score.setText("F-");
-        } else if (progress <= -40) {
-            holder.score.setText("F+");
-        } else if (progress <= -30) {
-            holder.score.setText("D-");
-        } else if (progress <= -20) {
-            holder.score.setText("D+");
-        } else if (progress <= -10) {
-            holder.score.setText("C-");
-        } else if (progress <= 10) {
-            holder.score.setText("C+");
-        } else if (progress <= 20) {
-            holder.score.setText("B-");
-        } else if (progress <= 30) {
-            holder.score.setText("B+");
-        } else if (progress <= 40) {
-            holder.score.setText("A-");
-        } else if (progress > 40) {
-            holder.score.setText("A+");
-        }
+        holder.score.setText(SH22Utils.getLetterGrade(progress));
 
         int resultColor = 0;
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
@@ -153,15 +132,11 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        //name of requestee
+        // Holds references to the UI elements in the friends card
         TextView personName;
         TextView score;
         TextView rank;
-        Integer id;
         CardView cardView;
-        TextView your_id;
-
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -170,13 +145,6 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
             score = itemView.findViewById(R.id.score);
             rank = itemView.findViewById(R.id.rank);
             cardView = itemView.findViewById(R.id.card_view);
-            //get your_id_number
-
-
         }
-
-
     }
 }
-
-

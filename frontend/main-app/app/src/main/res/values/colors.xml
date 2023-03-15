@@ -4,13 +4,19 @@
     <color name="mid_usage">#fff066</color>
     <color name="bad_usage">#FF6961</color>
     <color name="yellow_metal">#7D633F</color>
-    <color name="harvest_gold">#B753AF4C</color>
-    <color name="blue_whale">#62A526</color>
+    <color name="lighter_moxie">#B753AF4C</color>
+    <color name="lighter_green">#62A526</color>
     <color name="beaver">#92755C</color>
-    <color name="blue_jeans">#62a526</color>
-    <color name="black">#264C04</color>
+    <color name="moxie_green">#62a526</color>
+    <color name="forest_green">#264C04</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
-    <color name="light_blue">#8998AB</color>
-    <color name="lighter_blue">#4B8998AB</color>
+    <color name="light_grey">#8998AB</color>
+    <color name="grey">#4B8998AB</color>
+    <color name="black">#000000</color>
+    <color name ="lighter_grey">#1992AB89</color>
+    <color name = "blue">#04244C</color>
+    <color name = "moxie_orange">#DEB276</color>
+    <color name = "darker_moxie_orange">#ED7D31</color>
+
 </resources>

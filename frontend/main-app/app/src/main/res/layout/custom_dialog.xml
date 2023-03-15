@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@color/white">
 
 
     <TextView
@@ -15,7 +15,7 @@
         android:background="@drawable/layout_bg10"
         android:padding="20dp"
         android:text="Your friend request has been sent."
-        android:textColor="#000000"
+        android:textColor="@color/forest_green"
         android:textSize="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -52,9 +52,13 @@ import java.util.ArrayList;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
+/**
+ * RecyclerView for the friend requests page
+ * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.MyViewHolder> {
-    private Context mContext;
-    private ArrayList<FriendRequest> mRequests;
+    private final Context mContext;
+    private final ArrayList<FriendRequest> mRequests;
     public static final String FRIEND_REQUEST_ACCEPTED_ACTION = "com.sh22.energy_saver_app.friend_request_accepted";
 
     public FriendsRecyclerViewAdapter(Context context, ArrayList<FriendRequest> requests) {
@@ -76,9 +80,11 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        // Populate the name of the person requesting
         String firstname = mRequests.get(position).userInfo.firstname;
         String surname = mRequests.get(position).userInfo.surname;
-        holder.personName.setText(firstname+ " " + surname);
+        String full_name = firstname + " " + surname;
+        holder.personName.setText(full_name);
     }
 
     @Override
@@ -86,6 +92,9 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         return mRequests.size();
     }
 
+    /**
+     * View holder for the FriendsRecyclerView adapter
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView personName;
         Button accept;
