@@ -4,7 +4,6 @@ package com.sh22.energy_saver_app.common;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ekn.gruzer.gaugelibrary.HalfGauge;
-import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,15 +90,16 @@ public class ActiveFriendsRecyclerViewAdapter extends RecyclerView.Adapter<Activ
         //only get the first 3 digits of the score
         Double score = friends.get(position).userInfo.energy_score;
         int progress = (int) ((Math.round(score * 100) - 50) * 2);
-        holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
+
+        holder.personName.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
 
         // Set the UI elements for the row
         try {
             if (friends.get(position).userInfo.user_id == BackendInterface.GetUserInfo(context).user_id) {
                 holder.cardView.setCardBackgroundColor(Color.parseColor("#4877DD76"));
-                holder.personName.setTextColor(ContextCompat.getColor(context, R.color.black));
-                holder.rank.setTextColor(ContextCompat.getColor(context, R.color.black));
-                holder.score.setTextColor(ContextCompat.getColor(context, R.color.black));
+                holder.personName.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                holder.rank.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
+                holder.score.setTextColor(ContextCompat.getColor(context, R.color.forest_green));
                 //set to bold style text
                 holder.score.setTypeface(null, Typeface.BOLD);
                 holder.personName.setTypeface(null, Typeface.BOLD);

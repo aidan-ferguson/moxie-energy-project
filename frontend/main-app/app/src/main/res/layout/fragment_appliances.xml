@@ -5,17 +5,15 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foregroundTint="@color/light_blue"
+    android:foregroundTint="@color/light_grey"
     android:background="@color/white"
-
     tools:context=".ui.fragments.AppliancesFragment">
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appliance_recycler_view"
         android:layout_width="413dp"
         android:layout_height="match_parent"
-        android:background="#1992AB89"
+        android:background="@color/lighter_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +23,6 @@
         android:id="@+id/shadow_view"
         android:layout_width="415dp"
         android:layout_height="45dp"
-
         android:background="@drawable/shadow"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="-11dp" />
