@@ -102,15 +102,15 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void decreaseHeight(View view){
+    public void decreaseHeight(View view) {
         CardView card;
         CardView card2;
 
-        card= view.findViewById(R.id.score_card);
+        card = view.findViewById(R.id.score_card);
         card2 = view.findViewById(R.id.center_card);
         ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
 
-        int newWidth = card2.getWidth()-150;
+        int newWidth = card2.getWidth() - 150;
         int newHeight = SH22Utils.dpToPixels(view.getContext(), 350);
         ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
         ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
@@ -145,6 +145,7 @@ public class HomeFragment extends Fragment {
 
 
     }
+
     public HomeFragment() {
 
     }
@@ -162,8 +163,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -172,12 +171,12 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
-        ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
+        ((MainActivity) getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity) getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
 
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
-        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
+        ((MainActivity) getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
+        ((MainActivity) getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity) getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
 
 
         // Network calls are ordered by what will be the quickest
@@ -185,11 +184,11 @@ public class HomeFragment extends Fragment {
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
-                int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
+                int o = BackendInterface.GetUserInfo(view.getContext()).user_id;
                 // interger to string
 
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
-                if(appliance_data == null) {
+                if (appliance_data == null) {
                     Log.e("SH22", "Error loading appliance data");
                     throw new IOException();
                 }
@@ -197,12 +196,12 @@ public class HomeFragment extends Fragment {
                 // When we get the data, update the UI
                 // Some time may have passed so we need to check if the activity is now null
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
                         TextView v = view.findViewById(R.id.your_id_number);
-                        int progress = (Math.round(score * 100) - 50)*2;
+                        int progress = (Math.round(score * 100) - 50) * 2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
@@ -210,80 +209,55 @@ public class HomeFragment extends Fragment {
                         v.setText(Integer.toString(o));
                         int resultColor = 0;
 
-                        if(score < 0.5)
-                        {
+                        if (score < 0.5) {
                             resultColor = ColorUtils.blendARGB(bad_colour, mid_colour, score);
-                        }
-                        else
-                        {
+                        } else {
                             resultColor = ColorUtils.blendARGB(mid_colour, good_colour, score);
                         }
-
 
 
                         HalfGauge gauge = view.findViewById(R.id.halfGauge);
                         gauge.setMinValue(-100);
                         gauge.setMaxValue(100);
                         gauge.setValue(progress);
-                        for(int i = -50; i < 50; i++)
-                        {
+                        for (int i = -50; i < 50; i++) {
                             Range range = new Range();
-                            int colorToSet = ColorUtils.blendARGB(bad_colour, mid_colour, (i+50)/100f);
+                            int colorToSet = ColorUtils.blendARGB(bad_colour, mid_colour, (i + 50) / 100f);
                             range.setColor(colorToSet);
-                            range.setFrom(i-50);
-                            range.setTo(i-49);
+                            range.setFrom(i - 50);
+                            range.setTo(i - 49);
                             gauge.addRange(range);
                         }
 
-                        for(int i = -50; i < 50; i++)
-                        {
+                        for (int i = -50; i < 50; i++) {
                             Range range = new Range();
-                            int colorToSet = ColorUtils.blendARGB(mid_colour, good_colour, (i+50)/100f);
+                            int colorToSet = ColorUtils.blendARGB(mid_colour, good_colour, (i + 50) / 100f);
                             range.setColor(colorToSet);
-                            range.setFrom(i+50);
-                            range.setTo(i+49);
+                            range.setFrom(i + 50);
+                            range.setTo(i + 49);
                             gauge.addRange(range);
                         }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= -50)
-                        {
+                        if (progress <= -50) {
                             letterGrade.setText("F-");
-                        }
-                        else if (progress <= -40)
-                        {
+                        } else if (progress <= -40) {
                             letterGrade.setText("F+");
-                        }
-                        else if(progress <= -30)
-                        {
+                        } else if (progress <= -30) {
                             letterGrade.setText("D-");
-                        }
-                        else if(progress <= -20)
-                        {
+                        } else if (progress <= -20) {
                             letterGrade.setText("D+");
-                        }
-                        else if (progress <= -10)
-                        {
+                        } else if (progress <= -10) {
                             letterGrade.setText("C-");
-                        }
-                        else if (progress <= 10)
-                        {
+                        } else if (progress <= 10) {
                             letterGrade.setText("C+");
-                        }
-                        else if (progress <= 20)
-                        {
+                        } else if (progress <= 20) {
                             letterGrade.setText("B-");
-                        }
-                        else if (progress <= 30)
-                        {
+                        } else if (progress <= 30) {
                             letterGrade.setText("B+");
-                        }
-                        else if (progress <= 40)
-                        {
+                        } else if (progress <= 40) {
                             letterGrade.setText("A-");
-                        }
-                        else if (progress > 40)
-                        {
+                        } else if (progress > 40) {
                             letterGrade.setText("A+");
                         }
                         letterGrade.setTextColor(resultColor);
@@ -303,11 +277,11 @@ public class HomeFragment extends Fragment {
             try {
 
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
-                if(userInfo != null) {
+                if (userInfo != null) {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-                            ((TextView)activity.findViewById(R.id.action_bar_title)).setText("Welcome, " + userInfo.firstname);
+                            ((TextView) activity.findViewById(R.id.action_bar_title)).setText("Welcome, " + userInfo.firstname);
                         });
                     }
                 }
@@ -323,7 +297,7 @@ public class HomeFragment extends Fragment {
             try {
                 String totd = BackendInterface.GetTOTD(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Tip of the day
                         TextView textView = view.findViewById(R.id.tip_of_the_day);
@@ -341,7 +315,7 @@ public class HomeFragment extends Fragment {
             try {
                 String energy_report = BackendInterface.GetEnergyReport(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Usage report
                         TextView report_text_view = view.findViewById(R.id.energy_report);
@@ -362,13 +336,14 @@ public class HomeFragment extends Fragment {
 
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.request_recycler_view);
                         FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter(view.getContext(), friends.requests);
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    });
                 }
 
             } catch (AuthenticationException e) {
@@ -387,7 +362,7 @@ public class HomeFragment extends Fragment {
 
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
@@ -400,7 +375,8 @@ public class HomeFragment extends Fragment {
                             e.printStackTrace();
                         }
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    });
                 }
 
             } catch (AuthenticationException e) {
@@ -414,40 +390,36 @@ public class HomeFragment extends Fragment {
         ).start();
 
 
-
-
-        CardView card= view.findViewById(R.id.score_card);
+        CardView card = view.findViewById(R.id.score_card);
         CardView card2 = view.findViewById(R.id.center_card);
 
         //Tip of the day elements -small view
-        Button TipOfDayButton= view.findViewById(R.id.button1);
-        ImageView TipOfDayImage= view.findViewById(R.id.icon1);
+        Button TipOfDayButton = view.findViewById(R.id.button1);
+        ImageView TipOfDayImage = view.findViewById(R.id.icon1);
         TextView TipOfDayLabel = view.findViewById(R.id.button1Text);
 
         //Tip of the day elements -expanded view
-        TextView TipOfTheDay= view.findViewById(R.id.title1);
-        TextView Tip= view.findViewById(R.id.tip_of_the_day);
-        Button back1= view.findViewById(R.id.dd1);
-
+        TextView TipOfTheDay = view.findViewById(R.id.title1);
+        TextView Tip = view.findViewById(R.id.tip_of_the_day);
+        Button back1 = view.findViewById(R.id.dd1);
 
 
         //Energy report elements -small view
-        Button EnergyReportButton= view.findViewById(R.id.button2);
-        ImageView EnergyReportImage= view.findViewById(R.id.icon2);
-        TextView EnergyReportLabel= view.findViewById(R.id.button2Text);
+        Button EnergyReportButton = view.findViewById(R.id.button2);
+        ImageView EnergyReportImage = view.findViewById(R.id.icon2);
+        TextView EnergyReportLabel = view.findViewById(R.id.button2Text);
 
         //Energy report elements -expanded view
-        TextView EnergyReport= view.findViewById(R.id.title2);
-        ScrollView scrollView= view.findViewById(R.id.report_scroll);
-        TextView EnergyReportText= view.findViewById(R.id.energy_report);
-        Button back2= view.findViewById(R.id.dd2);
-
+        TextView EnergyReport = view.findViewById(R.id.title2);
+        ScrollView scrollView = view.findViewById(R.id.report_scroll);
+        TextView EnergyReportText = view.findViewById(R.id.energy_report);
+        Button back2 = view.findViewById(R.id.dd2);
 
 
         //Krew elements -small view
-        Button KrewButton= view.findViewById(R.id.button3);
-        ImageView KrewImage= view.findViewById(R.id.icon3);
-        TextView KrewLabel= view.findViewById(R.id.button3Text);
+        Button KrewButton = view.findViewById(R.id.button3);
+        ImageView KrewImage = view.findViewById(R.id.icon3);
+        TextView KrewLabel = view.findViewById(R.id.button3Text);
 
         //Krew elements -expanded view
         Button leaderboardButton = view.findViewById(R.id.leaderboard);
@@ -456,26 +428,18 @@ public class HomeFragment extends Fragment {
         //Leaderboard elements
         TextView Krew = view.findViewById(R.id.title3);
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
-        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
+        RecyclerView leaderboard = view.findViewById(R.id.friends_recycler_view);
 
-       //Requests elements
+        //Requests elements
         RecyclerView requests = view.findViewById(R.id.request_recycler_view);
-        Button back3= view.findViewById(R.id.dd3);
+        Button back3 = view.findViewById(R.id.dd3);
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
         TextView your_id_text = view.findViewById(R.id.your_id_number);
         Button send = view.findViewById(R.id.enter);
 
 
-
-
-
-
         View parent = view.findViewById(R.id.center_card);
-
-        //method that increases the size of the card to be used in onclick functions
-
-
 
 
         TipOfDayButton.setOnClickListener(new View.OnClickListener() {
@@ -485,8 +449,8 @@ public class HomeFragment extends Fragment {
 
                 ViewGroup.LayoutParams layoutParams = TipOfDayButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
+                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(TipOfDayButton.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(TipOfDayButton.getWidth(), newWidth);
 
@@ -519,9 +483,6 @@ public class HomeFragment extends Fragment {
                 increaseHeight(view);
 
 
-
-
-
                 EnergyReportButton.setVisibility(View.GONE);
                 KrewButton.setVisibility(View.GONE);
 
@@ -545,13 +506,14 @@ public class HomeFragment extends Fragment {
                 fadeInAnimator2.setDuration(1000); // 1 second
 
 
-                fadeInAnimator.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         Tip.setVisibility(View.VISIBLE);
 
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -567,13 +529,14 @@ public class HomeFragment extends Fragment {
                         // Optional: add code to run when the animation repeats
                     }
                 });
-                fadeInAnimator2.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator2.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
 
                         TipOfTheDay.setVisibility(View.VISIBLE);
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -670,19 +633,6 @@ public class HomeFragment extends Fragment {
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         EnergyReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -690,8 +640,8 @@ public class HomeFragment extends Fragment {
 
                 ViewGroup.LayoutParams layoutParams = EnergyReportButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (EnergyReportButton.getWidth()*2)+ parent.getWidth()-amount-(2*EnergyReportButton.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
+                int newWidth = (EnergyReportButton.getWidth() * 2) + parent.getWidth() - amount - (2 * EnergyReportButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(EnergyReportButton.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(EnergyReportButton.getWidth(), newWidth);
 
@@ -744,14 +694,14 @@ public class HomeFragment extends Fragment {
                 fadeInAnimator2.setDuration(600); // 1 second
 
 
-                fadeInAnimator.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         EnergyReport.setVisibility(View.VISIBLE);
 
 
-
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -767,7 +717,7 @@ public class HomeFragment extends Fragment {
                         // Optional: add code to run when the animation repeats
                     }
                 });
-                fadeInAnimator2.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator2.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         scrollView.setVisibility(View.VISIBLE);
@@ -775,6 +725,7 @@ public class HomeFragment extends Fragment {
 
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -869,8 +820,8 @@ public class HomeFragment extends Fragment {
 
                 ViewGroup.LayoutParams layoutParams = KrewButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
+                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(KrewButton.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(KrewButton.getWidth(), newWidth);
 
@@ -931,10 +882,7 @@ public class HomeFragment extends Fragment {
                 requestsButton.setTextColor(Color.parseColor("#62A526"));
 
 
-
-
                 KrewButton.setClickable(false);
-
 
 
             }
@@ -1042,12 +990,6 @@ public class HomeFragment extends Fragment {
                 requestsButton.setTextColor(Color.parseColor("#62A526"));
 
 
-
-
-
-
-
-
             }
         });
 
@@ -1112,7 +1054,7 @@ public class HomeFragment extends Fragment {
         });
 
 
+        return view;
 
-  return view;
-
-}}
+    }
+}
