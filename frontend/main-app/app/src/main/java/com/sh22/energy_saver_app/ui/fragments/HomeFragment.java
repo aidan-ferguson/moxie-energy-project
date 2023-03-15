@@ -416,70 +416,51 @@ public class HomeFragment extends Fragment {
 
 
 
-        //Three buttons
-        Button TipOfDayButton;
-        Button EnergyReportButton;
-        Button KrewButton;
-
-        ImageView TipOfDayImage;
-        ImageView EnergyReportImage;
-        ImageView KrewImage;
-
-        TextView TipOfDayLabel;
-        TextView EnergyReportLabel;
-        TextView KrewLabel;
-
-
-
         CardView card= view.findViewById(R.id.score_card);
         CardView card2 = view.findViewById(R.id.center_card);
 
-
-        TextView EnergyReport;
-        ScrollView scrollView;
-        TextView EnergyReportText;
-        Button back2;
-
-        TextView Krew;
-        RecyclerView KrewView;
-        Button back3;
-
         //Tip of the day elements -small view
-        TipOfDayButton= view.findViewById(R.id.button1);
-        TipOfDayImage= view.findViewById(R.id.icon1);
-        TipOfDayLabel = view.findViewById(R.id.button1Text);
+        Button TipOfDayButton= view.findViewById(R.id.button1);
+        ImageView TipOfDayImage= view.findViewById(R.id.icon1);
+        TextView TipOfDayLabel = view.findViewById(R.id.button1Text);
 
-        //Tip of the day elements -big view
+        //Tip of the day elements -expanded view
         TextView TipOfTheDay= view.findViewById(R.id.title1);
         TextView Tip= view.findViewById(R.id.tip_of_the_day);
         Button back1= view.findViewById(R.id.dd1);
 
-        //Energy report elements -small view
-        EnergyReportButton= view.findViewById(R.id.button2);
-        EnergyReportImage= view.findViewById(R.id.icon2);
-        EnergyReportLabel= view.findViewById(R.id.button2Text);
 
-        //Energy report elements -big view
-        EnergyReport= view.findViewById(R.id.title2);
-        scrollView= view.findViewById(R.id.report_scroll);
-        EnergyReportText= view.findViewById(R.id.energy_report);
-        back2= view.findViewById(R.id.dd2);
+
+        //Energy report elements -small view
+        Button EnergyReportButton= view.findViewById(R.id.button2);
+        ImageView EnergyReportImage= view.findViewById(R.id.icon2);
+        TextView EnergyReportLabel= view.findViewById(R.id.button2Text);
+
+        //Energy report elements -expanded view
+        TextView EnergyReport= view.findViewById(R.id.title2);
+        ScrollView scrollView= view.findViewById(R.id.report_scroll);
+        TextView EnergyReportText= view.findViewById(R.id.energy_report);
+        Button back2= view.findViewById(R.id.dd2);
+
+
 
         //Krew elements -small view
-        KrewButton= view.findViewById(R.id.button3);
-        KrewImage= view.findViewById(R.id.icon3);
-        KrewLabel= view.findViewById(R.id.button3Text);
+        Button KrewButton= view.findViewById(R.id.button3);
+        ImageView KrewImage= view.findViewById(R.id.icon3);
+        TextView KrewLabel= view.findViewById(R.id.button3Text);
 
-        //Krew elements -big view
-        Krew= view.findViewById(R.id.title3);
-        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
-        //get the request recycler view from the
+        //Krew elements -expanded view
         Button leaderboardButton = view.findViewById(R.id.leaderboard);
         Button requestsButton = view.findViewById(R.id.manage);
-        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
-        back3= view.findViewById(R.id.dd3);
 
+        //Leaderboard elements
+        TextView Krew = view.findViewById(R.id.title3);
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
+        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
+
+       //Requests elements
+        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
+        Button back3= view.findViewById(R.id.dd3);
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
         TextView your_id_text = view.findViewById(R.id.your_id_number);
