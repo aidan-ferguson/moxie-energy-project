@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/action_bar_title"
-        android:text="Your Account "
+        android:text="Your Account"
         android:textColor="@color/white"
         android:textSize="24sp" />
 </LinearLayout>
