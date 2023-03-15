@@ -61,6 +61,10 @@ import android.os.Handler;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
+/**
+ * RecyclerViewAdapter for the appliances page
+ * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<ApplianceRecyclerViewAdapter.MyViewHolder> {
     static Context context;
     ArrayList<ApplianceCardData> appliance_data;
@@ -85,6 +89,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         // Capitalise the first letter
         String pretty_name = appliance_data.get(position).getApplianceName();
         pretty_name = pretty_name.substring(0, 1).toUpperCase() + pretty_name.substring(1);
+
         // Multiple devices are concatenated together right now, so just take the first one
         if (pretty_name.contains("_")) {
             pretty_name = pretty_name.substring(0, pretty_name.indexOf("_"));
@@ -95,13 +100,13 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         // Set the progress position and colour of the progress bar
         float appliance_score = SH22Utils.getEnergyScore(appliance_data, position);
         holder.progressBar.setProgress((int) (appliance_score * 100), true);
-//        holder.progressBar.setProgress(32);
 
         int good_colour = ContextCompat.getColor(context, R.color.good_usage);
         int bad_colour = ContextCompat.getColor(context, R.color.bad_usage);
         int resultColor = ColorUtils.blendARGB(bad_colour, good_colour, appliance_score);
         holder.progressBar.setProgressTintList(ColorStateList.valueOf(resultColor));
 
+        // Create the bar chart for the appliance
         ArrayList<BarEntry> barEntriesArrayList = new ArrayList<>();
         barEntriesArrayList.add(new BarEntry(1f, appliance_data.get(position).getInitialUsage()));
         barEntriesArrayList.add(new BarEntry(2f, appliance_data.get(position).getUsageToday()));
@@ -120,60 +125,43 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         holder.barChart.getDescription().setEnabled(false);
         holder.barChart.setData(holder.barData);
         barDataSet.setColors(ColorTemplate.PASTEL_COLORS);
-
-        // setting text color.
         barDataSet.setValueTextColor(Color.BLACK);
-
-        // setting text size
         barDataSet.setValueTextSize(16f);
 
-
+        // Create the bar chart legend
         Legend legend = holder.barChart.getLegend();
-
-        legend.setCustom(new LegendEntry[]{new LegendEntry("Initial Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[0]),
-                new LegendEntry("Current Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[1]),
-                new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[2])});
-        //move the label to the top left
+        legend.setCustom(new LegendEntry[]{new LegendEntry("Initial Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[0]), new LegendEntry("Current Usage", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[1]), new LegendEntry("National Average", Legend.LegendForm.SQUARE, 10f, 2f, null, ColorTemplate.PASTEL_COLORS[2])});
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//stack the labels
-
         legend.setEnabled(true);
 
-
         //When the tips button is clicked the tips button changes colour
-        holder.TipsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                int color = context.getResources().getColor(R.color.blue_whale);
-                holder.TipsButton.setBackgroundColor(color);
-                holder.TipsButton.setTextColor(Color.WHITE);
-                holder.BreakDownButton.setBackgroundColor(Color.WHITE);
-                holder.BreakDownButton.setTextColor(color);
-                holder.barChart.setVisibility(View.GONE);
-                holder.tipsCard.setVisibility(View.VISIBLE);
-                // Fill tips card with tip
-                new Thread(() -> {
-                    try {
-                        String tip = BackendInterface.GetApplianceTip(context, appliance_data.get(position).getApplianceName());
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            holder.tipsText.setText(tip);
-                        });
-                    } catch (AuthenticationException e) {
-                        SH22Utils.Logout(context);
-                        e.printStackTrace();
-                    } catch (BackendException e) {
-                        SH22Utils.ToastException(view.getContext(), e.reason);
-                        e.printStackTrace();
-                    }
-                }).start();
+        holder.TipsButton.setOnClickListener(view -> {
+            Context context = view.getContext();
+            int color = context.getResources().getColor(R.color.blue_whale);
+            holder.TipsButton.setBackgroundColor(color);
+            holder.TipsButton.setTextColor(Color.WHITE);
+            holder.BreakDownButton.setBackgroundColor(Color.WHITE);
+            holder.BreakDownButton.setTextColor(color);
+            holder.barChart.setVisibility(View.GONE);
+            holder.tipsCard.setVisibility(View.VISIBLE);
 
-            }
+            // Fill tips card with tip
+            new Thread(() -> {
+                try {
+                    String tip = BackendInterface.GetApplianceTip(context, appliance_data.get(position).getApplianceName());
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        holder.tipsText.setText(tip);
+                    });
+                } catch (AuthenticationException e) {
+                    SH22Utils.Logout(context);
+                    e.printStackTrace();
+                } catch (BackendException e) {
+                    SH22Utils.ToastException(view.getContext(), e.reason);
+                    e.printStackTrace();
+                }
+            }).start();
         });
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -181,10 +169,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         return appliance_data.size();
     }
 
-
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-
         TextView DeviceTitle;
         ProgressBar progressBar;
         Button InvisibleButton;
@@ -198,8 +183,6 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         ImageView cautionLevel;
         BarChart barChart;
         BarData barData;
-        BarDataSet barDataSet;
-        ArrayList barEntriesArrayList;
         Button dropdownButton;
         Button button;
         TextView tipsText;
@@ -236,13 +219,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             InvisibleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
                     if (!isExpanded[0]) {
-
-
                         isExpanded[0] = true;
-
 
                         // Set the start and end values for the height and width animations
                         int initialHeight = DeviceCard.getHeight();
@@ -347,14 +325,8 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                                 InvisibleButton.setClickable(false);
                             }
                         });
-
-
                         animatorSet.start();
-
-
                     } else {
-
-
                         isExpanded[0] = false;
 
                         ViewGroup.LayoutParams layoutParams = DeviceCard.getLayoutParams();
@@ -421,24 +393,18 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
 
 
             BreakDownButton.setOnClickListener(new View.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(View view) {
-                                                       Context context = view.getContext();
-                                                       int color = context.getResources().getColor(R.color.blue_whale);
-                                                       BreakDownButton.setBackgroundColor(color);
-                                                       BreakDownButton.setTextColor(Color.WHITE);
-                                                       TipsButton.setBackgroundColor(Color.WHITE);
-                                                       TipsButton.setTextColor(color);
-                                                       tipsCard.setVisibility(View.GONE);
-                                                       barChart.setVisibility(View.VISIBLE);
-
-
-                                                   }
-
-                                               }
-            );
-
-
+                @Override
+                public void onClick(View view) {
+                    Context context = view.getContext();
+                    int color = context.getResources().getColor(R.color.blue_whale);
+                    BreakDownButton.setBackgroundColor(color);
+                    BreakDownButton.setTextColor(Color.WHITE);
+                    TipsButton.setBackgroundColor(Color.WHITE);
+                    TipsButton.setTextColor(color);
+                    tipsCard.setVisibility(View.GONE);
+                    barChart.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 }
