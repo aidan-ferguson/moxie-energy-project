@@ -44,7 +44,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:padding="12dp"
-        android:text="Make sure your kettle isnt empty before you start boiling water okay, you dont want to waste your time and energy, do you?, when you are boiling water, make sure you dont leave it unattended, you dont want to burn your house down, do you?"
+        android:text="Make sure your kettle isn't empty before you start boiling water okay, you dont want to waste your time and energy, do you?, when you are boiling water, make sure you dont leave it unattended, you dont want to burn your house down, do you?"
         android:textColor="@color/lighter_green"
         android:textSize="18sp"
         android:textStyle="bold"
