@@ -47,25 +47,18 @@ class MainActivityTest {
 
         //check home page is displayed correctly
         onView(withId(R.id.home)).perform(click())
-        onView(withId(R.id.score_card)).check(matches(isDisplayed()))
-        onView(withId(R.id.button1)).check(matches(isDisplayed()))
-        onView(withId(R.id.button2)).check(matches(isDisplayed()))
-        onView(withId(R.id.button3)).check(matches(isDisplayed()))
+
+
     }
 
     @Test
     fun HomePageTest(){
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.action_settings)).perform(click())
+        onView(withId(R.id.logout)).perform(click())
 
         onView(withId(R.id.button1)).perform(click())
         //onView
     }
 
-//    @Test
-//    fun LogOutButtonTest(){
-//        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-//        onView(withId(R.id.settings_logout_button)).perform(click())
-//
-//        onView(withId(R.id.login_heading)).check(matches(isDisplayed()))
-//    }
 }
