@@ -11,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sh22.energy_saver_app.ui.activites.LoginActivity
 import com.sh22.energy_saver_app.ui.activites.MainActivity
 import com.sh22.energy_saver_app.ui.fragments.LoginFragment
-import com.sh22.energy_saver_app.ui.fragments.SettingsFragment
 import okhttp3.internal.wait
 
 import org.junit.Test
@@ -35,7 +34,7 @@ class LoginActivityTest {
 
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
 
-        onView(withId(R.id.password)).perform(click()).perform(typeText("password"), closeSoftKeyboard())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("moxienergyxGlasgowUni2023"), closeSoftKeyboard())
 
         Thread.sleep(1500)
 
@@ -53,7 +52,5 @@ class LoginActivityTest {
 
 
         onView(withId(R.id.register_button)).perform(click())
-
-
     }
 }
