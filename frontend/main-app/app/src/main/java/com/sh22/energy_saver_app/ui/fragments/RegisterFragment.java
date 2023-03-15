@@ -122,10 +122,10 @@ public class RegisterFragment extends Fragment {
 
                                 // Parse individual field errors and show them
 
-                                json_response = ParseFieldErrors(username, "username", json_response);
-                                json_response = ParseFieldErrors(password, "password", json_response);
-                                json_response = ParseFieldErrors(firstname, "firstname", json_response);
-                                json_response = ParseFieldErrors(surname, "surname", json_response);
+                                ParseFieldErrors(username, "username", json_response);
+                                ParseFieldErrors(password, "password", json_response);
+                                ParseFieldErrors(firstname, "firstname", json_response);
+                                ParseFieldErrors(surname, "surname", json_response);
 
                             } catch (JSONException e) {
                                 ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.VISIBLE);
@@ -153,13 +153,12 @@ public class RegisterFragment extends Fragment {
         return label.getText().toString();
     }
 
-    private JSONObject ParseFieldErrors(EditText label, String labelString, JSONObject json_response) throws JSONException {
+    private void ParseFieldErrors(EditText label, String labelString, JSONObject json_response) throws JSONException {
         if(json_response.has(labelString)) {
             JSONArray response_array = json_response.getJSONArray(labelString);
             if (response_array.length() > 0) {
                 label.setError(response_array.getString(0));
             }
         }
-        return json_response;
     }
 }
