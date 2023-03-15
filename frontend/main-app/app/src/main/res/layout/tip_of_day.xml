@@ -16,7 +16,7 @@
         </androidx.appcompat.widget.AppCompatButton>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/baseline_chevron"
+        android:id="@+id/chevron"
         android:layout_width="43dp"
         android:layout_height="39dp"
         android:background="@drawable/ic_baseline_chevron_right_24"

@@ -184,7 +184,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
             DeviceTitle = itemView.findViewById(R.id.device_name);
             progressBar = itemView.findViewById(R.id.appliance_usage_bar);
             InvisibleButton = itemView.findViewById(R.id.device_name_button);
-            dropdownButton = itemView.findViewById(R.id.baseline_chevron);
+            dropdownButton = itemView.findViewById(R.id.chevron);
 
             TipsButton = itemView.findViewById(R.id.tips_rectangle);
             BreakDownButton = itemView.findViewById(R.id.breakdown);

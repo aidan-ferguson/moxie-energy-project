@@ -201,7 +201,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/baseline_chevron"
+                android:id="@+id/chevron"
                 android:layout_width="48dp"
                 android:layout_height="56dp"
                 android:background="@drawable/ic_baseline_chevron_right_24"
