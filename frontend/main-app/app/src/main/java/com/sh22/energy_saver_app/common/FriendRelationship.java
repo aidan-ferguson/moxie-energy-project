@@ -1,5 +1,9 @@
 package com.sh22.energy_saver_app.common;
 
+/**
+ * Contains a relationship between the current user and a friend, this holds all the information
+ *   about the current user and is used to display information on both FriendsRecyclerViewAdapter
+ */
 public class FriendRelationship {
     public UserInfo userInfo;
 

@@ -7,6 +7,9 @@ import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
 
+/**
+ * For holding a FriendRequest from some user to the current user
+ */
 public class FriendRequest {
     public UserInfo userInfo;
 
@@ -17,6 +20,10 @@ public class FriendRequest {
         userInfo.surname = last_name;
     }
 
+    /**
+     * Function for accepting the current friend request instance
+     * @param context - the current context of the application, used to access AuthorisationToken
+     */
     public void acceptRequest(Context context) {
         try {
             boolean ret_val = BackendInterface.AcceptFriendRequest(context, this.userInfo.user_id);
@@ -28,6 +35,10 @@ public class FriendRequest {
         }
     }
 
+    /**
+     * Function for denying the current friend request instance
+     * @param context - the current context of the application, used to access AuthorisationToken
+     */
     public void denyRequest(Context context) {
         try {
             boolean ret_val = BackendInterface.DenyFriendRequest(context, this.userInfo.user_id);
