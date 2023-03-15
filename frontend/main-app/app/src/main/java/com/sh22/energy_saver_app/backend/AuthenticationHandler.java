@@ -17,11 +17,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Class that handles all the authentication communication with the backend, as-well as storing the
+ *   tokens
+ */
 public class AuthenticationHandler {
     private static final Object logged_in_lock = new Object();
     private static Boolean logged_in = false;
 
-    // Method for getting the locally stored authentication token, throws exception if it does not exist
+    /**
+     * Method for getting the locally stored authentication token, throws exception if it does not exist
+     * @param context - the current application context
+     * @return Returns the string of the current token in the local cache
+     * @throws AuthenticationException
+     */
     public static String getLocalToken(Context context) throws AuthenticationException {
         // Attempt to get locally stored token
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
@@ -37,7 +46,11 @@ public class AuthenticationHandler {
         }
     }
 
-    // Method for storing the authentication token locally
+    /**
+     * Method for storing the authentication token locally
+     * @param context - The current application context
+     * @param token - The string to store in the local credential store
+     */
     private static void setLocalToken(Context context, String token){
         synchronized (logged_in_lock) {
             AuthenticationHandler.logged_in = true;
@@ -48,7 +61,10 @@ public class AuthenticationHandler {
         editor.apply();
     }
 
-    // Method to logout, will also clear BackendHandler cache
+    /**
+     * Method to logout, will also clear BackendHandler cache
+     * @param context - The current application context
+     */
     public static void Logout(Context context) {
         // We need to ensure that only one thread can logout at a time
         synchronized (logged_in_lock) {
@@ -60,7 +76,10 @@ public class AuthenticationHandler {
         }
     }
 
-    // Method to clear any stored tokens
+    /**
+     * Method to clear any stored tokens
+     * @param context - The current application context
+     */
     public static void clearLocalToken(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -68,7 +87,11 @@ public class AuthenticationHandler {
         editor.apply();
     }
 
-    // Method for checking if the user is authenticated with the backend
+    /**
+     * Method for checking if the user is authenticated with the backend
+     * @param context - The current application context
+     * @return True/False depending on if user has a token
+     */
     public static Boolean isLocallyAuthenticated(Context context) {
         String token = null;
         try {
@@ -83,7 +106,13 @@ public class AuthenticationHandler {
         return true;
     }
 
-    // Method that will attempt to get and store a new token from the backend given an email & password
+    /**
+     * Method that will attempt to get and store a new token from the backend by logging in
+     * @param context - The current application context
+     * @param email - E-Mail/Username to log in as
+     * @param password - Password to log in with
+     * @return AuthenticationStatus objects indicating success & data
+     */
     public static AuthenticationStatus tryLogin(Context context, String email, String password) {
         // Attempt to connect to endpoint and authenticate
         String url_str = Constants.SERVER_BASE_URL + "/auth/get-token";
@@ -121,6 +150,15 @@ public class AuthenticationHandler {
         } catch (IOException | JSONException e) { e.printStackTrace(); return AuthenticationStatus.FailedAuth(Constants.INTERNAL_ERROR);}
     }
 
+    /**
+     * Attempt to register a user with the backend
+     * @param context - Current application context
+     * @param username - Username (formatted as E-Mail) to register with
+     * @param password - Password to register with
+     * @param firstname - Firstname to register with
+     * @param surname - Surname to register with
+     * @return AuthenticationStatus objects indicating success & data
+     */
     public static AuthenticationStatus registerUser(Context context, String username, String password, String firstname, String surname) {
         String url_str = Constants.SERVER_BASE_URL + "/auth/register";
         URL url = null;
