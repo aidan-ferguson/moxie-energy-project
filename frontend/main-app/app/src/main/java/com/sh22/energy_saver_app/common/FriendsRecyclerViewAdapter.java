@@ -44,9 +44,13 @@ import java.util.ArrayList;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
+/**
+ * RecyclerView for the friend requests page
+ * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.MyViewHolder> {
-    private Context mContext;
-    private ArrayList<FriendRequest> mRequests;
+    private final Context mContext;
+    private final ArrayList<FriendRequest> mRequests;
 
     public FriendsRecyclerViewAdapter(Context context, ArrayList<FriendRequest> requests) {
         mContext = context;
@@ -64,9 +68,11 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        // Populate the name of the person requesting
         String firstname = mRequests.get(position).userInfo.firstname;
         String surname = mRequests.get(position).userInfo.surname;
-        holder.personName.setText(firstname+ " " + surname);
+        String full_name = firstname + " " + surname;
+        holder.personName.setText(full_name);
     }
 
     @Override
@@ -74,6 +80,9 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         return mRequests.size();
     }
 
+    /**
+     * View holder for the FriendsRecyclerView adapter
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView personName;
         Button accept;
@@ -100,7 +109,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                             public void onAnimationStart(Animator animator) {}
                             @Override
                             public void onAnimationEnd(Animator animation) {
-
                                 notifyDataSetChanged();
                             }
                             @Override
@@ -109,9 +117,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                             public void onAnimationRepeat(Animator animator) {}
                         });
                         alphaAnimator.start();
-
-
-
                     });
                 }).start();
             });
@@ -121,11 +126,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                 new Thread(() -> {
                     mRequests.get(getAdapterPosition()).denyRequest(mContext);
                     ((FragmentActivity) mContext).runOnUiThread(() -> {
-
-
-                        //decline
-
-
                         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f);
                         alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
                         alphaAnimator.setDuration(500);
@@ -134,7 +134,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                             public void onAnimationStart(Animator animator) {}
                             @Override
                             public void onAnimationEnd(Animator animation) {
-
                                 notifyDataSetChanged();
                             }
                             @Override

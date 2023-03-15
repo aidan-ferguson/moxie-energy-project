@@ -2,15 +2,15 @@
     <!-- Base application theme. -->
     <style name="Theme.ProgressBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorPrimary">@color/forest_green</item>
+        <item name="colorPrimaryVariant">@color/forest_green</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/blue_whale</item>
+        <item name="colorSecondary">@color/lighter_green</item>
         <item name="colorSecondaryVariant">@color/beaver</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/forest_green</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/blue_whale</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/lighter_green</item>
         <!-- Customize your theme here. -->
     </style>
 
