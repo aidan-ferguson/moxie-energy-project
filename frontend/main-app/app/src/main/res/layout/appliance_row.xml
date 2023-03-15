@@ -30,7 +30,6 @@
             android:layout_height="match_parent"
             tools:ignore="MissingClass">
 
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/device_name_button"
                 android:layout_width="match_parent"
@@ -67,7 +66,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_rectangle_button2"
-                android:text="Tips"
+                android:text="Tips "
                 android:textColor="@color/lighter_green"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -95,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Device Name:"
+                android:text="Device Name: "
                 android:textColor="@color/forest_green"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
