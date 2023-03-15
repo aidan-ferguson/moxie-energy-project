@@ -401,7 +401,7 @@ public class HomeFragment extends Fragment {
         TextView EnergyReportLabel= view.findViewById(R.id.button2Text);
 
         //Energy report elements -big view
-        TextView EnergyReport= view.findViewById(R.id.dropdownAdvisor);
+        TextView EnergyReport= view.findViewById(R.id.title2);
         ScrollView scrollView = view.findViewById(R.id.report_scroll);
         TextView EnergyReportText= view.findViewById(R.id.energy_report);
         Button back2= view.findViewById(R.id.dropdownAdvisor);
