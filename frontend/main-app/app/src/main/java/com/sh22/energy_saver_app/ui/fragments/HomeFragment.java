@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,21 +30,17 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
 import com.sh22.energy_saver_app.R;
 import com.sh22.energy_saver_app.backend.BackendException;
 import com.sh22.energy_saver_app.common.ActiveFriendsRecyclerViewAdapter;
-import com.sh22.energy_saver_app.common.ApplianceCardData;
 import com.sh22.energy_saver_app.common.ApplianceData;
 import com.sh22.energy_saver_app.backend.AuthenticationException;
 import com.sh22.energy_saver_app.backend.BackendInterface;
-import com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter;
 import com.sh22.energy_saver_app.common.Constants;
 import com.sh22.energy_saver_app.common.Friends;
 import com.sh22.energy_saver_app.common.FriendsRecyclerViewAdapter;
@@ -53,12 +48,7 @@ import com.sh22.energy_saver_app.common.SH22Utils;
 import com.sh22.energy_saver_app.common.UserInfo;
 import com.sh22.energy_saver_app.ui.activites.MainActivity;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,15 +102,15 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void decreaseHeight(View view){
+    public void decreaseHeight(View view) {
         CardView card;
         CardView card2;
 
-        card= view.findViewById(R.id.score_card);
+        card = view.findViewById(R.id.score_card);
         card2 = view.findViewById(R.id.center_card);
         ViewGroup.LayoutParams layoutParams = card2.getLayoutParams();
 
-        int newWidth = card2.getWidth()-150;
+        int newWidth = card2.getWidth() - 150;
         int newHeight = SH22Utils.dpToPixels(view.getContext(), 350);
         ValueAnimator heightAnimator = ValueAnimator.ofInt(card2.getHeight(), newHeight);
         ValueAnimator widthAnimator = ValueAnimator.ofInt(card2.getWidth(), newWidth);
@@ -155,6 +145,7 @@ public class HomeFragment extends Fragment {
 
 
     }
+
     public HomeFragment() {
 
     }
@@ -172,8 +163,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -182,12 +171,12 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#62A526"));
-        ((MainActivity)getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
+        ((MainActivity) getActivity()).getterActionBar().setBackgroundDrawable(colorDrawable);
+        ((MainActivity) getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#FFFFFF'>Welcome</font></div></center>"));
 
-        ((MainActivity)getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
-        ((MainActivity)getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((MainActivity)getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
+        ((MainActivity) getActivity()).getterActionBar().setTitle(Html.fromHtml("<center><div><font color='#DEB276'>Welcome</font></div></center>"));
+        ((MainActivity) getActivity()).getterActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((MainActivity) getActivity()).getterActionBar().setCustomView(R.layout.action_bar);
 
 
         // Network calls are ordered by what will be the quickest
@@ -195,11 +184,11 @@ public class HomeFragment extends Fragment {
         // Await appliance data coming in and update the page accordingly
         new Thread(() -> {
             try {
-                int o =BackendInterface.GetUserInfo(view.getContext()).user_id;
+                int o = BackendInterface.GetUserInfo(view.getContext()).user_id;
                 // interger to string
 
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
-                if(appliance_data == null) {
+                if (appliance_data == null) {
                     Log.e("SH22", "Error loading appliance data");
                     throw new IOException();
                 }
@@ -207,12 +196,12 @@ public class HomeFragment extends Fragment {
                 // When we get the data, update the UI
                 // Some time may have passed so we need to check if the activity is now null
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Currently the score will be the daily aggregate as a percentage of some number
                         float score = appliance_data.energy_score;//SH22Utils.getEnergyScore(appliance_data, "aggregate");
                         TextView v = view.findViewById(R.id.your_id_number);
-                        int progress = (Math.round(score * 100) - 50)*2;
+                        int progress = (Math.round(score * 100) - 50) * 2;
 
                         int bad_colour = ContextCompat.getColor(activity, R.color.bad_usage);
                         int mid_colour = ContextCompat.getColor(activity, R.color.mid_usage);
@@ -220,80 +209,55 @@ public class HomeFragment extends Fragment {
                         v.setText(Integer.toString(o));
                         int resultColor = 0;
 
-                        if(score < 0.5)
-                        {
+                        if (score < 0.5) {
                             resultColor = ColorUtils.blendARGB(bad_colour, mid_colour, score);
-                        }
-                        else
-                        {
+                        } else {
                             resultColor = ColorUtils.blendARGB(mid_colour, good_colour, score);
                         }
-
 
 
                         HalfGauge gauge = view.findViewById(R.id.halfGauge);
                         gauge.setMinValue(-100);
                         gauge.setMaxValue(100);
                         gauge.setValue(progress);
-                        for(int i = -50; i < 50; i++)
-                        {
+                        for (int i = -50; i < 50; i++) {
                             Range range = new Range();
-                            int colorToSet = ColorUtils.blendARGB(bad_colour, mid_colour, (i+50)/100f);
+                            int colorToSet = ColorUtils.blendARGB(bad_colour, mid_colour, (i + 50) / 100f);
                             range.setColor(colorToSet);
-                            range.setFrom(i-50);
-                            range.setTo(i-49);
+                            range.setFrom(i - 50);
+                            range.setTo(i - 49);
                             gauge.addRange(range);
                         }
 
-                        for(int i = -50; i < 50; i++)
-                        {
+                        for (int i = -50; i < 50; i++) {
                             Range range = new Range();
-                            int colorToSet = ColorUtils.blendARGB(mid_colour, good_colour, (i+50)/100f);
+                            int colorToSet = ColorUtils.blendARGB(mid_colour, good_colour, (i + 50) / 100f);
                             range.setColor(colorToSet);
-                            range.setFrom(i+50);
-                            range.setTo(i+49);
+                            range.setFrom(i + 50);
+                            range.setTo(i + 49);
                             gauge.addRange(range);
                         }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if(progress <= -50)
-                        {
+                        if (progress <= -50) {
                             letterGrade.setText("F-");
-                        }
-                        else if (progress <= -40)
-                        {
+                        } else if (progress <= -40) {
                             letterGrade.setText("F+");
-                        }
-                        else if(progress <= -30)
-                        {
+                        } else if (progress <= -30) {
                             letterGrade.setText("D-");
-                        }
-                        else if(progress <= -20)
-                        {
+                        } else if (progress <= -20) {
                             letterGrade.setText("D+");
-                        }
-                        else if (progress <= -10)
-                        {
+                        } else if (progress <= -10) {
                             letterGrade.setText("C-");
-                        }
-                        else if (progress <= 10)
-                        {
+                        } else if (progress <= 10) {
                             letterGrade.setText("C+");
-                        }
-                        else if (progress <= 20)
-                        {
+                        } else if (progress <= 20) {
                             letterGrade.setText("B-");
-                        }
-                        else if (progress <= 30)
-                        {
+                        } else if (progress <= 30) {
                             letterGrade.setText("B+");
-                        }
-                        else if (progress <= 40)
-                        {
+                        } else if (progress <= 40) {
                             letterGrade.setText("A-");
-                        }
-                        else if (progress > 40)
-                        {
+                        } else if (progress > 40) {
                             letterGrade.setText("A+");
                         }
                         letterGrade.setTextColor(resultColor);
@@ -313,11 +277,11 @@ public class HomeFragment extends Fragment {
             try {
 
                 UserInfo userInfo = BackendInterface.GetUserInfo(view.getContext());
-                if(userInfo != null) {
+                if (userInfo != null) {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-                            ((TextView)activity.findViewById(R.id.action_bar_title)).setText("Welcome, " + userInfo.firstname);
+                            ((TextView) activity.findViewById(R.id.action_bar_title)).setText("Welcome, " + userInfo.firstname);
                         });
                     }
                 }
@@ -333,7 +297,7 @@ public class HomeFragment extends Fragment {
             try {
                 String totd = BackendInterface.GetTOTD(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Tip of the day
                         TextView textView = view.findViewById(R.id.tip_of_the_day);
@@ -351,7 +315,7 @@ public class HomeFragment extends Fragment {
             try {
                 String energy_report = BackendInterface.GetEnergyReport(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Usage report
                         TextView report_text_view = view.findViewById(R.id.energy_report);
@@ -372,13 +336,14 @@ public class HomeFragment extends Fragment {
 
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.request_recycler_view);
                         FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter(view.getContext(), friends.requests);
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    });
                 }
 
             } catch (AuthenticationException e) {
@@ -397,7 +362,7 @@ public class HomeFragment extends Fragment {
 
                 Friends friends = BackendInterface.GetFriends(view.getContext());
                 FragmentActivity activity = getActivity();
-                if(activity != null) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
                         // Now attach the recycler view class to the view in the layout
                         RecyclerView recyclerView = view.findViewById(R.id.friends_recycler_view);
@@ -410,7 +375,8 @@ public class HomeFragment extends Fragment {
                             e.printStackTrace();
                         }
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));});
+                        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    });
                 }
 
             } catch (AuthenticationException e) {
@@ -424,108 +390,69 @@ public class HomeFragment extends Fragment {
         ).start();
 
 
-
-
-
-        Button button1;
-        Button button2;
-        Button button3;
-        Button button4;
-        ImageView icon1;
-        ImageView icon2;
-        ImageView icon3;
-        ImageView icon4;
-        TextView label1;
-        TextView label2;
-        TextView label3;
-        TextView label4;
-        CardView card;
-        CardView card2;
-          ;
-
-        card= view.findViewById(R.id.score_card);
-        card2 = view.findViewById(R.id.center_card);
-
-
-        TextView TipOfTheDay;
-        TextView Tip;
-        Button back1;
-        TextView v;
-        v = view.findViewById(R.id.your_id_number);
-
-        TextView EnergyReport;
-        ScrollView scrollView;
-        TextView EnergyReportText;
-        Button back2;
-
-        TextView Krew;
-        RecyclerView KrewView;
-        Button back3;
+        CardView card = view.findViewById(R.id.score_card);
+        CardView card2 = view.findViewById(R.id.center_card);
 
         //Tip of the day elements -small view
-        button1= view.findViewById(R.id.button1);
-        icon1= view.findViewById(R.id.icon1);
-        label1= view.findViewById(R.id.button1Text);
+        Button TipOfDayButton = view.findViewById(R.id.button1);
+        ImageView TipOfDayImage = view.findViewById(R.id.icon1);
+        TextView TipOfDayLabel = view.findViewById(R.id.button1Text);
 
-        //Tip of the day elements -big view
-        TipOfTheDay= view.findViewById(R.id.title1);
-        Tip= view.findViewById(R.id.tip_of_the_day);
-        back1= view.findViewById(R.id.dd1);
+        //Tip of the day elements -expanded view
+        TextView TipOfTheDay = view.findViewById(R.id.title1);
+        TextView Tip = view.findViewById(R.id.tip_of_the_day);
+        Button back1 = view.findViewById(R.id.dd1);
+
 
         //Energy report elements -small view
-        button2= view.findViewById(R.id.button2);
-        icon2= view.findViewById(R.id.icon2);
-        label2= view.findViewById(R.id.button2Text);
+        Button EnergyReportButton = view.findViewById(R.id.button2);
+        ImageView EnergyReportImage = view.findViewById(R.id.icon2);
+        TextView EnergyReportLabel = view.findViewById(R.id.button2Text);
 
-        //Energy report elements -big view
-        EnergyReport= view.findViewById(R.id.title2);
-        scrollView= view.findViewById(R.id.report_scroll);
-        EnergyReportText= view.findViewById(R.id.energy_report);
-        back2= view.findViewById(R.id.dd2);
+        //Energy report elements -expanded view
+        TextView EnergyReport = view.findViewById(R.id.title2);
+        ScrollView scrollView = view.findViewById(R.id.report_scroll);
+        TextView EnergyReportText = view.findViewById(R.id.energy_report);
+        Button back2 = view.findViewById(R.id.dd2);
+
 
         //Krew elements -small view
-        button3= view.findViewById(R.id.button3);
-        icon3= view.findViewById(R.id.icon3);
-        label3= view.findViewById(R.id.button3Text);
+        Button KrewButton = view.findViewById(R.id.button3);
+        ImageView KrewImage = view.findViewById(R.id.icon3);
+        TextView KrewLabel = view.findViewById(R.id.button3Text);
 
-        //Krew elements -big view
-        Krew= view.findViewById(R.id.title3);
-        RecyclerView leaderboard= view.findViewById(R.id.friends_recycler_view);
-        //get the request recycler view from the
+        //Krew elements -expanded view
         Button leaderboardButton = view.findViewById(R.id.leaderboard);
         Button requestsButton = view.findViewById(R.id.manage);
-        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
-        back3= view.findViewById(R.id.dd3);
 
+        //Leaderboard elements
+        TextView Krew = view.findViewById(R.id.title3);
         TextView leaderboardtitle = view.findViewById(R.id.leaderboardtitle);
+        RecyclerView leaderboard = view.findViewById(R.id.friends_recycler_view);
+
+        //Requests elements
+        RecyclerView requests = view.findViewById(R.id.request_recycler_view);
+        Button back3 = view.findViewById(R.id.dd3);
         EditText send_request = view.findViewById(R.id.friend_id);
         TextView your_id = view.findViewById(R.id.your_id);
         TextView your_id_text = view.findViewById(R.id.your_id_number);
         Button send = view.findViewById(R.id.enter);
 
 
-
-
-
-
         View parent = view.findViewById(R.id.center_card);
 
-        //method that increases the size of the card to be used in onclick functions
 
-
-
-
-        button1.setOnClickListener(new View.OnClickListener() {
+        TipOfDayButton.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View v) {
 
-                ViewGroup.LayoutParams layoutParams = button1.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = TipOfDayButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (button1.getWidth() * 2) + parent.getWidth() - amount - (2 * button1.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button1.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button1.getWidth(), newWidth);
+                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(TipOfDayButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(TipOfDayButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -536,7 +463,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button1.setLayoutParams(layoutParams);
+                        TipOfDayButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -544,7 +471,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button1.setLayoutParams(layoutParams);
+                        TipOfDayButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -556,39 +483,37 @@ public class HomeFragment extends Fragment {
                 increaseHeight(view);
 
 
+                EnergyReportButton.setVisibility(View.GONE);
+                KrewButton.setVisibility(View.GONE);
 
 
-
-                button2.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
-
-
-                icon2.setVisibility(View.GONE);
-                icon3.setVisibility(View.GONE);
+                EnergyReportImage.setVisibility(View.GONE);
+                KrewImage.setVisibility(View.GONE);
 
 
-                label2.setVisibility(View.GONE);
-                label3.setVisibility(View.GONE);
+                EnergyReportLabel.setVisibility(View.GONE);
+                KrewLabel.setVisibility(View.GONE);
 
-                label1.setVisibility(View.VISIBLE);
-                icon1.setVisibility(View.GONE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.GONE);
 
 
-                label1.setVisibility(View.GONE);
-                icon1.setVisibility(View.GONE);
+                TipOfDayLabel.setVisibility(View.GONE);
+                TipOfDayImage.setVisibility(View.GONE);
                 ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(Tip, "alpha", 0, 1);
                 fadeInAnimator.setDuration(1000); // 1 second
                 ObjectAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(TipOfTheDay, "alpha", 0, 1);
                 fadeInAnimator2.setDuration(1000); // 1 second
 
 
-                fadeInAnimator.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         Tip.setVisibility(View.VISIBLE);
 
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -604,13 +529,14 @@ public class HomeFragment extends Fragment {
                         // Optional: add code to run when the animation repeats
                     }
                 });
-                fadeInAnimator2.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator2.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
 
                         TipOfTheDay.setVisibility(View.VISIBLE);
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -633,7 +559,7 @@ public class HomeFragment extends Fragment {
                 // Start the animation
                 animatorSet.start();
 
-                button1.setClickable(false);
+                TipOfDayButton.setClickable(false);
 
 
             }
@@ -643,16 +569,16 @@ public class HomeFragment extends Fragment {
         back1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button1.setBackground(getResources().getDrawable(R.drawable.layout_bg3));
+                TipOfDayButton.setBackground(getResources().getDrawable(R.drawable.layout_bg3));
 
 
-                button1.setClickable(true);
-                ViewGroup.LayoutParams layoutParams = button1.getLayoutParams();
+                TipOfDayButton.setClickable(true);
+                ViewGroup.LayoutParams layoutParams = TipOfDayButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = button2.getWidth();
-                int newHeight = button2.getHeight();
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button1.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button1.getWidth(), newWidth);
+                int newWidth = EnergyReportButton.getWidth();
+                int newHeight = EnergyReportButton.getHeight();
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(TipOfDayButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(TipOfDayButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -663,7 +589,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button1.setLayoutParams(layoutParams);
+                        TipOfDayButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -671,7 +597,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button1.setLayoutParams(layoutParams);
+                        TipOfDayButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -683,23 +609,23 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
 
 
-                button2.setVisibility(View.VISIBLE);
-                button3.setVisibility(View.VISIBLE);
+                EnergyReportButton.setVisibility(View.VISIBLE);
+                KrewButton.setVisibility(View.VISIBLE);
 
 
-                icon2.setVisibility(View.VISIBLE);
-                icon3.setVisibility(View.VISIBLE);
+                EnergyReportImage.setVisibility(View.VISIBLE);
+                KrewImage.setVisibility(View.VISIBLE);
 
 
-                label2.setVisibility(View.VISIBLE);
-                label3.setVisibility(View.VISIBLE);
+                EnergyReportLabel.setVisibility(View.VISIBLE);
+                KrewLabel.setVisibility(View.VISIBLE);
 
-                label1.setVisibility(View.VISIBLE);
-                icon1.setVisibility(View.VISIBLE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.VISIBLE);
 
 
-                label1.setVisibility(View.VISIBLE);
-                icon1.setVisibility(View.VISIBLE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.VISIBLE);
                 Tip.setVisibility(View.GONE);
                 TipOfTheDay.setVisibility(View.GONE);
                 back1.setVisibility(View.GONE);
@@ -707,30 +633,17 @@ public class HomeFragment extends Fragment {
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        button2.setOnClickListener(new View.OnClickListener() {
+        EnergyReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                ViewGroup.LayoutParams layoutParams = button2.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = EnergyReportButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (button2.getWidth()*2)+ parent.getWidth()-amount-(2*button2.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button2.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button2.getWidth(), newWidth);
+                int newWidth = (EnergyReportButton.getWidth() * 2) + parent.getWidth() - amount - (2 * EnergyReportButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(EnergyReportButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(EnergyReportButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -741,7 +654,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button2.setLayoutParams(layoutParams);
+                        EnergyReportButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -749,7 +662,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button2.setLayoutParams(layoutParams);
+                        EnergyReportButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -760,35 +673,35 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
 
 
-                button1.setVisibility(View.GONE);
-                button3.setVisibility(View.GONE);
+                TipOfDayButton.setVisibility(View.GONE);
+                KrewButton.setVisibility(View.GONE);
 
 
-                icon1.setVisibility(View.GONE);
-                icon3.setVisibility(View.GONE);
+                TipOfDayImage.setVisibility(View.GONE);
+                KrewImage.setVisibility(View.GONE);
 
 
-                label1.setVisibility(View.GONE);
-                label3.setVisibility(View.GONE);
+                TipOfDayLabel.setVisibility(View.GONE);
+                KrewLabel.setVisibility(View.GONE);
 
 
-                label2.setVisibility(View.GONE);
-                icon2.setVisibility(View.GONE);
-                button2.setClickable(false);
+                EnergyReportLabel.setVisibility(View.GONE);
+                EnergyReportImage.setVisibility(View.GONE);
+                EnergyReportButton.setClickable(false);
                 ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(EnergyReport, "alpha", 0, 1);
                 fadeInAnimator.setDuration(600); // 1 second
                 ObjectAnimator fadeInAnimator2 = ObjectAnimator.ofFloat(scrollView, "alpha", 0, 1);
                 fadeInAnimator2.setDuration(600); // 1 second
 
 
-                fadeInAnimator.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         EnergyReport.setVisibility(View.VISIBLE);
 
 
-
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -804,7 +717,7 @@ public class HomeFragment extends Fragment {
                         // Optional: add code to run when the animation repeats
                     }
                 });
-                fadeInAnimator2.addListener(new Animator.AnimatorListener(){
+                fadeInAnimator2.addListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                         scrollView.setVisibility(View.VISIBLE);
@@ -812,6 +725,7 @@ public class HomeFragment extends Fragment {
 
 
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // Optional: add code to run when the animation ends
@@ -841,12 +755,12 @@ public class HomeFragment extends Fragment {
         back2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewGroup.LayoutParams layoutParams = button2.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = EnergyReportButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = button1.getWidth();
-                int newHeight = button1.getHeight();
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button2.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button2.getWidth(), newWidth);
+                int newWidth = TipOfDayButton.getWidth();
+                int newHeight = TipOfDayButton.getHeight();
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(EnergyReportButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(EnergyReportButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -857,7 +771,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button2.setLayoutParams(layoutParams);
+                        EnergyReportButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -865,7 +779,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button2.setLayoutParams(layoutParams);
+                        EnergyReportButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -876,40 +790,40 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
 
 
-                button1.setVisibility(View.VISIBLE);
-                button3.setVisibility(View.VISIBLE);
+                TipOfDayButton.setVisibility(View.VISIBLE);
+                KrewButton.setVisibility(View.VISIBLE);
 
 
-                icon1.setVisibility(View.VISIBLE);
-                icon3.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.VISIBLE);
+                KrewImage.setVisibility(View.VISIBLE);
 
 
-                label1.setVisibility(View.VISIBLE);
-                label3.setVisibility(View.VISIBLE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
+                KrewLabel.setVisibility(View.VISIBLE);
 
-                label2.setVisibility(View.VISIBLE);
-                icon2.setVisibility(View.VISIBLE);
+                EnergyReportLabel.setVisibility(View.VISIBLE);
+                EnergyReportImage.setVisibility(View.VISIBLE);
 
 
-                label2.setVisibility(View.VISIBLE);
-                icon2.setVisibility(View.VISIBLE);
+                EnergyReportLabel.setVisibility(View.VISIBLE);
+                EnergyReportImage.setVisibility(View.VISIBLE);
                 EnergyReport.setVisibility(View.GONE);
                 scrollView.setVisibility(View.GONE);
                 back2.setVisibility(View.GONE);
-                button2.setClickable(true);
+                EnergyReportButton.setClickable(true);
             }
         });
 
-        button3.setOnClickListener(new View.OnClickListener() {
+        KrewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ViewGroup.LayoutParams layoutParams = button3.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = KrewButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = (button1.getWidth() * 2) + parent.getWidth() - amount - (2 * button1.getWidth())+150;
-                int newHeight = card.getHeight()*2-100;
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button3.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button3.getWidth(), newWidth);
+                int newWidth = (TipOfDayButton.getWidth() * 2) + parent.getWidth() - amount - (2 * TipOfDayButton.getWidth()) + 150;
+                int newHeight = card.getHeight() * 2 - 100;
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(KrewButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(KrewButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -920,7 +834,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button3.setLayoutParams(layoutParams);
+                        KrewButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -928,7 +842,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button3.setLayoutParams(layoutParams);
+                        KrewButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -939,20 +853,20 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
 
 
-                button1.setVisibility(View.GONE);
-                button2.setVisibility(View.GONE);
+                TipOfDayButton.setVisibility(View.GONE);
+                EnergyReportButton.setVisibility(View.GONE);
 
 
-                icon1.setVisibility(View.GONE);
-                icon2.setVisibility(View.GONE);
+                TipOfDayImage.setVisibility(View.GONE);
+                EnergyReportImage.setVisibility(View.GONE);
 
-                icon3.setVisibility(View.GONE);
+                KrewImage.setVisibility(View.GONE);
 
 
-                label1.setVisibility(View.GONE);
-                label2.setVisibility(View.GONE);
+                TipOfDayLabel.setVisibility(View.GONE);
+                EnergyReportLabel.setVisibility(View.GONE);
 
-                label3.setVisibility(View.GONE);
+                KrewLabel.setVisibility(View.GONE);
                 back3.setVisibility(View.VISIBLE);
 
                 Krew.setVisibility(View.VISIBLE);
@@ -961,17 +875,14 @@ public class HomeFragment extends Fragment {
                 leaderboardButton.setVisibility(View.VISIBLE);
                 leaderboardButton.setBackground(getResources().getDrawable(R.drawable.layout_bg6));
                 requestsButton.setBackground(getResources().getDrawable(R.drawable.layout_bg7));
-                button3.setVisibility(View.GONE);
+                KrewButton.setVisibility(View.GONE);
                 leaderboardtitle.setVisibility(View.VISIBLE);
                 leaderboardtitle.setText("Your Energy Leaderboard");
                 leaderboardButton.setTextColor(Color.parseColor("#ffffff"));
                 requestsButton.setTextColor(Color.parseColor("#62A526"));
 
 
-
-
-                button3.setClickable(false);
-
+                KrewButton.setClickable(false);
 
 
             }
@@ -981,16 +892,16 @@ public class HomeFragment extends Fragment {
         back3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button3.setBackground(getResources().getDrawable(R.drawable.layout_bg3));
+                KrewButton.setBackground(getResources().getDrawable(R.drawable.layout_bg3));
 
 
-                button3.setClickable(true);
-                ViewGroup.LayoutParams layoutParams = button3.getLayoutParams();
+                KrewButton.setClickable(true);
+                ViewGroup.LayoutParams layoutParams = KrewButton.getLayoutParams();
                 Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = button2.getWidth();
-                int newHeight = button2.getHeight();
-                ValueAnimator heightAnimator = ValueAnimator.ofInt(button3.getHeight(), newHeight);
-                ValueAnimator widthAnimator = ValueAnimator.ofInt(button3.getWidth(), newWidth);
+                int newWidth = EnergyReportButton.getWidth();
+                int newHeight = EnergyReportButton.getHeight();
+                ValueAnimator heightAnimator = ValueAnimator.ofInt(KrewButton.getHeight(), newHeight);
+                ValueAnimator widthAnimator = ValueAnimator.ofInt(KrewButton.getWidth(), newWidth);
 
                 heightAnimator.setDuration(200);
                 heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -1001,7 +912,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.height = value;
-                        button3.setLayoutParams(layoutParams);
+                        KrewButton.setLayoutParams(layoutParams);
                     }
                 });
                 widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -1009,7 +920,7 @@ public class HomeFragment extends Fragment {
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int value = (int) animation.getAnimatedValue();
                         layoutParams.width = value;
-                        button3.setLayoutParams(layoutParams);
+                        KrewButton.setLayoutParams(layoutParams);
                     }
                 });
 
@@ -1021,23 +932,23 @@ public class HomeFragment extends Fragment {
                 animatorSet.start();
 
 
-                button2.setVisibility(View.VISIBLE);
-                button1.setVisibility(View.VISIBLE);
+                EnergyReportButton.setVisibility(View.VISIBLE);
+                TipOfDayButton.setVisibility(View.VISIBLE);
 
-                button3.setVisibility(View.VISIBLE);
+                KrewButton.setVisibility(View.VISIBLE);
 
-                icon2.setVisibility(View.VISIBLE);
-                icon1.setVisibility(View.VISIBLE);
+                EnergyReportImage.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.VISIBLE);
                 ;
-                icon3.setVisibility(View.VISIBLE);
+                KrewImage.setVisibility(View.VISIBLE);
 
-                label2.setVisibility(View.VISIBLE);
-                label1.setVisibility(View.VISIBLE);
+                EnergyReportLabel.setVisibility(View.VISIBLE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
 
-                label3.setVisibility(View.VISIBLE);
+                KrewLabel.setVisibility(View.VISIBLE);
 
-                label1.setVisibility(View.VISIBLE);
-                icon1.setVisibility(View.VISIBLE);
+                TipOfDayLabel.setVisibility(View.VISIBLE);
+                TipOfDayImage.setVisibility(View.VISIBLE);
                 Krew.setVisibility(View.GONE);
 
                 requests.setVisibility(View.VISIBLE);
@@ -1077,12 +988,6 @@ public class HomeFragment extends Fragment {
                 your_id_text.setVisibility(View.GONE);
                 //green (blue_jeans) = #2ECC71
                 requestsButton.setTextColor(Color.parseColor("#62A526"));
-
-
-
-
-
-
 
 
             }
@@ -1149,7 +1054,7 @@ public class HomeFragment extends Fragment {
         });
 
 
+        return view;
 
-  return view;
-
-}}
+    }
+}
