@@ -75,9 +75,9 @@ class LoginActivityTest {
 
         //check homepage is displayed correctly after account creation
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
-        onView(withId(R.id.button1)).check(matches(isDisplayed()))
-        onView(withId(R.id.button2)).check(matches(isDisplayed()))
-        onView(withId(R.id.button3)).check(matches(isDisplayed()))
+        onView(withId(R.id.tip_square)).check(matches(isDisplayed()))
+        onView(withId(R.id.breakdown)).check(matches(isDisplayed()))
+        onView(withId(R.id.kilowattButton)).check(matches(isDisplayed()))
         onView(withId(R.id.halfGauge)).check(matches(isDisplayed()))
 
         //delete fake account

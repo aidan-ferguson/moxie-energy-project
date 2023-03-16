@@ -32,7 +32,6 @@ class MainActivityTest {
     fun NavBarTest() {
         // launches main activity and checks whether nav bar is in view
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        val fragmentScenario = FragmentScenario.launchInContainer(HomeFragment::class.java)
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
 
         //check nav bar can switch between fragments
@@ -47,38 +46,37 @@ class MainActivityTest {
 
         //check home page is displayed correctly
         onView(withId(R.id.home)).perform(click())
-        onView(withId(R.id.button1)).check(matches(isDisplayed()))
-        onView(withId(R.id.button2)).check(matches(isDisplayed()))
-        onView(withId(R.id.button3)).check(matches(isDisplayed()))
+        onView(withId(R.id.tip_square)).check(matches(isDisplayed()))
+        onView(withId(R.id.breakdown)).check(matches(isDisplayed()))
+        onView(withId(R.id.kilowattButton)).check(matches(isDisplayed()))
         onView(withId(R.id.halfGauge)).check(matches(isDisplayed()))
 
 
     }
 
     @Test
-    fun HomePageTest(){
+    fun TipPageTest(){
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
 
-        onView(withId(R.id.button1)).perform(click())
+        onView(withId(R.id.tip_square)).perform(click())
         Thread.sleep(2500)
-        onView(withId(R.id.button2)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.button3)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.dd1)).perform(click())
-        Thread.sleep(2500)
-
-        onView(withId(R.id.button2)).perform(click())
-        Thread.sleep(2500)
-        onView(withId(R.id.button1)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.button3)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.dd2)).perform(click())
-        Thread.sleep(2500)
-
-        onView(withId(R.id.button3)).perform(click())
-        Thread.sleep(2500)
-        onView(withId(R.id.button1)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.button2)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.dd3)).perform(click())
-        Thread.sleep(2500)
+        onView(withId(R.id.breakdown)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.kilowattButton)).check(matches(not(isDisplayed())))
     }
 
+    @Test
+    fun breakdownPageTest(){
+        onView(withId(R.id.breakdown)).perform(click())
+        Thread.sleep(2500)
+        onView(withId(R.id.tip_square)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.kilowattButton)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun krewPageTest(){
+        onView(withId(R.id.kilowattButton)).perform(click())
+        Thread.sleep(2500)
+        onView(withId(R.id.tip_square)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.breakdown)).check(matches(not(isDisplayed())))
+    }
 }
