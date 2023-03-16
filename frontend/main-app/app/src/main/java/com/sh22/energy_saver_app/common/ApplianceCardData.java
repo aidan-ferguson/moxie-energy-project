@@ -1,6 +1,8 @@
 package com.sh22.energy_saver_app.common;
 
-// The class used in the recycler view used for each individual entry
+/**
+ * A utility class for holding data used in the ApplianceRecyclerView adapter to hold the card data
+ */
 public class ApplianceCardData {
     String applianceName;
     Float initialUsage;

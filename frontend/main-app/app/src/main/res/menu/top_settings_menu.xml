@@ -8,7 +8,7 @@
         android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom"
         android:background="@color/white"
-        android:iconTint="@color/harvest_gold">
+        android:iconTint="@color/lighter_moxie">
 
         <menu>
             <item android:title="Log Out"
