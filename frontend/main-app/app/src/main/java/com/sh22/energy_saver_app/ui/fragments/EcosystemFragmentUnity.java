@@ -29,8 +29,16 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.Objects;
 
-// Template file for when building with unity version
-
+/**
+ * This class if for the ecosystem fragment when you are building with unity.
+ * Because java doesn't have macros we cannot include/exclude code at compile time, additionally
+ *   java requires the class name to be the same as the filename for some reason, so we copy this
+ *   file to EcosystemFragment.java before building (in the gradle script) so that the correct
+ *   functionality is included for the build
+ * Note: this is also why android studio throws tonnes of errors, because by default the unity
+ *   project is not included, to include it in the build you need to run gradlew -PBuildUnity=true
+ *   this is what the appUnity target does
+ */
 public class EcosystemFragment extends Fragment {
 
     // // Unity player variables

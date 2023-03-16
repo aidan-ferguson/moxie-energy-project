@@ -236,27 +236,7 @@ public class HomeFragment extends Fragment {
                         }
 
                         TextView letterGrade = view.findViewById(R.id.home_fragment_letter_gradex);
-                        if (progress <= -50) {
-                            letterGrade.setText("F-");
-                        } else if (progress <= -40) {
-                            letterGrade.setText("F+");
-                        } else if (progress <= -30) {
-                            letterGrade.setText("D-");
-                        } else if (progress <= -20) {
-                            letterGrade.setText("D+");
-                        } else if (progress <= -10) {
-                            letterGrade.setText("C-");
-                        } else if (progress <= 10) {
-                            letterGrade.setText("C+");
-                        } else if (progress <= 20) {
-                            letterGrade.setText("B-");
-                        } else if (progress <= 30) {
-                            letterGrade.setText("B+");
-                        } else if (progress <= 40) {
-                            letterGrade.setText("A-");
-                        } else if (progress > 40) {
-                            letterGrade.setText("A+");
-                        }
+                        letterGrade.setText(SH22Utils.getLetterGrade(progress));
                         letterGrade.setTextColor(resultColor);
                     });
                 }
