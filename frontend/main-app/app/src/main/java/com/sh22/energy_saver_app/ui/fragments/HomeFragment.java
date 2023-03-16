@@ -308,6 +308,7 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
+        // Start new thread to get tips and usage report, these may take a while given OpenAI's inference time
         new Thread(() -> {
             try {
                 String energy_report = BackendInterface.GetEnergyReport(view.getContext());
@@ -327,6 +328,8 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
+
+        // Start new thread to get friends
         new Thread(() -> {
             try {
 
@@ -353,6 +356,8 @@ public class HomeFragment extends Fragment {
 
         ).start();
 
+
+        // Start new thread to get friends recycler view
         new Thread(() -> {
             try {
                 Friends friends = BackendInterface.GetFriends(view.getContext());
@@ -555,7 +560,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
+        //When clicked the the home page is restored
         back1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -623,6 +628,7 @@ public class HomeFragment extends Fragment {
         });
 
 
+        //expand the energy report features
         EnergyReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -742,6 +748,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        //When clicked the the home page is restored
         back2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -804,6 +812,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        //Exapnd the friendship features
         KrewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -878,7 +888,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
+        //When clicked the the home page is restored
         back3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -887,8 +897,8 @@ public class HomeFragment extends Fragment {
 
                 KrewButton.setClickable(true);
                 ViewGroup.LayoutParams layoutParams = KrewButton.getLayoutParams();
-                Integer amount = SH22Utils.dpToPixels(view.getContext(), 64);
-                int newWidth = EnergyReportButton.getWidth();
+                Integer amount = SH22Utils.dpToPixels(view.getContext(), 290);
+                int newWidth = amount;
                 int newHeight = EnergyReportButton.getHeight();
                 ValueAnimator heightAnimator = ValueAnimator.ofInt(KrewButton.getHeight(), newHeight);
                 ValueAnimator widthAnimator = ValueAnimator.ofInt(KrewButton.getWidth(), newWidth);
@@ -958,7 +968,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //onclick for when leaderboards is clicked
+        //onclick for when leaderboards is clicked from within the krew page
+        //refreshes the leaderboard
         leaderboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1012,7 +1023,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //onlick for when manage is clicked
+        //onlick for when manage is clicked from within the krew page
         requestsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1032,7 +1043,9 @@ public class HomeFragment extends Fragment {
         });
 
 
-//set onclick for send button
+        //set onclick for send button in manage friends
+        //Sends a friend request to the user with the id entered in the edit text
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

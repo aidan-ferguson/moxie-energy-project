@@ -11,8 +11,8 @@
     <color name="forest_green">#264C04</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
-    <color name="light_grey">#8998AB</color>
-    <color name="grey">#4B8998AB</color>
+ 
+    <color name="light_grey">#4B8998AB</color>
     <color name="black">#000000</color>
     <color name ="lighter_grey">#1992AB89</color>
     <color name = "blue">#04244C</color>

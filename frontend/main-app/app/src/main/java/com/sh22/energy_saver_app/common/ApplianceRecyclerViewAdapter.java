@@ -119,7 +119,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         legend.setEnabled(true);
 
-        //When the tips button is clicked the tips button changes colour
+        //When the tips button is clicked the tips options become available
         holder.TipsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -379,7 +379,7 @@ public class ApplianceRecyclerViewAdapter extends RecyclerView.Adapter<Appliance
                 }
             });
 
-
+            //Switchs to barchart
             BreakDownButton.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View view) {
