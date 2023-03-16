@@ -44,9 +44,19 @@ task copy_unity_files {
 
 preBuild.dependsOn(copy_unity_files)
 
+def getServerUrl(){
+    // By default the remote server location will be set to the remote server unless build type is testing
+    if(gradle.startParameter.taskNames.contains(":" + project.name + ":assembleDebugAndroidTest")){
+        return "\"http://10.0.2.2:8000/api\""
+    } else {
+        return "\"http://ec2-18-168-148-213.eu-west-2.compute.amazonaws.com:8000/api\""
+    }
+}
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
+
 
     defaultConfig {
         ndk {
@@ -66,9 +76,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "SERVER_BASE_URL", getServerUrl())
         }
         debug {
             testCoverageEnabled true
+            buildConfigField("String", "SERVER_BASE_URL", getServerUrl())
         }
     }
 

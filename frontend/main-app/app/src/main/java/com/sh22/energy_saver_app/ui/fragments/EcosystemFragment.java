@@ -27,12 +27,16 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.Objects;
 
-// // All comments in this file should have double 
 
+/**
+ * This class if for the ecosystem fragement when you are building without unity.
+ * Because java doesn't have macros we cannot include/exclude code at compile time, additionally
+ *   java requires the class name to be the same as the filename for some reason, so we copy this
+ *   file to EcosystemFragement.java before building (in the gradle script) so that the correct
+ *   functionality is included for the build
+ */
 public class EcosystemFragment extends Fragment {
 
-    // // Unity player variables
-    // private static UnityPlayer mUnityPlayer = null;
     FrameLayout frameLayoutForUnity;
 
     public EcosystemFragment() {

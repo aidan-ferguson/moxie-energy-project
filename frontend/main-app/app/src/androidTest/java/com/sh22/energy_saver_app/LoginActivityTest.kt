@@ -35,7 +35,7 @@ class LoginActivityTest {
 
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
 
-        onView(withId(R.id.password)).perform(click()).perform(typeText("moxienergyxGlasgowUni2023"), closeSoftKeyboard())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("password"), closeSoftKeyboard())
 
         Thread.sleep(1500)
 
