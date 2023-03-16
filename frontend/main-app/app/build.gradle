@@ -175,6 +175,7 @@ dependencies {
     // androidx.test
     def androidx_test = "1.1.0"
     androidTestImplementation "androidx.test:runner:$androidx_test"
-    androidTestImplementation "androidx.test:core:$androidx_test"
+    androidTestImplementation "androidx.test:core:1.4.0"
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
+
 }

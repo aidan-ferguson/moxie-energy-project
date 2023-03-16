@@ -1,5 +1,7 @@
 package com.sh22.energy_saver_app
 
+import androidx.fragment.app.testing.FragmentScenario
+import androidx.fragment.app.testing.launchFragment
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -30,7 +32,6 @@ class LoginActivityTest {
     fun logInTest(){
 
         val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
-        val fragmentScenario = launchFragmentInContainer<LoginFragment>()
 
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
 
@@ -48,9 +49,42 @@ class LoginActivityTest {
     @Test
     fun RegisterNewUserTest(){
         val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
-        val fragmentScenario = launchFragmentInContainer<LoginFragment>()
+        val fragmentScenario = FragmentScenario.launchInContainer(LoginFragment::class.java)
 
+        //register new user with fake details
+        onView(withId(R.id.login_register_button)).perform(click())
+        Thread.sleep(1500)
+
+        onView(withId(R.id.register_username)).perform(click())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("testuser@gmail.com"), closeSoftKeyboard())
+
+        onView(withId(R.id.register_password)).perform(click())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("test1234"), closeSoftKeyboard())
+
+        onView(withId(R.id.register_password_confirm)).perform(click())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("test1234"), closeSoftKeyboard())
+
+        onView(withId(R.id.register_firstname)).perform(click())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("test"), closeSoftKeyboard())
+
+        onView(withId(R.id.register_surname)).perform(click())
+        onView(withId(R.id.password)).perform(click()).perform(typeText("user"), closeSoftKeyboard())
 
         onView(withId(R.id.register_button)).perform(click())
+        Thread.sleep(1500)
+
+        //check homepage is displayed correctly after account creation
+        onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
+        onView(withId(R.id.button1)).check(matches(isDisplayed()))
+        onView(withId(R.id.button2)).check(matches(isDisplayed()))
+        onView(withId(R.id.button3)).check(matches(isDisplayed()))
+        onView(withId(R.id.halfGauge)).check(matches(isDisplayed()))
+
+        //delete fake account
+        onView(withId(R.id.action_settings)).perform(click())
+        onView(withId(R.id.delete_account_button)).perform(click())
+
+        //check account deletion was successful
+        onView(withId(R.id.login_frame_layout)).check(matches(isDisplayed()))
     }
 }
