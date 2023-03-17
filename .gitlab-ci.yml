@@ -186,7 +186,7 @@ integration_test:
     - *backend-setup
   script:
     # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator -no-window -no-boot-anim &> emulator.log&
+    - emulator @moxie_emulator -no-window -no-boot-anim &> $ANDROID_PROJECT_DIR/emulator.log&
     # Finish setting up backend
     - cd $BACKEND_DIR
     - python3 reset_db.py
@@ -202,7 +202,7 @@ integration_test:
     - /root/android/platform-tools/adb shell "settings put global animator_duration_scale 0.0"
     - ./gradlew createDebugCoverageReport
     # - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
-    - pushd $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
+    - cd $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
     - python3 $CI_PROJECT_DIR/scripts/get_integration_code_coverage.py
     - echo coverage-$COVERAGE
   coverage: '/coverage-([0-9.]+)%/'
