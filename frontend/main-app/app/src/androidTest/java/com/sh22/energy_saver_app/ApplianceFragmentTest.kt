@@ -27,6 +27,7 @@ class ApplianceFragmentTest {
     @Before
     fun login() {
         TestUtilities.clear_token(InstrumentationRegistry.getInstrumentation().getTargetContext());
+        Thread.sleep(2000);
         ActivityScenario.launch(LoginActivity::class.java)
 
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))

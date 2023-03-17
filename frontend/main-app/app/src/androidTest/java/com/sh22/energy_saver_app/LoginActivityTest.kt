@@ -37,9 +37,10 @@ class LoginActivityTest {
     fun logInTest(){
         ActivityScenario.launch(LoginActivity::class.java)
 
+        Thread.sleep(2000);
         onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
         onView(withId(R.id.password)).perform(click()).perform(typeText("password"), closeSoftKeyboard())
-        Thread.sleep(100);
+        Thread.sleep(1000);
         onView(withId(R.id.login_button)).perform(click())
 
         Thread.sleep(2000)
@@ -51,6 +52,7 @@ class LoginActivityTest {
         ActivityScenario.launch(LoginActivity::class.java)
 
         //register new user with fake details
+        Thread.sleep(2000);
         onView(withId(R.id.login_register_button)).perform(click())
         Thread.sleep(1500)
 
@@ -65,7 +67,7 @@ class LoginActivityTest {
         onView(withId(R.id.register_surname)).perform(click()).perform(typeText("user"), closeSoftKeyboard())
 
         onView(withId(R.id.register_button)).perform(click())
-        Thread.sleep(1500)
+        Thread.sleep(4000)
 
         //check homepage is displayed correctly after account creation
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
@@ -77,8 +79,10 @@ class LoginActivityTest {
         //delete fake account
         onView(withId(R.id.settings_action_bar)).perform(click())
         onView(withText("Your Account")).perform(click())
+        Thread.sleep(2000);
         onView(withId(R.id.delete_account_button)).perform(click())
 
+        Thread.sleep(2000);
         //check account deletion was successful
         onView(withId(R.id.login_frame_layout)).check(matches(isDisplayed()))
     }

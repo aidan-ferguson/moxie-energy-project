@@ -27,18 +27,20 @@ class HomeFragmentTest {
     fun login() {
         TestUtilities.clear_token(InstrumentationRegistry.getInstrumentation().getTargetContext());
         ActivityScenario.launch(LoginActivity::class.java)
+        Thread.sleep(2000);
 
         onView(withId(R.id.username)).perform(click()).perform(ViewActions.typeText("admin"))
         onView(withId(R.id.password)).perform(click()).perform(ViewActions.typeText("password"), ViewActions.closeSoftKeyboard())
-        Thread.sleep(100);
+        Thread.sleep(1000);
         onView(withId(R.id.login_button)).perform(click())
-        Thread.sleep(400);
+        Thread.sleep(2000);
     }
 
     @Test
     fun NavBarTest() {
         // launches main activity and checks whether nav bar is in view
         ActivityScenario.launch(MainActivity::class.java)
+        Thread.sleep(2000);
         onView(withId(R.id.bottomNavigationView)).check(matches(isDisplayed()))
 
         //check appliance page is displayed correctly
@@ -59,6 +61,7 @@ class HomeFragmentTest {
 
     @Test
     fun krewPageTest(){
+        Thread.sleep(2000);
         onView(withId(R.id.kilowattButton)).perform(click())
         Thread.sleep(2500)
         onView(withId(R.id.tip_square)).check(matches(not(isDisplayed())))
@@ -70,6 +73,7 @@ class HomeFragmentTest {
 
     @Test
     fun tipPageTest(){
+        Thread.sleep(2000);
         onView(withId(R.id.tip_square)).perform(click())
         Thread.sleep(2500)
         onView(withId(R.id.breakdown)).check(matches(not(isDisplayed())))
@@ -78,6 +82,7 @@ class HomeFragmentTest {
 
     @Test
     fun breakdownPageTest(){
+        Thread.sleep(2000);
         onView(withId(R.id.breakdown)).perform(click())
         Thread.sleep(2500)
         onView(withId(R.id.tip_square)).check(matches(not(isDisplayed())))
@@ -86,6 +91,7 @@ class HomeFragmentTest {
 
     @Test
     fun testDataProviderChange() {
+        Thread.sleep(2000);
         onView(withId(R.id.settings_action_bar)).perform(click())
         onView(ViewMatchers.withText("Your Account")).perform(click())
 
