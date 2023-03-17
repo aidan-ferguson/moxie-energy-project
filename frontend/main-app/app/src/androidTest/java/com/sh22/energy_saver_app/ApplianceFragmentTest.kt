@@ -35,7 +35,7 @@ class ApplianceFragmentTest {
         Thread.sleep(100);
         onView(withId(R.id.login_button)).perform(click())
 
-        Thread.sleep(400);
+        Thread.sleep(2000);
 
         onView(withId(R.id.appliances)).perform(click())
 
