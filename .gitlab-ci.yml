@@ -205,7 +205,6 @@ integration_test:
     # - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
     - cd $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
     - python3 $CI_PROJECT_DIR/scripts/get_integration_code_coverage.py
-    - echo coverage-$COVERAGE
   coverage: '/coverage-([0-9.]+)%/'
   artifacts:
     when: always

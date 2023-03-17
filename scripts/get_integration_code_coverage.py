@@ -16,4 +16,4 @@ for tag in data:
         
 # Remove the lowest as the lowest will always be databinding
 coverages = sorted(coverages)
-print("Coverage-" + str(sum(coverages[1:])/len(coverages[1:])) + "%")
+print("coverage-" + str(sum(coverages[1:])/len(coverages[1:])) + "%")
