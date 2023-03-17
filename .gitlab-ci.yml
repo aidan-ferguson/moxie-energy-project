@@ -195,7 +195,7 @@ integration_test:
     - python3 manage.py runserver &> server.log&
     - cd $ANDROID_PROJECT_DIR
     # Wait for the emualtor to finish booting
-    - tail -n0 -f emulator.log | sed '/Boot completed/ q'
+    - ( tail -f -n0 emulator.log & ) | grep -q "Boot completed"
     # Now that the emulator has (hopefully) booted, we need to disable some settings so that the test can complete (https://stackoverflow.com/questions/34510696/android-espresso-error-on-button-click)
     - /root/android/platform-tools/adb shell "settings put global window_animation_scale 0.0"
     - /root/android/platform-tools/adb shell "settings put global transition_animation_scale 0.0"
