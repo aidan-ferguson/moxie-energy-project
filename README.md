@@ -3,8 +3,10 @@
 
 This is the repository for the SH22 Moxie energy saver app project. The app allows users to view their energy usage per-device and generate useful tips. It also has a 3D ecosystem visualisation of the energy usage and a comparison with friends.
 
-## Setup Instructions
-Please go [here](https://stgit.dcs.gla.ac.uk/team-project-h/2022/sh22/sh22-main/-/wikis/compiling-and-building) for detailed setup instructions
+## Local Setup Instructions
+Please go [here](https://stgit.dcs.gla.ac.uk/team-project-h/2022/sh22/sh22-main/-/wikis/compiling-and-building) for detailed local setup & compilation instructions
+
+Alternativly, the most recent pipeline build can be found [here](https://stgit.dcs.gla.ac.uk/api/v4/projects/6006/jobs/artifacts/main/raw/frontend/main-app/app/build/outputs/apk/debug/app-debug.apk?job=android:build)
 
 ## License
 Attribution-NonCommercial 2.0 Generic, please see the [LICENSE file](https://stgit.dcs.gla.ac.uk/team-project-h/2022/sh22/sh22-main/-/blob/main/LICENSE) for more information
