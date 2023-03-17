@@ -112,14 +112,18 @@ public class BackendInterface {
      * @return - Method to get the national averages from the database
      * @throws BackendException - On failure in backend
      */
-    public static Map<String, Double> GetNationalAverages() throws BackendException {
+    public static Map<String, Double> GetNationalAverages(Context context) throws BackendException, AuthenticationException {
+        String token = AuthenticationHandler.getLocalToken(context);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("Authorization", "Token " + token);
+
 
         if (cached_national_averages.GetObject() != null) {
             return cached_national_averages.GetObject();
         }
         try {
             // Successful authentication, store and return true
-            String response = SH22Utils.getBackendView("/usage/national-average", null);
+            String response = SH22Utils.getBackendView("/usage/national-average", requestProperties);
             Map<String, Double> averages = new HashMap<>();
             JSONObject json_response = new JSONObject(response);
             if (!json_response.getBoolean("success")) {
