@@ -39,7 +39,6 @@ class RegisterSerializer(serializers.Serializer):
                 # User already exists
                 raise serializers.ValidationError("A user with that email already exists", code='email-in-use')
             
-            # TODO: more validators
             try:
                 validate_email(username)
             except ValidationError:

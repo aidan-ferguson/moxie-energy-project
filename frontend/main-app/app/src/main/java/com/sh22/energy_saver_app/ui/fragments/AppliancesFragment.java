@@ -64,7 +64,7 @@ public class AppliancesFragment extends Fragment {
         new Thread(() -> {
             try {
                 ApplianceData appliance_data = BackendInterface.get_appliance_data(view.getContext());
-                Map<String, Double> national_averages = BackendInterface.GetNationalAverages();
+                Map<String, Double> national_averages = BackendInterface.GetNationalAverages(view.getContext());
 
                 // When we get the data, update the UI
                 if(appliance_data != null && national_averages != null) {

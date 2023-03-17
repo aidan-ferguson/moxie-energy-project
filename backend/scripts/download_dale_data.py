@@ -71,7 +71,7 @@ def dale_download_files(folder, houses_to_exclude):
             decrease_dale_resolution(os.path.join(folder, house))
             
             # Calculate the start and end of the house dataset
-            print(f"Calculating start/end to maximise data during live-loop")
+            print("Calculating start/end to maximise data during live-loop")
             dale_calculate_start_end(os.path.join(folder, house))
 
             # Finally clean up (delete the downloaded .tgz file)
@@ -99,7 +99,7 @@ def extract_dale_data(folder, filename):
 def decrease_dale_resolution(house_folder):
     for filename in os.listdir(house_folder):
         # house_1 has a 1gb file that takes forever, dont DO IT
-        if "channel" in filename and not "mains" in filename and "button_press" not in filename:
+        if "channel" in filename and "mains" not in filename and "button_press" not in filename:
             # Get old file data
             old_data = None
             with open(os.path.join(house_folder, filename), "r") as file:
@@ -142,23 +142,24 @@ def dale_calculate_start_end(house_folder):
     MAX_START = None
     MIN_END = None
     for filename in os.listdir(house_folder):
-            if "channel" in filename and "button_press" not in filename:
-                with open(os.path.join(house_folder, filename)) as file:
-                    data = file.readlines()
-                    start_date = int(data[0].split(" ")[0])
-                    end_date = int(data[-1].split(" ")[0])
-                    
-                    if MAX_START is None or start_date > MAX_START:
-                        MAX_START = start_date
-                    if MIN_END is None or end_date < MIN_END:
-                        MIN_END = end_date
+        if "channel" in filename and "button_press" not in filename:
+            with open(os.path.join(house_folder, filename)) as file:
+                data = file.readlines()
+                start_date = int(data[0].split(" ")[0])
+                end_date = int(data[-1].split(" ")[0])
+                
+                if MAX_START is None or start_date > MAX_START:
+                    MAX_START = start_date
+                if MIN_END is None or end_date < MIN_END:
+                    MIN_END = end_date
     
     # Save calculated values
-    if(MAX_START >= MIN_END):
+    if (MAX_START >= MIN_END):
         print("Error calculating start/end, no overlap found")
     
     with open(os.path.join(house_folder, "start-end.dat"), "w") as file:
         file.write(f"{MAX_START}\n{MIN_END}\n")
+
 
 # Calculate the averages for each channel in the dataset and store it in a new folder
 def dale_calculate_averages(dale_folder):

@@ -9,7 +9,6 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 import json
 import openai
 from api import models
-import math
 from api.data_providers.dale_data_provider import DALEDataProvider
 
 
@@ -39,11 +38,11 @@ class UserInfoView(views.APIView):
     
     def get(self, request):
         content = {'id': request.user.id,
-                    'username': request.user.username,
-                    'firstname': request.user.first_name,
-                    'surname': request.user.last_name,
-                    'data_provider': request.user.data_provider,
-                    'energy_score': calculate_energy_score(get_user_energy_data(request.user)["data"])}
+                   'username': request.user.username,
+                   'firstname': request.user.first_name,
+                   'surname': request.user.last_name,
+                   'data_provider': request.user.data_provider,
+                   'energy_score': calculate_energy_score(get_user_energy_data(request.user)["data"])}
         return Response(json_success(content))
     
     def post(self, request):
@@ -65,7 +64,7 @@ class UserInfoView(views.APIView):
 
 # View for returning the national averages of devices
 class NationalAverageView(views.APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
         with open(staticfiles_storage.path("datasets/dale/house_averages.dat"), "r") as file:
@@ -94,9 +93,9 @@ class TOTDView(views.APIView):
             return Response(json_success(response))
         except openai.OpenAIError as e:
             print(f"{str(e.__class__.__name__ )}: {e}")
-            return Response(json_error("An internal error occured with generating tips"))
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR, data=json_error("An internal error occured with generating tips"))
 
-#TODO: all json_errors explicitly 
+
 # View for generating energy reports
 class EnergyReportView(views.APIView):
     permission_classes = (permissions.IsAuthenticated, )
@@ -115,7 +114,8 @@ class EnergyReportView(views.APIView):
         except openai.OpenAIError as e:
             print(f"{str(e.__class__.__name__ )}: {e}")
             return Response(json_error("An internal error occured with generating tips"))
-        
+
+       
 class ApplianceTips(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
@@ -218,7 +218,7 @@ class FriendView(views.APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=json_error("You must send a valid action"))
 
 
-class DataProviderView(views.APIView): 
+class DataProviderView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):

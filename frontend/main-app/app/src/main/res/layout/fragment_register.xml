@@ -27,7 +27,7 @@
                 app:layout_gravity="center_horizontal" />
 
             <TextView
-                android:id="@+id/register_heading"
+                android:id="@+id/login_heading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_heading"

@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Settings"
-        android:id="@+id/settings"
+        android:id="@+id/settings_action_bar"
         android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom"
         android:background="@color/white"
@@ -15,7 +15,7 @@
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_baseline_settings_24"
                 tools:ignore="HardcodedText"/>
-            <item android:title="Your account"
+            <item android:title="Your Account"
                 android:id="@+id/changeDataProvider"
                 android:icon="@drawable/ic_baseline_settings_24"
                 tools:ignore="HardcodedText"/>

@@ -7,6 +7,7 @@ import math
 ENERGY_SIGMOID_GRADIANT_STEEPNESS = 0.4
 ENERGY_NORMALISATION_SIGMOID_STRECH = 0.2
 
+
 # Function used to simplify returning JSON structures
 def json_error(reason):
     return {"success": False, "reason": reason}
@@ -51,7 +52,6 @@ class Prompts:
         """
         
         # Decide which appliances to include, always include the aggregate reading
-        # TODO: proper initial date
         prompt += f"\n\nThe household usage 6 months ago was {energy_usage['initial_usage'][0]:.2f}kWh, the previous week was {energy_usage['previous_week'][0]:.2f}kWh and the last 24 hours it was {energy_usage['today'][0]:.2f}kWh"
         
         # Add appliances which have massive differences in energy usage (i.e. they are interesting)
@@ -77,6 +77,7 @@ class Prompts:
         prompt += f"The device is a {device}"
         prompt += f"The device used up {energy_usage['initial_usage'][device_idx]:.2f}kWh on average 6 months ago, the previous week was {energy_usage['previous_week'][device_idx]:.2f}kWh and the last 24 hours it was {energy_usage['today'][device_idx]:.2f}kWh"
         return prompt
+    
         
 # Rules to choose which data provider to use depending on the users preference
 def get_user_energy_data(user):
@@ -86,14 +87,17 @@ def get_user_energy_data(user):
         house = user.data_provider.split(":")[1]
         return DALEDataProvider.get_energy_data(house)
 
+
 def sigmoid(x):
     return 1/(1+np.exp(-x * ENERGY_SIGMOID_GRADIANT_STEEPNESS))
+
 
 # Will return a normalised energy rating in the range (0, 1)
 # https://www.desmos.com/calculator/mifnjmnoy4
 def normalise_energy_rating(rating):
-    a = ENERGY_NORMALISATION_SIGMOID_STRECH;
-    return sigmoid((1/a) * (rating - (a * 5)));
+    a = ENERGY_NORMALISATION_SIGMOID_STRECH
+    return sigmoid((1/a) * (rating - (a * 5)))
+
 
 def calculate_energy_score(data):
     score = normalise_energy_rating((data["previous_week"][0]/data["today"][0]))

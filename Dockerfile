@@ -29,5 +29,5 @@ RUN sdkmanager --sdk_root=${ANDROID_HOME} "ndk;${ANDROID_NDK_VERSION}"
 RUN sdkmanager --sdk_root=${ANDROID_HOME} "cmake;3.22.1"
 # Create emulator
 RUN sdkmanager --sdk_root=${ANDROID_HOME} ${ANDROID_EMULATOR_VERSION}
-RUN avdmanager --silent create avd -n moxie_emulator -k ${ANDROID_EMULATOR_VERSION}
+RUN avdmanager --silent create avd -n moxie_emulator -k ${ANDROID_EMULATOR_VERSION} --device "pixel_6_pro"
 ENV PATH=$PATH:${ANDROID_HOME}/emulator/:${ANDROID_HOME}/tools/

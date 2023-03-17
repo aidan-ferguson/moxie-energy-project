@@ -44,9 +44,21 @@ task copy_unity_files {
 
 preBuild.dependsOn(copy_unity_files)
 
+def getServerUrl(){
+    // By default the remote server location will be set to the remote server unless build type is testing
+    if(
+    gradle.startParameter.taskNames.contains(":" + project.name + ":assembleDebugAndroidTest") ||
+    gradle.startParameter.taskNames.contains("createDebugCoverageReport")){
+        return "\"http://10.0.2.2:8000/api\""
+    } else {
+        return "\"http://ec2-18-168-148-213.eu-west-2.compute.amazonaws.com:8000/api\""
+    }
+}
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
+
 
     defaultConfig {
         ndk {
@@ -66,9 +78,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "SERVER_BASE_URL", getServerUrl())
         }
         debug {
             testCoverageEnabled true
+            buildConfigField("String", "SERVER_BASE_URL", getServerUrl())
         }
     }
 
@@ -119,14 +133,19 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['test']) {
         html.enabled true
     }
 
-    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes")
-    def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug")
+    def exclude_coverage = ["**/databinding/*"]
+
+    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", exclude: exclude_coverage)
+    def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", exclude: exclude_coverage)
     classDirectories.from = files([javaTree, kotlinTree])
+    for(file in classDirectories.from) {
+        project.logger.lifecycle(javaTree.toString())
+    }
     sourceDirectories.from = files('src/main/java')
     executionData.from = fileTree(dir: project.buildDir, includes: [
             "jacoco/testDebugUnitTest.exec",
             "outputs/code-coverage/connected/*coverage.ec"
-    ])
+    ], excludes: exclude_coverage)
 }
 
 dependencies {
@@ -155,5 +174,27 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "androidx.gridlayout:gridlayout:1.0.0"
+
+    def fragment_version = "1.5.5"
+
+    debugImplementation("androidx.fragment:fragment-testing:$fragment_version")
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+
+    // Espresso
+    def androidx_test_espresso = "3.1.0"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidx_test_espresso"
+
+    // androidx.test
+    def androidx_test = "1.1.0"
+    androidTestImplementation "androidx.test:runner:$androidx_test"
+    androidTestImplementation "androidx.test:core:1.4.0"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
 
 }

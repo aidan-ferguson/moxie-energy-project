@@ -53,6 +53,8 @@ backend:test:
   before_script:
     - *backend-setup
   script:
+    # Only download the small datasets
+    - python3 setup.py --exclude-dale house_1,house_2,house_5
     - python3 manage.py test api/tests
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
@@ -183,19 +185,26 @@ integration_test:
     - *android-before
     - *backend-setup
   script:
+    # Start the emulator from the docker container and run UI testing
+    - emulator @moxie_emulator -no-window -no-boot-anim &> $ANDROID_PROJECT_DIR/emulator.log&
     # Finish setting up backend
     - cd $BACKEND_DIR
     - python3 reset_db.py
     # Only download the small datasets
     - python3 setup.py --exclude-dale house_1,house_2,house_5
-    - python3 manage.py runserver&
+    - python3 manage.py runserver &> server.log&
     - cd $ANDROID_PROJECT_DIR
-    # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator -no-window -no-boot-anim &
-    - /bin/sleep 10 # Give the emulator time to boot
+    # Wait for the emualtor to finish booting
+    - ( tail -f -n0 emulator.log & ) | grep -q "Boot completed"
+    - /bin/sleep 20
+    # Now that the emulator has (hopefully) booted, we need to disable some settings so that the test can complete (https://stackoverflow.com/questions/34510696/android-espresso-error-on-button-click)
+    - /root/android/platform-tools/adb shell "settings put global window_animation_scale 0.0"
+    - /root/android/platform-tools/adb shell "settings put global transition_animation_scale 0.0"
+    - /root/android/platform-tools/adb shell "settings put global animator_duration_scale 0.0"
     - ./gradlew createDebugCoverageReport
-    - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
-    - echo coverage-$COVERAGE
+    # - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
+    - cd $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
+    - python3 $CI_PROJECT_DIR/scripts/get_integration_code_coverage.py
   coverage: '/coverage-([0-9.]+)%/'
   artifacts:
     when: always
@@ -203,6 +212,8 @@ integration_test:
     paths:
       - $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/
       - $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected
+      - $ANDROID_PROJECT_DIR/emulator.log
+      - $BACKEND_DIR/server.log
     reports:
       junit: $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected/TEST-*.xml
   rules:
