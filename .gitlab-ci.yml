@@ -186,16 +186,17 @@ integration_test:
     - *backend-setup
   script:
     # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator -no-window -no-boot-anim &
+    - emulator @moxie_emulator -no-window -no-boot-anim &> emulator.log&
     # Finish setting up backend
     - cd $BACKEND_DIR
     - python3 reset_db.py
     # Only download the small datasets
     - python3 setup.py --exclude-dale house_1,house_2,house_5
-    - python3 manage.py runserver&
+    - python3 manage.py runserver &> server.log&
     - cd $ANDROID_PROJECT_DIR
+    # Wait for the emualtor to finish booting
+    - tail -n0 -f emulator.log | sed '/Boot completed/ q'
     # Now that the emulator has (hopefully) booted, we need to disable some settings so that the test can complete (https://stackoverflow.com/questions/34510696/android-espresso-error-on-button-click)
-    - /bin/sleep 60 # Give the emulator time to boot
     - /root/android/platform-tools/adb shell "settings put global window_animation_scale 0.0"
     - /root/android/platform-tools/adb shell "settings put global transition_animation_scale 0.0"
     - /root/android/platform-tools/adb shell "settings put global animator_duration_scale 0.0"
@@ -211,6 +212,8 @@ integration_test:
     paths:
       - $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/
       - $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected
+      - $ANDROID_PROJECT_DIR/emulator.log
+      - $BACKEND_DIR/server.log
     reports:
       junit: $ANDROID_PROJECT_DIR/app/build/outputs/androidTest-results/connected/TEST-*.xml
   rules:
