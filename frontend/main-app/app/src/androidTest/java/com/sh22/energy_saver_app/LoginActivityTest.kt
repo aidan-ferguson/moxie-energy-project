@@ -38,8 +38,8 @@ class LoginActivityTest {
         ActivityScenario.launch(LoginActivity::class.java)
 
         Thread.sleep(2000);
-        onView(withId(R.id.username)).perform(click()).perform(typeText("admin"))
-        onView(withId(R.id.password)).perform(click()).perform(typeText("password"), closeSoftKeyboard())
+        onView(withId(R.id.username)).perform(scrollTo(), click()).perform(typeText("admin"))
+        onView(withId(R.id.password)).perform(scrollTo(), click()).perform(typeText("password"), closeSoftKeyboard())
         Thread.sleep(1000);
         onView(withId(R.id.login_button)).perform(click())
 
