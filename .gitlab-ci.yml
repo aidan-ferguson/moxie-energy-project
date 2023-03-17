@@ -187,7 +187,6 @@ integration_test:
   script:
     # Start the emulator from the docker container and run UI testing
     - emulator @moxie_emulator -no-window -no-boot-anim &
-    - /bin/sleep 10 # Give the emulator time to boot
     # Finish setting up backend
     - cd $BACKEND_DIR
     - python3 reset_db.py
@@ -196,6 +195,7 @@ integration_test:
     - python3 manage.py runserver&
     - cd $ANDROID_PROJECT_DIR
     # Now that the emulator has (hopefully) booted, we need to disable some settings so that the test can complete (https://stackoverflow.com/questions/34510696/android-espresso-error-on-button-click)
+    - /bin/sleep 60 # Give the emulator time to boot
     - /root/android/platform-tools/adb shell "settings put global window_animation_scale 0.0"
     - /root/android/platform-tools/adb shell "settings put global transition_animation_scale 0.0"
     - /root/android/platform-tools/adb shell "settings put global animator_duration_scale 0.0"
