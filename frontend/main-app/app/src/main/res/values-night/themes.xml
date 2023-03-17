@@ -3,14 +3,14 @@
     <style name="Theme.Frontendnetworkingtest" parent="Theme.AppCompat.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/bad_usage</item>
-        <item name="colorPrimaryVariant">@color/harvest_gold</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/lighter_moxie</item>
+        <item name="colorOnPrimary">@color/forest_green</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/blue_whale</item>
-        <item name="colorSecondaryVariant">@color/blue_whale</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/lighter_green</item>
+        <item name="colorSecondaryVariant">@color/lighter_green</item>
+        <item name="colorOnSecondary">@color/forest_green</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/blue_whale</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/lighter_green</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

@@ -1,11 +1,15 @@
 package com.sh22.energy_saver_app.common;
 
 
+
+import static com.sh22.energy_saver_app.common.ApplianceRecyclerViewAdapter.context;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -19,10 +23,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,13 +52,21 @@ import java.util.ArrayList;
 
 // Good tutorial https://www.youtube.com/watch?v=Mc0XT58A1Z4
 
+/**
+ * RecyclerView for the friend requests page
+ * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.MyViewHolder> {
-    private Context mContext;
-    private ArrayList<FriendRequest> mRequests;
+    private final Context mContext;
+    private final ArrayList<FriendRequest> mRequests;
+    public static final String FRIEND_REQUEST_ACCEPTED_ACTION = "com.sh22.energy_saver_app.friend_request_accepted";
 
     public FriendsRecyclerViewAdapter(Context context, ArrayList<FriendRequest> requests) {
         mContext = context;
         mRequests = requests;
+    }
+    public interface OnAcceptButtonClickListener {
+        void onAcceptButtonClicked(FriendRelationship friend);
     }
 
     @NonNull
@@ -64,9 +80,11 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        // Populate the name of the person requesting
         String firstname = mRequests.get(position).userInfo.firstname;
         String surname = mRequests.get(position).userInfo.surname;
-        holder.personName.setText(firstname+ " " + surname);
+        String full_name = firstname + " " + surname;
+        holder.personName.setText(full_name);
     }
 
     @Override
@@ -74,6 +92,9 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         return mRequests.size();
     }
 
+    /**
+     * View holder for the FriendsRecyclerView adapter
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView personName;
         Button accept;
@@ -86,66 +107,62 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
             accept = itemView.findViewById(R.id.accept);
             decline = itemView.findViewById(R.id.decline);
 
+
+
             accept.setOnClickListener(v -> {
                 // Accept the friend's request
                 new Thread(() -> {
-                    mRequests.get(getAdapterPosition()).acceptRequest(mContext);
+                    int position = getAdapterPosition();
+                    mRequests.get(position).acceptRequest(mContext);
                     ((FragmentActivity) mContext).runOnUiThread(() -> {
+                        // Remove the accepted friend request from the data list
+                        mRequests.remove(position);
 
-                        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f);
-                        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                        alphaAnimator.setDuration(500);
-                        alphaAnimator.addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animator) {}
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
+                        // Notify the adapter that the item has been removed
+                        notifyItemRemoved(position);
 
-                                notifyDataSetChanged();
-                            }
-                            @Override
-                            public void onAnimationCancel(Animator animator) {}
-                            @Override
-                            public void onAnimationRepeat(Animator animator) {}
-                        });
-                        alphaAnimator.start();
+                        // Notify the adapter that the data set has changed
+                        notifyItemRangeChanged(position, mRequests.size());
 
-
-
+                        // Send a broadcast to inform that a friend request has been accepted
+                        Intent intent = new Intent(FRIEND_REQUEST_ACCEPTED_ACTION);
+                        mContext.sendBroadcast(intent);
                     });
                 }).start();
+
             });
 
             decline.setOnClickListener(v -> {
-                // Decline the friend's request
+                // Accept the friend's request
                 new Thread(() -> {
-                    mRequests.get(getAdapterPosition()).denyRequest(mContext);
+                    int position = getAdapterPosition();
+                    mRequests.get(position).denyRequest(mContext);
                     ((FragmentActivity) mContext).runOnUiThread(() -> {
+                        // Remove the accepted friend request from the data list
+                        mRequests.remove(position);
+
+                        // Notify the adapter that the item has been removed
+                        notifyItemRemoved(position);
+
+                        // Notify the adapter that the data set has changed
+                        notifyItemRangeChanged(position, mRequests.size());
+
+                        //update the active friends leaderboard recyclerView
 
 
-                        //decline
 
 
-                        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f);
-                        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                        alphaAnimator.setDuration(500);
-                        alphaAnimator.addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animator) {}
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-
-                                notifyDataSetChanged();
-                            }
-                            @Override
-                            public void onAnimationCancel(Animator animator) {}
-                            @Override
-                            public void onAnimationRepeat(Animator animator) {}
-                        });
-                        alphaAnimator.start();
                     });
                 }).start();
             });
-        }
-    }
+
+
+
+
+
 }
+
+
+    }
+
+    }

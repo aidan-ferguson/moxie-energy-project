@@ -22,6 +22,4 @@
     <string name="no_account">Don\'t have an account? </string>
     <string name="existing_account">Already have an account?</string>
     <string name="change_data_provider">Change Your Data Provider: </string>
-
-
 </resources>

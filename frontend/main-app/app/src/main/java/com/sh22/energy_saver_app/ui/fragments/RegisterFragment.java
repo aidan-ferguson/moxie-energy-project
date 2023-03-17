@@ -74,7 +74,6 @@ public class RegisterFragment extends Fragment {
         // Callback function for when register is clicked
         view.findViewById(R.id.register_button).setOnClickListener((View v) -> {
 
-
             EditText username = (EditText) view.findViewById(R.id.register_username);
             EditText password = (EditText) view.findViewById(R.id.register_password);
             EditText firstname = (EditText) view.findViewById(R.id.register_firstname);
@@ -88,10 +87,14 @@ public class RegisterFragment extends Fragment {
                 // Network stuff we need a separate thread
                 new Thread(() -> {
                     AuthenticationStatus status = AuthenticationHandler.registerUser(getContext(),
-                            username.getText().toString(),
-                            password.getText().toString(),
-                            firstname.getText().toString(),
-                            surname.getText().toString());
+
+                            // REFACTORED ???
+
+                            EditTextToString(username),
+                            EditTextToString(password),
+                            EditTextToString(firstname),
+                            EditTextToString(surname));
+
                     // Jump back on UI thread
                     new Handler(Looper.getMainLooper()).post(() -> {
                         if (status.success) {
@@ -106,6 +109,7 @@ public class RegisterFragment extends Fragment {
                             }
                         } else {
                             ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.GONE);
+
                             try {
                                 JSONObject json_response = new JSONObject(status.data);
                                 if (json_response.has("non_field_errors")) {
@@ -115,31 +119,13 @@ public class RegisterFragment extends Fragment {
                                         ((TextView) view.findViewById(R.id.register_error_box)).setText(response_array.getString(0));
                                     }
                                 }
+
                                 // Parse individual field errors and show them
-                                if (json_response.has("username")) {
-                                    JSONArray response_array = json_response.getJSONArray("username");
-                                    if (response_array.length() > 0) {
-                                        username.setError(response_array.getString(0));
-                                    }
-                                }
-                                if (json_response.has("password")) {
-                                    JSONArray response_array = json_response.getJSONArray("password");
-                                    if (response_array.length() > 0) {
-                                        password.setError(response_array.getString(0));
-                                    }
-                                }
-                                if (json_response.has("firstname")) {
-                                    JSONArray response_array = json_response.getJSONArray("firstname");
-                                    if (response_array.length() > 0) {
-                                        firstname.setError(response_array.getString(0));
-                                    }
-                                }
-                                if (json_response.has("surname")) {
-                                    JSONArray response_array = json_response.getJSONArray("surname");
-                                    if (response_array.length() > 0) {
-                                        surname.setError(response_array.getString(0));
-                                    }
-                                }
+
+                                ParseFieldErrors(username, "username", json_response);
+                                ParseFieldErrors(password, "password", json_response);
+                                ParseFieldErrors(firstname, "firstname", json_response);
+                                ParseFieldErrors(surname, "surname", json_response);
 
                             } catch (JSONException e) {
                                 ((TextView) view.findViewById(R.id.register_error_box)).setVisibility(View.VISIBLE);
@@ -161,5 +147,18 @@ public class RegisterFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private String EditTextToString(EditText label){
+        return label.getText().toString();
+    }
+
+    private void ParseFieldErrors(EditText label, String labelString, JSONObject json_response) throws JSONException {
+        if(json_response.has(labelString)) {
+            JSONArray response_array = json_response.getJSONArray(labelString);
+            if (response_array.length() > 0) {
+                label.setError(response_array.getString(0));
+            }
+        }
     }
 }

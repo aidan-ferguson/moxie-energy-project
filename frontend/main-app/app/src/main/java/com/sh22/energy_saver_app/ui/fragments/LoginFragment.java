@@ -82,18 +82,9 @@ public class LoginFragment extends Fragment {
                             }
 
                             // Parse individual field errors and show them
-                            if (json_response.has("username")) {
-                                JSONArray response_array = json_response.getJSONArray("username");
-                                if (response_array.length() > 0) {
-                                    email.setError(response_array.getString(0));
-                                }
-                            }
-                            if (json_response.has("password")) {
-                                JSONArray response_array = json_response.getJSONArray("password");
-                                if (response_array.length() > 0) {
-                                    password.setError(response_array.getString(0));
-                                }
-                            }
+
+                            ParseFieldErrors(email,"username", json_response);
+                            ParseFieldErrors(password, "password", json_response);
 
                         } catch (JSONException e) {
                             ((TextView) view.findViewById(R.id.login_error_box)).setVisibility(View.VISIBLE);
@@ -126,6 +117,15 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void ParseFieldErrors(EditText label, String labelString, JSONObject json_response) throws JSONException {
+        if(json_response.has(labelString)) {
+            JSONArray response_array = json_response.getJSONArray(labelString);
+            if (response_array.length() > 0) {
+                label.setError(response_array.getString(0));
+            }
+        }
     }
 
 }

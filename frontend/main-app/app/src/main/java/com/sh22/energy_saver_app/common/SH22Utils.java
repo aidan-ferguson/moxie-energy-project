@@ -55,6 +55,34 @@ public class SH22Utils {
         return SH22Utils.normaliseEnergyRating((float)(data.get(index).getInitialUsage()/data.get(index).getUsageToday()));
     }
 
+    // Takes a score percentage between 0-100% and returns the corresponding letter grade
+    public static String getLetterGrade(float score) {
+        if (score <= -50) {
+            return "F-";
+        } else if (score <= -40) {
+            return "F+";
+        } else if (score <= -30) {
+            return "D-";
+        } else if (score <= -20) {
+            return "D+";
+        } else if (score <= -10) {
+            return "C-";
+        } else if (score <= 10) {
+            return "C+";
+        } else if (score <= 20) {
+            return "B-";
+        } else if (score <= 30) {
+            return "B+";
+        } else if (score <= 40) {
+            return "A-";
+        } else if (score > 40) {
+            return "A+";
+        } else {
+            // Should never reach here
+            return "B";
+        }
+    }
+
     // Convert dp units to pixels for this device
     public static int dpToPixels(Context context, int dp) {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);

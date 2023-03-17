@@ -2,7 +2,10 @@ package com.sh22.energy_saver_app.common;
 
 import java.time.LocalDateTime;
 
-// Class for caching objects that expire after some time
+/**
+ * Class for caching objects that expire after some time
+ * @param <T> Templated object type
+ */
 public class CacheObject<T> {
     private T object = null;
     private Long time_set = null;

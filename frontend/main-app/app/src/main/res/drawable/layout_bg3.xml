@@ -18,7 +18,7 @@
 
 
             <corners android:radius="5dp"/>
-            <stroke android:width="2dp" android:color="@color/blue_jeans"/>
+            <stroke android:width="2dp" android:color="@color/moxie_green"/>
 
         </shape>
     </item>
