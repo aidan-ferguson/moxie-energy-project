@@ -943,6 +943,7 @@ public class HomeFragment extends Fragment {
                 leaderboardtitle.setVisibility(View.GONE);
                 send_request.setVisibility(View.GONE);
                 your_id.setVisibility(View.GONE);
+                your_id_text.setVisibility(View.GONE);
                 send.setVisibility(View.GONE);
 
             }
