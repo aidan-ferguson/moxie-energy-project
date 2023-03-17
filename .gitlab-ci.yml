@@ -185,6 +185,9 @@ integration_test:
     - *android-before
     - *backend-setup
   script:
+    # Start the emulator from the docker container and run UI testing
+    - emulator @moxie_emulator -no-window -no-boot-anim &
+    - /bin/sleep 10 # Give the emulator time to boot
     # Finish setting up backend
     - cd $BACKEND_DIR
     - python3 reset_db.py
@@ -192,9 +195,10 @@ integration_test:
     - python3 setup.py --exclude-dale house_1,house_2,house_5
     - python3 manage.py runserver&
     - cd $ANDROID_PROJECT_DIR
-    # Start the emulator from the docker container and run UI testing
-    - emulator @moxie_emulator -no-window -no-boot-anim &
-    - /bin/sleep 10 # Give the emulator time to boot
+    # Now that the emulator has (hopefully) booted, we need to disable some settings so that the test can complete (https://stackoverflow.com/questions/34510696/android-espresso-error-on-button-click)
+    - /root/android/platform-tools/adb shell "settings put global window_animation_scale 0.0"
+    - /root/android/platform-tools/adb shell "settings put global transition_animation_scale 0.0"
+    - /root/android/platform-tools/adb shell "settings put global animator_duration_scale 0.0"
     - ./gradlew createDebugCoverageReport
     # - COVERAGE=$(cat $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug/index.html | grep -o 'Total[^%]*%' | sed 's/.*>\([0-9,.]*\)%.*/\1%/')
     - pushd $ANDROID_PROJECT_DIR/app/build/reports/coverage/debug
